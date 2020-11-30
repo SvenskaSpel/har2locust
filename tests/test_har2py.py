@@ -19,7 +19,7 @@ with open(har_file) as f:
 
 
 def test_version():
-    assert __version__ == '0.1.0'
+    assert __version__ == '0.1.1'
 
 
 def test_har_file_not_found():
@@ -84,4 +84,4 @@ def test_rendering_syntax_error():
 # writing py file in tests/output for manual inspection
 @pytest.mark.parametrize("har_file, py_file", zip(har_files, py_files))
 def test_main(har_file, py_file):
-    main(har_file, py_file)
+    main(har_file, py_file, overwrite=True)
