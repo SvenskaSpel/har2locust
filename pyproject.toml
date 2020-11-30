@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "har2py"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = ["S1M0N38 <bertolottosimone@gmail.com>"]
 
