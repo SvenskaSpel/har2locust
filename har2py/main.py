@@ -1,3 +1,4 @@
+import argparse
 import ast
 import json
 import logging
@@ -8,17 +9,99 @@ import jinja2
 # logging.basicConfig(level='DEBUG')
 
 
-def main(har_file: str, py_file: str, overwrite: bool = False):
+def cli():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        'input',
+        action='store',
+        help='har input file',
+    )
+    parser.add_argument(
+        '-o',
+        '--output',
+        action='store',
+        default='',
+        type=str,
+        help=(
+            'py output file. If not the define use the same name '
+            'of the har file with py extension.'
+        ),
+    )
+    parser.add_argument(
+        '-t',
+        '--template',
+        action='store',
+        default='requests',
+        type=str,
+        help=(
+            'jinja2 template used to generate py code. '
+            'Default to requests. '
+            '(For now "requests" is the only available template)'
+        ),
+    )
+    parser.add_argument(
+        '-f',
+        '--filters',
+        action='store',
+        default='xhr,document,other',
+        type=str,
+        help=(
+            'commas value separeted string of the resource type you want to '
+            'include in py generated code. Supported type are `xhr`, '
+            '`script`, `stylesheet`, `image`, `font`, `document`, `other`. '
+            'Default to xhr,document,other.'
+        ),
+    )
+    parser.add_argument(
+        '-w',
+        '--overwrite',
+        action='store_true',
+        help=(
+            'overwrite py file if one previous py file with the same name '
+            'already exists.'
+        ),
+    )
+
+    args = parser.parse_args()
+
+    main(
+        args.input,
+        args.output,
+        overwrite=args.overwrite,
+        resource_type=args.filters.split(','),
+        template_name=args.template + '.jinja2',
+    )
+
+
+def main(
+    har_file: str,
+    py_file: str,
+    overwrite: bool = False,
+    resource_type: str = ['xhr', 'document', 'other'],
+    template_dir: str = pathlib.Path(__file__).parents[0],
+    template_name: str = 'requests.jinja2',
+):
     """Load .har file and produce .py
 
     Args:
         har_file (str): path to the input har file.
         har_py (str): path to the output py file.
         overwrite (bool): overwrite existing .py file. Default to False.
+        resource_type (list): list of resource type to include in the python
+            generated code. Supported type are `xhr`, `script`, `stylesheet`,
+            `image`, `font`, `document`, `other`.
+            Default to ['xhr', 'document', 'other'].
+        template_dir (str): path where are store the jinja2 template.
+            Default to `pathlib.Path(__file__).parents[0]`.
+        template_name (str): name of the jinja2 template used by rendering.
+            Default to 'requests.jinja2'.
     """
 
     har_file = pathlib.Path(har_file)
-    py_file = pathlib.Path(py_file)
+    if py_file:
+        py_file = pathlib.Path(py_file)
+    else:
+        py_file = har_file.with_suffix('.py')
 
     if not har_file.is_file():
         raise FileNotFoundError
@@ -40,8 +123,8 @@ def main(har_file: str, py_file: str, overwrite: bool = False):
         har = json.load(f)
     logging.debug(f'load {har_file}')
 
-    har = preprocessing(har)
-    py = rendering(har)
+    har = preprocessing(har, resource_type=resource_type)
+    py = rendering(har, template_dir=template_dir, template_name=template_name)
 
     with open(py_file, 'w') as f:
         f.write(py)
@@ -65,7 +148,7 @@ def preprocessing(
         resource_type (list): list of resource type to include in the python
             generated code. Supported type are `xhr`, `script`, `stylesheet`,
             `image`, `font`, `document`, `other`.
-            Default is ['xhr', 'document', 'other'].
+            Default to ['xhr', 'document', 'other'].
 
     Returns:
         dict: new har dict structured in the following way:
@@ -209,16 +292,16 @@ def preprocessing(
 def rendering(
     har: dict,
     template_dir: str = pathlib.Path(__file__).parents[0],
-    template_name: str = 'template.jinja2',
+    template_name: str = 'requests.jinja2',
 ):
     """Generate valid python code from preprocessed har using jinja2 template.
 
     Args:
         har (dict): preprocessed har dict
         template_dir (str): path where are store the jinja2 template.
-            Defalut to `pathlib.Path(__file__).parents[0]`.
+            Default to `pathlib.Path(__file__).parents[0]`.
         template_name (str): name of the jinja2 template used by rendering.
-            Default to 'template.jinja2'.
+            Default to 'requests.jinja2'.
 
     Returns:
         str: generated python code
