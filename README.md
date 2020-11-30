@@ -12,7 +12,11 @@ Just a simple pip install, i.e. `python3 -m pip install har2py`
 
 ## Usage
 
-Navigate to the directory where is located the har file you want to convert and
+1. Navigate the web with your browser while recording your activity. Then save the
+data in HAR file. Here is an example with Chrome Devs Tools
+![har.gif](https://github.com/S1M0N38/har2py/blob/main/har.gif?raw=true)
+
+2. Go to the directory where is located the har file you want to convert and
 type
 
 ```har2py my_har_file.har```
