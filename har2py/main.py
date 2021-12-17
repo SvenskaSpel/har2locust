@@ -119,7 +119,7 @@ def main(
     if not overwrite and py_file.is_file():
         raise FileExistsError(f'{py_file} already exists.')
 
-    with open(har_file) as f:
+    with open(har_file, encoding='utf8', errors='ignore') as f:
         har = json.load(f)
     logging.debug(f'load {har_file}')
 
