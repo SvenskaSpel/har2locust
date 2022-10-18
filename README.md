@@ -1,14 +1,14 @@
-# har2py
+# har2locust
 
 When browsing the web with the Developer Tools open you can record the Network
 Activities (requests perform by your browser & responses you get from servers).
 Then you can export all these data into an [HAR](https://en.wikipedia.org/wiki/HAR_(file_format))
-file (Http ARchive). With **har2py** you can convert HAR file into valid python
+file (Http ARchive). With **har2locust** you can convert HAR file into valid python
 code that reproduce the requests perform by your browser.
 
 ## Installation
 
-Just a simple pip install, i.e. `python3 -m pip install har2py`
+Just a simple pip install, i.e. `python3 -m pip install har2locust`
 
 ## Usage
 
@@ -19,7 +19,7 @@ data in HAR file. Here is an example with Chrome Devs Tools
 2. Go to the directory where is located the har file you want to convert and
 type
 
-```har2py my_har_file.har```
+```har2locust my_har_file.har```
 
 This will generate valid python code base on [requests](https://requests.readthedocs.io/en/master/)
 library from *my_har_file.har*. The generated file will be called
@@ -29,9 +29,9 @@ Additional arguemnts are describe in the help
 
 ```
 
-> har2py -h
+> har2locust -h
 
-usage: har2py [-h] [-o OUTPUT] [-t TEMPLATE] [-f FILTERS] [-w] input
+usage: har2locust [-h] [-o OUTPUT] [-t TEMPLATE] [-f FILTERS] [-w] input
 
 positional arguments:
   input                 har input file
