@@ -6,7 +6,7 @@ authors = ["S1M0N38 <bertolottosimone@gmail.com>", "CyberW <lars.holmberg@redshi
 
 [tool.poetry.dependencies]
 python = "^3.9"
-Jinja2 = "^2.11.2"
+Jinja2 = "^3.1.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
