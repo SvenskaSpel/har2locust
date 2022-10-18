@@ -313,7 +313,7 @@ def preprocessing(
 def rendering(
     har: dict,
     template_dir: str = pathlib.Path(__file__).parents[0],
-    template_name: str = 'requests.jinja2',
+    template_name: str = 'locust.jinja2',
 ):
     """Generate valid python code from preprocessed har using jinja2 template.
 
@@ -322,7 +322,7 @@ def rendering(
         template_dir (str): path where are store the jinja2 template.
             Default to `pathlib.Path(__file__).parents[0]`.
         template_name (str): name of the jinja2 template used by rendering.
-            Default to 'requests.jinja2'.
+            Default to 'locust.jinja2'.
 
     Returns:
         str: generated python code
