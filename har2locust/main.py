@@ -112,7 +112,7 @@ def main(
         )
 
     if py_file.suffix != '.py':
-        raise IOError(
+        logging.debug(
             'output file has not ".py" extension. Please use an ".py" file'
         )
 
