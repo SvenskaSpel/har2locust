@@ -1,0 +1,25 @@
+from locust import HttpUser, task
+
+
+class MyUser(HttpUser):
+    @task
+    def t(self):
+        {% for request in requests -%}
+        self.client.{{ request.method }}("{{ request.url.split('?')[0] }}"
+        {%- if request.headers -%}, headers={
+            {%- for (key, value) in request.headers %}
+            '{{ key }}': '{{ value }}',
+            {%- endfor %}}
+        {%- endif -%}
+        {%- if request.params -%}, params=[
+            {%- for (key, value) in request.params %}
+            ('{{ key }}', '{{ value }}'),
+            {%- endfor %}
+        ]
+        {%- endif -%}
+        {%- if request.post_data -%}, data='{{request.post_data}}'
+        {%- endif -%})
+        {% endfor %}
+
+if __name__ == "__main__":
+    run_single_user(LBUser)

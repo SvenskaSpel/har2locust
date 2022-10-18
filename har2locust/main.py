@@ -3,7 +3,9 @@ import ast
 import json
 import logging
 import pathlib
+import subprocess
 
+import re
 import jinja2
 
 # logging.basicConfig(level='DEBUG')
@@ -79,7 +81,7 @@ def main(
     overwrite: bool = False,
     resource_type: str = ['xhr', 'document', 'other'],
     template_dir: str = pathlib.Path(__file__).parents[0],
-    template_name: str = 'requests.jinja2',
+    template_name: str = 'locust.jinja2',
 ):
     """Load .har file and produce .py
 
@@ -94,7 +96,7 @@ def main(
         template_dir (str): path where are store the jinja2 template.
             Default to `pathlib.Path(__file__).parents[0]`.
         template_name (str): name of the jinja2 template used by rendering.
-            Default to 'requests.jinja2'.
+            Default to 'locust.jinja2'.
     """
 
     har_file = pathlib.Path(har_file)
@@ -123,7 +125,21 @@ def main(
         har = json.load(f)
     logging.debug(f'load {har_file}')
 
-    har = preprocessing(har, resource_type=resource_type)
+    urlignore_file = pathlib.Path(".urlignore")
+    url_filters = []
+    if urlignore_file.is_file():
+        with open(urlignore_file) as f:
+            url_filters = f.readlines()
+            url_filters = [line.rstrip() for line in url_filters]
+            
+    headerignore_file = pathlib.Path(".headerignore")
+    header_filters = []
+    if headerignore_file.is_file():
+        with open(headerignore_file) as f:
+            header_filters = f.readlines()
+            header_filters = [line.rstrip() for line in header_filters]
+
+    har = preprocessing(har, resource_type=resource_type, url_filters=url_filters, header_filters=header_filters)
     py = rendering(har, template_dir=template_dir, template_name=template_name)
 
     with open(py_file, 'w') as f:
@@ -134,6 +150,8 @@ def main(
 def preprocessing(
     har: dict,
     resource_type=['xhr', 'document', 'other'],
+    url_filters: list[re.Pattern]=[],
+    header_filters: list[re.Pattern]=[],
 ) -> dict:
     """Scan the har dict for common headers and cookies and group them into
     session headers and session cookies.
@@ -224,9 +242,10 @@ def preprocessing(
     entries = har['log']['entries']
     logging.debug(f'found {len(entries)} entries')
 
-    # filtering entries by resource type
+    # filtering entries
     entries = [
-        e for e in har['log']['entries'] if e['_resourceType'] in resource_type
+        e for e in har['log']['entries'] 
+        if e['_resourceType'] in resource_type and not any(re.search(r, e['request']['url']) for r in url_filters)
     ]
     logging.debug(f'resource type allowed {resource_type}')
     logging.debug(f'{len(entries)} entries filter by resource_type')
@@ -234,16 +253,17 @@ def preprocessing(
     # organize request variable in a useful format
     # [[{'name': key, 'value': value}, ...], ...] list of list of dict ->
     # [{(key, value), ...}, ...] list of set of tuple
-    urls, methods, headers_req, cookies_req, params = [], [], [], [], []
+    urls, methods, headers_req, cookies_req, params, post_datas = [], [], [], [], [], []
     headers_res, cookies_res = [], []
     for e in entries:
         req = e['request']
         urls.append(req['url'].split('?')[0])
         methods.append(req['method'].lower())
-        headers_req.append({(h['name'], h['value']) for h in req['headers']})
+        headers_req.append({(h['name'], h['value']) for h in req['headers'] if not any(re.search(r, h['name']) for r in header_filters)})
         cookies_req.append({(c['name'], c['value']) for c in req['cookies']})
         params.append({(p['name'], p['value']) for p in req['queryString']})
         res = e['response']
+        post_datas.append(req['postData']['text'] if "postData" in req else None)
         headers_res.append({(h['name'], h['value']) for h in res['headers']})
         cookies_res.append({(c['name'], c['value']) for c in res['cookies']})
 
@@ -262,6 +282,7 @@ def preprocessing(
             'headers': headers_req[i] - session['headers'],
             'cookies': cookies_req[i] - session['cookies'],
             'params': params[i],
+            'post_data': post_datas[i]
         }
         for i, e in enumerate(entries)
     ]
@@ -334,5 +355,10 @@ def rendering(
         )
 
     logging.debug('successfully generate valid python code')
-
-    return py
+    
+    p = subprocess.Popen(["black", "-"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
+    assert p.stdin # keep linter happy
+    p.stdin.write(py)
+    stdout, _stderr = p.communicate()
+    
+    return stdout
