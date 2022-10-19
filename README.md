@@ -1,5 +1,9 @@
 # har2locust
 
+This is a fork of [har2py](https://github.com/S1M0N38/har2py)
+
+---
+
 When browsing the web with the Developer Tools open you can record the Network
 Activities (requests perform by your browser & responses you get from servers).
 Then you can export all these data into an [HAR](https://en.wikipedia.org/wiki/HAR_(file_format))
