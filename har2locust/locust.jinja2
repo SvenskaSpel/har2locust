@@ -7,7 +7,7 @@ class MyUser(FastHttpUser):
 
     {%- if session.headers %}
     default_headers = {
-        {%- for (key, value) in session.headers %}
+        {%- for (key, value) in session.headers | sort %}
         '{{ key }}': '{{ value }}',
         {%- endfor %}
     }
@@ -16,17 +16,11 @@ class MyUser(FastHttpUser):
     @task
     def t(self):
         {% for request in requests -%}
-        self.client.{{ request.method }}("{{ request.url.split('?')[0] }}"
+        self.client.{{ request.method }}("{{ request.url }}"
         {%- if request.headers -%}, headers={
-            {%- for (key, value) in request.headers %}
+            {%- for (key, value) in request.headers | sort %}
             '{{ key }}': '{{ value }}',
             {%- endfor %}}
-        {%- endif -%}
-        {%- if request.params -%}, params=[
-            {%- for (key, value) in request.params %}
-            ('{{ key }}', '{{ value }}'),
-            {%- endfor %}
-        ]
         {%- endif -%}
         {%- if request.post_data -%}, data='{{ request.post_data }}'
         {%- endif -%})

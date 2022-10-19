@@ -210,7 +210,7 @@ def preprocessing(
     headers_res, cookies_res = [], []
     for e in entries:
         req = e["request"]
-        urls.append(req["url"].split("?")[0])
+        urls.append(req["url"])
         methods.append(req["method"].lower())
         headers_req.append(
             {
@@ -220,7 +220,7 @@ def preprocessing(
             }
         )
         cookies_req.append({(c["name"], c["value"]) for c in req["cookies"]})
-        params.append({(p["name"], p["value"]) for p in req["queryString"]})
+        # params.append({(p["name"], p["value"]) for p in req["queryString"]})
         post_datas.append(req["postData"]["text"] if "postData" in req else None)
         res = e["response"]
         headers_res.append({(h["name"], h["value"]) for h in res["headers"]})
@@ -240,7 +240,7 @@ def preprocessing(
             "method": methods[i],
             "headers": headers_req[i] - session["headers"],
             "cookies": cookies_req[i] - session["cookies"],
-            "params": params[i],
+            # "params": params[i],
             "post_data": post_datas[i],
         }
         for i, e in enumerate(entries)
