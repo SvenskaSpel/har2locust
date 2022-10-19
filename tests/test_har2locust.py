@@ -1,6 +1,7 @@
 import json
 import pathlib
-
+import subprocess
+import os
 import pytest
 from har2locust import __version__
 from har2locust.main import main, preprocessing, rendering
@@ -25,7 +26,7 @@ def test_version():
 def test_har_file_not_found():
     har_file_foo = inputs_dir / "foo.har"
     with pytest.raises(FileNotFoundError):
-        main(har_file_foo, py_file)
+        main(har_file_foo)
 
 
 def test_har_file_wrong_suffix():
@@ -33,24 +34,8 @@ def test_har_file_wrong_suffix():
     with open(foo_file, "w"):
         pass
     with pytest.raises(IOError, match='use an ".har" file'):
-        main(foo_file, py_file)
+        main(foo_file)
     foo_file.unlink()
-
-
-def test_py_file_already_exists_overwrite_false():
-    with open(py_file, "w"):
-        pass
-    with pytest.raises(IOError):
-        main(har_file, py_file, overwrite=False)
-    assert py_file.is_file()
-    py_file.unlink()
-
-
-def test_py_file_already_exists_overwrite_true():
-    with open(py_file, "w"):
-        pass
-    main(har_file, py_file, overwrite=True)
-    py_file.unlink()
 
 
 def test_preprocessing_unsupported_resource_type():
@@ -75,4 +60,16 @@ def test_rendering_syntax_error():
 # writing py file in tests/output for manual inspection
 @pytest.mark.parametrize("har_file, py_file", zip(har_files, py_files))
 def test_main(har_file, py_file):
-    main(har_file, py_file, overwrite=True)
+    with open(py_file, encoding="utf-8") as f:
+        expected_output = f.read()
+    proc = subprocess.Popen(
+        ["har2locust", har_file],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        encoding="utf-8",
+        cwd=os.path.join(os.path.dirname(__file__), "../"),
+    )
+    stdout, stderr = proc.communicate()
+    assert stdout == expected_output
+    assert proc.returncode == 0, f"Bad return code {proc.returncode}, stderr: {stderr}"
