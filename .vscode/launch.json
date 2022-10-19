@@ -1,0 +1,40 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "har2locust",
+            "type": "python",
+            "request": "launch",
+            "program": "/usr/local/bin/har2locust",
+            "console": "integratedTerminal",
+            "args": [
+                "login.har",
+                "-o",
+                "/dev/stdout"
+            ],
+            "env": {
+                "LC_ALL": "en_US.UTF-8"
+            },
+            "justMyCode": false,
+            "gevent": true
+        },
+        {
+            "name": "Python: current file",
+            "type": "python",
+            "gevent": true,
+            "request": "launch",
+            "program": "${file}",
+            "console": "internalConsole",
+            "internalConsoleOptions": "openOnSessionStart",
+            "args": [],
+            "justMyCode": false,
+            "env": {
+                "LOCUST_PLAYWRIGHT": "1",
+                "LOCUST_TEST_ENV": "test"
+            }
+        }
+    ]
+}
