@@ -14,52 +14,49 @@ import jinja2
 def cli():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        'input',
-        action='store',
-        help='har input file',
+        "input",
+        action="store",
+        help="har input file",
     )
     parser.add_argument(
-        '-o',
-        '--output',
-        action='store',
-        default='',
+        "-o",
+        "--output",
+        action="store",
+        default="",
         type=str,
         help=(
-            'py output file. If not the define use the same name '
-            'of the har file with py extension.'
+            "py output file. If not the define use the same name "
+            "of the har file with py extension."
         ),
     )
     parser.add_argument(
-        '-t',
-        '--template',
-        action='store',
-        default='locust',
+        "-t",
+        "--template",
+        action="store",
+        default="locust",
+        type=str,
+        help=("jinja2 template used to generate py code. " "Default to locust. "),
+    )
+    parser.add_argument(
+        "-f",
+        "--filters",
+        action="store",
+        default="xhr,document,other",
         type=str,
         help=(
-            'jinja2 template used to generate py code. '
-            'Default to locust. '
+            "commas value separeted string of the resource type you want to "
+            "include in py generated code. Supported type are `xhr`, "
+            "`script`, `stylesheet`, `image`, `font`, `document`, `other`. "
+            "Default to xhr,document,other."
         ),
     )
     parser.add_argument(
-        '-f',
-        '--filters',
-        action='store',
-        default='xhr,document,other',
-        type=str,
+        "-w",
+        "--overwrite",
+        action="store_true",
         help=(
-            'commas value separeted string of the resource type you want to '
-            'include in py generated code. Supported type are `xhr`, '
-            '`script`, `stylesheet`, `image`, `font`, `document`, `other`. '
-            'Default to xhr,document,other.'
-        ),
-    )
-    parser.add_argument(
-        '-w',
-        '--overwrite',
-        action='store_true',
-        help=(
-            'overwrite py file if one previous py file with the same name '
-            'already exists.'
+            "overwrite py file if one previous py file with the same name "
+            "already exists."
         ),
     )
 
@@ -69,8 +66,8 @@ def cli():
         args.input,
         args.output,
         overwrite=args.overwrite,
-        resource_type=args.filters.split(','),
-        template_name=args.template + '.jinja2',
+        resource_type=args.filters.split(","),
+        template_name=args.template + ".jinja2",
     )
 
 
@@ -78,9 +75,9 @@ def main(
     har_file: str,
     py_file: str,
     overwrite: bool = False,
-    resource_type: str = ['xhr', 'document', 'other'],
+    resource_type: str = ["xhr", "document", "other"],
     template_dir: str = pathlib.Path(__file__).parents[0],
-    template_name: str = 'locust.jinja2',
+    template_name: str = "locust.jinja2",
 ):
     """Load .har file and produce .py
 
@@ -102,27 +99,23 @@ def main(
     if py_file:
         py_file = pathlib.Path(py_file)
     else:
-        py_file = har_file.with_suffix('.py')
+        py_file = har_file.with_suffix(".py")
 
     if not har_file.is_file():
         raise FileNotFoundError
 
-    if har_file.suffix != '.har':
-        raise IOError(
-            'input file has not ".har" extension. Please use an ".har" file'
-        )
+    if har_file.suffix != ".har":
+        raise IOError('input file has not ".har" extension. Please use an ".har" file')
 
-    if py_file.suffix != '.py':
-        logging.debug(
-            'output file has not ".py" extension. Please use an ".py" file'
-        )
+    if py_file.suffix != ".py":
+        logging.debug('output file has not ".py" extension. Please use an ".py" file')
 
     if not overwrite and py_file.is_file():
-        raise FileExistsError(f'{py_file} already exists.')
+        raise FileExistsError(f"{py_file} already exists.")
 
-    with open(har_file, encoding='utf8', errors='ignore') as f:
+    with open(har_file, encoding="utf8", errors="ignore") as f:
         har = json.load(f)
-    logging.debug(f'load {har_file}')
+    logging.debug(f"load {har_file}")
 
     urlignore_file = pathlib.Path(".urlignore")
     url_filters = []
@@ -130,7 +123,7 @@ def main(
         with open(urlignore_file) as f:
             url_filters = f.readlines()
             url_filters = [line.rstrip() for line in url_filters]
-            
+
     headerignore_file = pathlib.Path(".headerignore")
     header_filters = []
     if headerignore_file.is_file():
@@ -138,19 +131,24 @@ def main(
             header_filters = f.readlines()
             header_filters = [line.rstrip() for line in header_filters]
 
-    har = preprocessing(har, resource_type=resource_type, url_filters=url_filters, header_filters=header_filters)
+    har = preprocessing(
+        har,
+        resource_type=resource_type,
+        url_filters=url_filters,
+        header_filters=header_filters,
+    )
     py = rendering(har, template_dir=template_dir, template_name=template_name)
 
-    with open(py_file, 'w') as f:
+    with open(py_file, "w") as f:
         f.write(py)
-    logging.debug(f'saving {py_file}')
+    logging.debug(f"saving {py_file}")
 
 
 def preprocessing(
     har: dict,
-    resource_type=['xhr', 'document', 'other'],
-    url_filters: list[re.Pattern]=[],
-    header_filters: list[re.Pattern]=[],
+    resource_type=["xhr", "document", "other"],
+    url_filters: list[re.Pattern] = [],
+    header_filters: list[re.Pattern] = [],
 ) -> dict:
     """Scan the har dict for common headers and cookies and group them into
     session headers and session cookies.
@@ -214,40 +212,40 @@ def preprocessing(
         ```
     """
     supported_resource_type = {
-        'xhr',
-        'script',
-        'stylesheet',
-        'image',
-        'font',
-        'document',
-        'other',
+        "xhr",
+        "script",
+        "stylesheet",
+        "image",
+        "font",
+        "document",
+        "other",
     }
     if unsupported := set(resource_type) - supported_resource_type:
-        raise NotImplementedError(
-            f'{unsupported} resource types are not supported'
-        )
+        raise NotImplementedError(f"{unsupported} resource types are not supported")
 
-    log_version = har['log']['version']
+    log_version = har["log"]["version"]
     logging.debug(f'log version is "{log_version}"')
-    if log_version != '1.2':
+    if log_version != "1.2":
         logging.warning(
-            'this script it is only tested on '
+            "this script it is only tested on "
             'log version "1.2" and not on "{log_version}"'
         )
 
-    pages = har['log']['pages']
-    logging.debug(f'found {len(pages)} pages')
+    pages = har["log"]["pages"]
+    logging.debug(f"found {len(pages)} pages")
 
-    entries = har['log']['entries']
-    logging.debug(f'found {len(entries)} entries')
+    entries = har["log"]["entries"]
+    logging.debug(f"found {len(entries)} entries")
 
     # filtering entries
     entries = [
-        e for e in har['log']['entries'] 
-        if e['_resourceType'] in resource_type and not any(re.search(r, e['request']['url']) for r in url_filters)
+        e
+        for e in har["log"]["entries"]
+        if e["_resourceType"] in resource_type
+        and not any(re.search(r, e["request"]["url"]) for r in url_filters)
     ]
-    logging.debug(f'resource type allowed {resource_type}')
-    logging.debug(f'{len(entries)} entries filter by resource_type')
+    logging.debug(f"resource type allowed {resource_type}")
+    logging.debug(f"{len(entries)} entries filter by resource_type")
 
     # organize request variable in a useful format
     # [[{'name': key, 'value': value}, ...], ...] list of list of dict ->
@@ -255,64 +253,70 @@ def preprocessing(
     urls, methods, headers_req, cookies_req, params, post_datas = [], [], [], [], [], []
     headers_res, cookies_res = [], []
     for e in entries:
-        req = e['request']
-        urls.append(req['url'].split('?')[0])
-        methods.append(req['method'].lower())
-        headers_req.append({(h['name'], h['value']) for h in req['headers'] if not any(re.search(r, h['name']) for r in header_filters)})
-        cookies_req.append({(c['name'], c['value']) for c in req['cookies']})
-        params.append({(p['name'], p['value']) for p in req['queryString']})
-        res = e['response']
-        post_datas.append(req['postData']['text'] if "postData" in req else None)
-        headers_res.append({(h['name'], h['value']) for h in res['headers']})
-        cookies_res.append({(c['name'], c['value']) for c in res['cookies']})
+        req = e["request"]
+        urls.append(req["url"].split("?")[0])
+        methods.append(req["method"].lower())
+        headers_req.append(
+            {
+                (h["name"], h["value"])
+                for h in req["headers"]
+                if not any(re.search(r, h["name"]) for r in header_filters)
+            }
+        )
+        cookies_req.append({(c["name"], c["value"]) for c in req["cookies"]})
+        params.append({(p["name"], p["value"]) for p in req["queryString"]})
+        res = e["response"]
+        post_datas.append(req["postData"]["text"] if "postData" in req else None)
+        headers_res.append({(h["name"], h["value"]) for h in res["headers"]})
+        cookies_res.append({(c["name"], c["value"]) for c in res["cookies"]})
 
     # inside session dict are collect all varibles common to all requests
     session = {
-        'name': 's',  # name of the Session() object
-        'headers': set.intersection(*headers_req),
-        'cookies': set.intersection(*cookies_req),
+        "name": "s",  # name of the Session() object
+        "headers": set.intersection(*headers_req),
+        "cookies": set.intersection(*cookies_req),
     }
 
     # requests is a list of dictionary with value specific to single requests
     requests = [
         {
-            'url': urls[i],
-            'method': methods[i],
-            'headers': headers_req[i] - session['headers'],
-            'cookies': cookies_req[i] - session['cookies'],
-            'params': params[i],
-            'post_data': post_datas[i]
+            "url": urls[i],
+            "method": methods[i],
+            "headers": headers_req[i] - session["headers"],
+            "cookies": cookies_req[i] - session["cookies"],
+            "params": params[i],
+            "post_data": post_datas[i],
         }
         for i, e in enumerate(entries)
     ]
 
     responses = [
         {
-            'status': e['response']['status'],
-            'headers': headers_res[i],
-            'cookies': cookies_res[i],
-            'redirect_url': e['response']['redirectURL'],
-            'content': e['response']['content'],
+            "status": e["response"]["status"],
+            "headers": headers_res[i],
+            "cookies": cookies_res[i],
+            "redirect_url": e["response"]["redirectURL"],
+            "content": e["response"]["content"],
         }
         for i, e in enumerate(entries)
     ]
 
-    resources_types = [e['_resourceType'] for e in entries]
+    resources_types = [e["_resourceType"] for e in entries]
 
-    logging.debug('preprocessed har dict')
+    logging.debug("preprocessed har dict")
 
     return {
-        'session': session,
-        'requests': requests,
-        'responses': responses,
-        'resources_types': resources_types,
+        "session": session,
+        "requests": requests,
+        "responses": responses,
+        "resources_types": resources_types,
     }
 
 
 def rendering(
     har: dict,
     template_dir: str = pathlib.Path(__file__).parents[0],
-    template_name: str = 'locust.jinja2',
+    template_name: str = "locust.jinja2",
 ):
     """Generate valid python code from preprocessed har using jinja2 template.
 
@@ -327,10 +331,10 @@ def rendering(
         str: generated python code
     """
     # check for the correctness of the har structure
-    if set(har) != {'session', 'requests', 'responses', 'resources_types'}:
+    if set(har) != {"session", "requests", "responses", "resources_types"}:
         raise ValueError(
-            'har dict has wrong format. '
-            'Must be first preprocessed with preprocessing(har).'
+            "har dict has wrong format. "
+            "Must be first preprocessed with preprocessing(har)."
         )
 
     env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
@@ -338,10 +342,10 @@ def rendering(
     logging.debug(f'render har with "{template.name}" template')
 
     py = template.render(
-        session=har['session'],
-        requests=har['requests'],
-        responses=har['responses'],
-        resources_types=har['resources_types'],
+        session=har["session"],
+        requests=har["requests"],
+        responses=har["responses"],
+        resources_types=har["resources_types"],
     )
 
     # test if the generated code is python valid code
@@ -349,16 +353,18 @@ def rendering(
         ast.parse(py)
     except SyntaxError:
         raise SyntaxError(
-            'cannot parse har into valid python code. '
-            'Please check the correctness of the jinja2 template'
+            "cannot parse har into valid python code. "
+            "Please check the correctness of the jinja2 template"
         )
 
-    logging.debug('successfully generate valid python code')
-    
-    p = subprocess.Popen(["black", "-q", "-"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
-    assert p.stdin # keep linter happy
+    logging.debug("successfully generate valid python code")
+
+    p = subprocess.Popen(
+        ["black", "-q", "-"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True
+    )
+    assert p.stdin  # keep linter happy
     p.stdin.write(py)
     stdout, _stderr = p.communicate()
     assert not p.returncode, "Black failed to format"
-    
+
     return stdout
