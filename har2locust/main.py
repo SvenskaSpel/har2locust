@@ -19,17 +19,6 @@ def cli():
         help="har input file",
     )
     parser.add_argument(
-        "-o",
-        "--output",
-        action="store",
-        default="",
-        type=str,
-        help=(
-            "py output file. If not the define use the same name "
-            "of the har file with py extension."
-        ),
-    )
-    parser.add_argument(
         "-t",
         "--template",
         action="store",
@@ -50,22 +39,11 @@ def cli():
             "Default to xhr,document,other."
         ),
     )
-    parser.add_argument(
-        "-w",
-        "--overwrite",
-        action="store_true",
-        help=(
-            "overwrite py file if one previous py file with the same name "
-            "already exists."
-        ),
-    )
 
     args = parser.parse_args()
 
     main(
         args.input,
-        args.output,
-        overwrite=args.overwrite,
         resource_type=args.filters.split(","),
         template_name=args.template + ".jinja2",
     )
@@ -73,8 +51,6 @@ def cli():
 
 def main(
     har_file: str,
-    py_file: str,
-    overwrite: bool = False,
     resource_type: str = ["xhr", "document", "other"],
     template_dir: str = pathlib.Path(__file__).parents[0],
     template_name: str = "locust.jinja2",
@@ -83,8 +59,6 @@ def main(
 
     Args:
         har_file (str): path to the input har file.
-        har_py (str): path to the output py file.
-        overwrite (bool): overwrite existing .py file. Default to False.
         resource_type (list): list of resource type to include in the python
             generated code. Supported type are `xhr`, `script`, `stylesheet`,
             `image`, `font`, `document`, `other`.
@@ -96,22 +70,6 @@ def main(
     """
 
     har_file = pathlib.Path(har_file)
-    if py_file:
-        py_file = pathlib.Path(py_file)
-    else:
-        py_file = har_file.with_suffix(".py")
-
-    if not har_file.is_file():
-        raise FileNotFoundError
-
-    if har_file.suffix != ".har":
-        raise IOError('input file has not ".har" extension. Please use an ".har" file')
-
-    if py_file.suffix != ".py":
-        logging.debug('output file has not ".py" extension. Please use an ".py" file')
-
-    if not overwrite and py_file.is_file():
-        raise FileExistsError(f"{py_file} already exists.")
 
     with open(har_file, encoding="utf8", errors="ignore") as f:
         har = json.load(f)
@@ -139,9 +97,7 @@ def main(
     )
     py = rendering(har, template_dir=template_dir, template_name=template_name)
 
-    with open(py_file, "w") as f:
-        f.write(py)
-    logging.debug(f"saving {py_file}")
+    print(py)
 
 
 def preprocessing(
@@ -265,8 +221,8 @@ def preprocessing(
         )
         cookies_req.append({(c["name"], c["value"]) for c in req["cookies"]})
         params.append({(p["name"], p["value"]) for p in req["queryString"]})
-        res = e["response"]
         post_datas.append(req["postData"]["text"] if "postData" in req else None)
+        res = e["response"]
         headers_res.append({(h["name"], h["value"]) for h in res["headers"]})
         cookies_res.append({(c["name"], c["value"]) for c in res["cookies"]})
 

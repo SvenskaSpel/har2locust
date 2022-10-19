@@ -35,16 +35,13 @@ Additional arguemnts are describe in the help
 
 > har2locust -h
 
-usage: har2locust [-h] [-o OUTPUT] [-t TEMPLATE] [-f FILTERS] [-w] input
+usage: har2locust [-h] [-t TEMPLATE] [-f FILTERS] input
 
 positional arguments:
   input                 har input file
 
 optional arguments:
   -h, --help            show this help message and exit
-  -o OUTPUT, --output OUTPUT
-                        py output file. If not the define use the same name of the har
-                        file with py extension.
   -t TEMPLATE, --template TEMPLATE
                         jinja2 template used to generate py code. Default to requests.
                         (For now "requests" is the only available template)
@@ -53,7 +50,5 @@ optional arguments:
                         include in py generated code. Supported type are `xhr`,
                         `script`, `stylesheet`, `image`, `font`, `document`, `other`.
                         Default to xhr,document,other.
-  -w, --overwrite       overwrite py file if one previous py file with the same name
-                        already exists.
 
 ```
