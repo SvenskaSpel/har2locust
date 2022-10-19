@@ -33,12 +33,11 @@ def cli():
         '-t',
         '--template',
         action='store',
-        default='requests',
+        default='locust',
         type=str,
         help=(
             'jinja2 template used to generate py code. '
-            'Default to requests. '
-            '(For now "requests" is the only available template)'
+            'Default to locust. '
         ),
     )
     parser.add_argument(
@@ -356,9 +355,10 @@ def rendering(
 
     logging.debug('successfully generate valid python code')
     
-    p = subprocess.Popen(["black", "-"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
+    p = subprocess.Popen(["black", "-q", "-"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
     assert p.stdin # keep linter happy
     p.stdin.write(py)
     stdout, _stderr = p.communicate()
+    assert not p.returncode, "Black failed to format"
     
     return stdout

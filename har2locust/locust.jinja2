@@ -1,7 +1,20 @@
-from locust import HttpUser, task
+#!/usr/bin/env python3
+from locust import FastHttpUser, task, run_single_user, events
+from locust_plugins.listeners import RescheduleTaskOnFail
 
+class MyUser(FastHttpUser):
+    host = "https://nowhere"
 
-class MyUser(HttpUser):
+    {%- if session.headers %}
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.client.headers = {
+            {%- for (key, value) in session.headers %}
+            '{{ key }}': '{{ value }}',
+            {%- endfor %}
+        }
+    {%- endif %}
+
     @task
     def t(self):
         {% for request in requests -%}
@@ -17,9 +30,13 @@ class MyUser(HttpUser):
             {%- endfor %}
         ]
         {%- endif -%}
-        {%- if request.post_data -%}, data='{{request.post_data}}'
+        {%- if request.post_data -%}, data='{{ request.post_data }}'
         {%- endif -%})
         {% endfor %}
 
+@events.init.add_listener
+def on_locust_init(environment, **_kwargs):
+    RescheduleTaskOnFail(environment)
+
 if __name__ == "__main__":
-    run_single_user(LBUser)
+    run_single_user(MyUser)
