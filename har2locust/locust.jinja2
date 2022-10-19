@@ -6,13 +6,11 @@ class MyUser(FastHttpUser):
     host = "https://nowhere"
 
     {%- if session.headers %}
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.client.headers = {
-            {%- for (key, value) in session.headers %}
-            '{{ key }}': '{{ value }}',
-            {%- endfor %}
-        }
+    default_headers = {
+        {%- for (key, value) in session.headers %}
+        '{{ key }}': '{{ value }}',
+        {%- endfor %}
+    }
     {%- endif %}
 
     @task
