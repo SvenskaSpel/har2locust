@@ -2,8 +2,8 @@ import json
 import pathlib
 
 import pytest
-from har2py import __version__
-from har2py.main import main, preprocessing, rendering
+from har2locust import __version__
+from har2locust.main import main, preprocessing, rendering
 
 inputs_dir = pathlib.Path(__file__).parents[0] / 'inputs'
 outputs_dir = pathlib.Path(__file__).parents[0] / 'outputs'
@@ -36,14 +36,6 @@ def test_har_file_wrong_suffix():
         main(foo_file, py_file)
     foo_file.unlink()
 
-
-def test_py_file_wrong_suffix():
-    foo_file = py_file.with_suffix('.foo')
-    with open(foo_file, 'w'):
-        pass
-    with pytest.raises(IOError, match='use an ".py" file'):
-        main(har_file, foo_file)
-    foo_file.unlink()
 
 
 def test_py_file_already_exists_overwrite_false():

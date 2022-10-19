@@ -53,15 +53,3 @@ optional arguments:
                         already exists.
 
 ```
-
-## Similar projects
-
-I like to develope my own program so I can extend easly by adding new jinja2 templates.
-In the past I use this other projects and from them I have been ispired to build
-har2py.
-
-- [curlconverter](https://github.com/NickCarneiro/curlconverter):
-  Convert cURL syntax to native Python, Go, PHP, JavaScript, R, Elixir and Dart
-  HTTP code
-- [har2requests](https://github.com/louisabraham/har2requests):
-  Generate Python Requests code from your browser activity
