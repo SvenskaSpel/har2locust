@@ -29,15 +29,6 @@ def test_har_file_not_found():
         main(har_file_foo)
 
 
-def test_har_file_wrong_suffix():
-    foo_file = har_file.with_suffix(".foo")
-    with open(foo_file, "w"):
-        pass
-    with pytest.raises(IOError, match='use an ".har" file'):
-        main(foo_file)
-    foo_file.unlink()
-
-
 def test_preprocessing_unsupported_resource_type():
     with pytest.raises(NotImplementedError, match="are not supported"):
         preprocessing(har, resource_type=["xhr", "foo", "bar"])
