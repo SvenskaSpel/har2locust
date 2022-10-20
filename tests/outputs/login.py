@@ -32,15 +32,6 @@ class MyUser(FastHttpUser):
                 "origin": "https://spela.test3.svenskaspel.se",
             },
         )
-        self.client.post(
-            "https://api.spela.test3.svenskaspel.se/player/1/sessionstoreitems",
-            headers={
-                "accept": "application/json, text/javascript, */*; q=0.01",
-                "content-type": "application/json",
-                "origin": "https://spela.test3.svenskaspel.se",
-            },
-            data='{"key":"trinidad_user","data":"{"userId":"tn-gmnh-lshdpslkdkstknrlsjhk-zhsx-tx"}"}',
-        )
         self.client.get(
             "https://spela.test3.svenskaspel.se/",
             headers={
