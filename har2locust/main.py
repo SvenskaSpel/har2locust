@@ -1,5 +1,4 @@
 import argparse
-import ast
 import json
 import logging
 import pathlib
@@ -7,8 +6,8 @@ import subprocess
 
 import re
 import jinja2
-
-# logging.basicConfig(level='DEBUG')
+from typing import List
+from setuptools_scm import get_version
 
 
 def cli():
@@ -24,7 +23,7 @@ def cli():
         action="store",
         default="locust",
         type=str,
-        help=("jinja2 template used to generate py code. " "Default to locust. "),
+        help=("jinja2 template used to generate locustfile. " "Default to locust. "),
     )
     parser.add_argument(
         "-f",
@@ -40,6 +39,18 @@ def cli():
         ),
     )
 
+    try:
+        version = get_version(root="..", relative_to=__file__, local_scheme="no-local-version")
+    except LookupError:
+        # meh. probably we are running in a github action.
+        version = "unknown"
+
+    parser.add_argument(
+        "--version",
+        "-V",
+        action="version",
+        version=f"%(prog)s {version}",
+    )
     args = parser.parse_args()
 
     main(
@@ -51,9 +62,9 @@ def cli():
 
 def main(
     har_file: str,
-    resource_type: str = ["xhr", "document", "other"],
-    template_dir: str = pathlib.Path(__file__).parents[0],
-    template_name: str = "locust.jinja2",
+    resource_type=["xhr", "document", "other"],
+    template_dir=pathlib.Path(__file__).parents[0],
+    template_name="locust.jinja2",
 ):
     """Load .har file and produce .py
 
@@ -69,11 +80,11 @@ def main(
             Default to 'locust.jinja2'.
     """
 
-    har_file = pathlib.Path(har_file)
+    har_path = pathlib.Path(har_file)
 
-    with open(har_file, encoding="utf8", errors="ignore") as f:
+    with open(har_path, encoding="utf8", errors="ignore") as f:
         har = json.load(f)
-    logging.debug(f"load {har_file}")
+    logging.debug(f"load {har_path}")
 
     urlignore_file = pathlib.Path(".urlignore")
     url_filters = []
@@ -82,12 +93,15 @@ def main(
             url_filters = f.readlines()
             url_filters = [line.rstrip() for line in url_filters]
 
-    headerignore_file = pathlib.Path(".headerignore")
+    headerignore_path = pathlib.Path(".headerignore")
     header_filters = []
-    if headerignore_file.is_file():
-        with open(headerignore_file) as f:
+    if headerignore_path.is_file():
+        with open(headerignore_path) as f:
             header_filters = f.readlines()
             header_filters = [line.rstrip() for line in header_filters]
+
+    # always filter these, because they will be added by locust automatically
+    header_filters.extend(["^cookie", "^content-length", "^:"])
 
     har = preprocessing(
         har,
@@ -103,8 +117,8 @@ def main(
 def preprocessing(
     har: dict,
     resource_type=["xhr", "document", "other"],
-    url_filters: list[re.Pattern] = [],
-    header_filters: list[re.Pattern] = [],
+    url_filters: List[re.Pattern] = [],
+    header_filters: List[re.Pattern] = [],
 ) -> dict:
     """Scan the har dict for common headers and cookies and group them into
     session headers and session cookies.
@@ -179,13 +193,10 @@ def preprocessing(
     if unsupported := set(resource_type) - supported_resource_type:
         raise NotImplementedError(f"{unsupported} resource types are not supported")
 
-    log_version = har["log"]["version"]
-    logging.debug(f'log version is "{log_version}"')
-    if log_version != "1.2":
-        logging.warning(
-            "this script it is only tested on "
-            'log version "1.2" and not on "{log_version}"'
-        )
+    har_version = har["log"]["version"]
+    logging.debug(f'log version is "{har_version}"')
+    if har_version != "1.2":
+        logging.warning(f"Untested har version {har_version}")
 
     pages = har["log"]["pages"]
     logging.debug(f"found {len(pages)} pages")
@@ -197,8 +208,7 @@ def preprocessing(
     entries = [
         e
         for e in har["log"]["entries"]
-        if e["_resourceType"] in resource_type
-        and not any(re.search(r, e["request"]["url"]) for r in url_filters)
+        if e["_resourceType"] in resource_type and not any(re.search(r, e["request"]["url"]) for r in url_filters)
     ]
     logging.debug(f"resource type allowed {resource_type}")
     logging.debug(f"{len(entries)} entries filter by resource_type")
@@ -206,7 +216,7 @@ def preprocessing(
     # organize request variable in a useful format
     # [[{'name': key, 'value': value}, ...], ...] list of list of dict ->
     # [{(key, value), ...}, ...] list of set of tuple
-    urls, methods, headers_req, cookies_req, params, post_datas = [], [], [], [], [], []
+    urls, methods, headers_req, cookies_req, post_datas = [], [], [], [], []
     headers_res, cookies_res = [], []
     for e in entries:
         req = e["request"]
@@ -220,7 +230,6 @@ def preprocessing(
             }
         )
         cookies_req.append({(c["name"], c["value"]) for c in req["cookies"]})
-        # params.append({(p["name"], p["value"]) for p in req["queryString"]})
         post_datas.append(req["postData"]["text"] if "postData" in req else None)
         res = e["response"]
         headers_res.append({(h["name"], h["value"]) for h in res["headers"]})
@@ -288,10 +297,7 @@ def rendering(
     """
     # check for the correctness of the har structure
     if set(har) != {"session", "requests", "responses", "resources_types"}:
-        raise ValueError(
-            "har dict has wrong format. "
-            "Must be first preprocessed with preprocessing(har)."
-        )
+        raise ValueError("har dict has wrong format. Must be first preprocessed with preprocessing(har).")
 
     env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
     template = env.get_template(template_name)
@@ -304,23 +310,11 @@ def rendering(
         resources_types=har["resources_types"],
     )
 
-    # test if the generated code is python valid code
-    try:
-        ast.parse(py)
-    except SyntaxError:
-        raise SyntaxError(
-            "cannot parse har into valid python code. "
-            "Please check the correctness of the jinja2 template"
-        )
-
-    logging.debug("successfully generate valid python code")
-
-    p = subprocess.Popen(
-        ["black", "-q", "-"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True
-    )
+    p = subprocess.Popen(["black", "-q", "-"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
     assert p.stdin  # keep linter happy
     p.stdin.write(py)
     stdout, _stderr = p.communicate()
-    assert not p.returncode, "Black failed to format"
+    assert not p.returncode, "Black failed to format the output - perhaps your template is broken?"
 
-    return stdout
+    # for some reason the subprocess returns an extra newline, get rid of that
+    return stdout[:-1]

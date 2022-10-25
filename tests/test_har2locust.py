@@ -1,9 +1,9 @@
+# pylint: disable=redefined-outer-name
 import json
 import pathlib
 import subprocess
 import os
 import pytest
-from har2locust import __version__
 from har2locust.main import main, preprocessing, rendering
 
 inputs_dir = pathlib.Path(__file__).parents[0] / "inputs"
@@ -17,10 +17,6 @@ py_file = py_files[0]
 
 with open(har_file) as f:
     har = json.load(f)
-
-
-def test_version():
-    assert __version__ == "0.1.1"
 
 
 def test_har_file_not_found():
@@ -40,7 +36,10 @@ def test_rendering_without_preprocess():
 
 
 def test_rendering_syntax_error():
-    with pytest.raises(SyntaxError, match="cannot parse har"):
+    with pytest.raises(
+        AssertionError,
+        match="Black failed to format the output - perhaps your template is broken?",
+    ):
         rendering(
             preprocessing(har),
             template_dir=pathlib.Path(__file__).parents[0],
@@ -62,5 +61,5 @@ def test_main(har_file, py_file):
         cwd=os.path.join(os.path.dirname(__file__), "../"),
     )
     stdout, stderr = proc.communicate()
-    assert stdout == expected_output
     assert proc.returncode == 0, f"Bad return code {proc.returncode}, stderr: {stderr}"
+    assert stdout.strip() == expected_output.strip()
