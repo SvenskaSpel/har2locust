@@ -31,7 +31,7 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: ${{ steps.pip-cache.outputs.dir }}
-          key: pip|${{ runner.os }}|${{ matrix.python }}|${{ hashFiles('setup.py') }}
+          key: pip|${{ runner.os }}|${{ matrix.python }}|${{ hashFiles('setup.cfg') }}
       - name: set full Python version in PY env var
         # See https://pre-commit.com/#github-actions-example
         run: echo "PY=$(python -VV | sha256sum | cut -d' ' -f1)" >> $GITHUB_ENV
@@ -53,8 +53,11 @@ jobs:
           python-version: "3.x"
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install setuptools wheel
+          python -m pip install --upgrade pip build
+      - name: Build + set TAG env var for later use
+        run: |
+          python -m build
+          echo "TAG=${GITHUB_REF#refs/*/}" | tee -a $GITHUB_ENV
       - name: Build
         run: |
           python setup.py sdist bdist_wheel
