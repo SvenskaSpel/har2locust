@@ -14,7 +14,9 @@ and interface without notice. If you encounter an issue, PRs are very welcome.
 
 ## Installation
 
-har2locust is installed together with locust-plugins (`pip install locust-plugins`)
+`pip install har2locust`
+
+This will also install locust and locust-plugins, because they are needed to run the generated locustfiles.
 
 ## Usage
 
@@ -46,5 +48,5 @@ options:
 3. har2locust also reads two files, .urlignore and .headerignore (from your current directory).
 Populate them with regexes to filter any unwanted requests or headers from your recordings. 
 Some headers are always ignored (cookie, content-length and chrome's "fake" headers)
-Here are some examples: [.urlignore](https://github.com/SvenskaSpel/locust-plugins/tree/master/locust_plugins/har2locust/.urlignore), 
-[.headerignore](https://github.com/SvenskaSpel/locust-plugins/tree/master/locust_plugins/har2locust/.headerignore)
+Here are some examples: [.urlignore](https://github.com/SvenskaSpel/har2locust/tree/master/.urlignore), 
+[.headerignore](https://github.com/SvenskaSpel/har2locust/tree/master/.headerignore)
