@@ -7,7 +7,7 @@ import subprocess
 import re
 import jinja2
 from typing import List
-from setuptools_scm import get_version
+from ._version import version
 
 
 def cli():
@@ -38,12 +38,6 @@ def cli():
             "Default to xhr,document,other."
         ),
     )
-
-    try:
-        version = get_version(root="..", relative_to=__file__, local_scheme="no-local-version")
-    except LookupError:
-        # meh. probably we are running in a github action.
-        version = "unknown"
 
     parser.add_argument(
         "--version",
