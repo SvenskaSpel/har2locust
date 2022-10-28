@@ -40,11 +40,15 @@ def test_rendering_syntax_error():
         AssertionError,
         match="Black failed to format the output - perhaps your template is broken?",
     ):
-        rendering(
-            preprocessing(har),
-            template_dir=pathlib.Path(__file__).parents[0],
-            template_name="broken_template.jinja2",
-        )
+        rendering(preprocessing(har), template_name="tests/broken_template.jinja2")
+
+
+def test_rendering_syntax_error():
+    with pytest.raises(
+        Exception,
+        match="Template this_doesnt_exist.jinja2 does not exist, neither in current directory nor as built in",
+    ):
+        rendering(preprocessing(har), template_name="this_doesnt_exist.jinja2")
 
 
 # writing py file in tests/output for manual inspection

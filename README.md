@@ -38,7 +38,7 @@ positional arguments:
 options:
   -h, --help            show this help message and exit
   -t TEMPLATE, --template TEMPLATE
-                        jinja2 template used to generate locustfile. Default to locust.
+                        jinja2 template used to generate locustfile. Default to locust.jinja2
   -f FILTERS, --filters FILTERS
                         commas value separeted string of the resource type you want to include in py generated code. Supported type are `xhr`, `script`, `stylesheet`, `image`, `font`, `document`, `other`. Default to xhr,document,other.
   --version, -V         show program's version number and exit

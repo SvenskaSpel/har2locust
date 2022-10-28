@@ -21,9 +21,11 @@ def cli():
         "-t",
         "--template",
         action="store",
-        default="locust",
+        default="locust.jinja2",
         type=str,
-        help=("jinja2 template used to generate locustfile. " "Default to locust. "),
+        help=(
+            "jinja2 template used to generate locustfile. Default to locust.jinja2. Will check current directory/absolute paths first and har2locust built-ins second"
+        ),
     )
     parser.add_argument(
         "-f",
@@ -38,26 +40,31 @@ def cli():
             "Default to xhr,document,other."
         ),
     )
-
     parser.add_argument(
         "--version",
         "-V",
         action="version",
         version=f"%(prog)s {version}",
     )
+    parser.add_argument(
+        "--loglevel",
+        "-L",
+        default="INFO",
+    )
     args = parser.parse_args()
+
+    logging.basicConfig(level=args.loglevel.upper())
 
     main(
         args.input,
         resource_type=args.filters.split(","),
-        template_name=args.template + ".jinja2",
+        template_name=args.template,
     )
 
 
 def main(
     har_file: str,
     resource_type=["xhr", "document", "other"],
-    template_dir=pathlib.Path(__file__).parents[0],
     template_name="locust.jinja2",
 ):
     """Load .har file and produce .py
@@ -68,8 +75,6 @@ def main(
             generated code. Supported type are `xhr`, `script`, `stylesheet`,
             `image`, `font`, `document`, `other`.
             Default to ['xhr', 'document', 'other'].
-        template_dir (str): path where are store the jinja2 template.
-            Default to `pathlib.Path(__file__).parents[0]`.
         template_name (str): name of the jinja2 template used by rendering.
             Default to 'locust.jinja2'.
     """
@@ -103,7 +108,7 @@ def main(
         url_filters=url_filters,
         header_filters=header_filters,
     )
-    py = rendering(har, template_dir=template_dir, template_name=template_name)
+    py = rendering(har, template_name=template_name)
 
     print(py)
 
@@ -188,7 +193,7 @@ def preprocessing(
         raise NotImplementedError(f"{unsupported} resource types are not supported")
 
     har_version = har["log"]["version"]
-    logging.debug(f'log version is "{har_version}"')
+    logging.debug(f'har log version is "{har_version}"')
     if har_version != "1.2":
         logging.warning(f"Untested har version {har_version}")
 
@@ -274,15 +279,12 @@ def preprocessing(
 
 def rendering(
     har: dict,
-    template_dir: str = str(pathlib.Path(__file__).parents[0]),
     template_name: str = "locust.jinja2",
 ):
     """Generate valid python code from preprocessed har using jinja2 template.
 
     Args:
         har (dict): preprocessed har dict
-        template_dir (str): path where are store the jinja2 template.
-            Default to `pathlib.Path(__file__).parents[0]`.
         template_name (str): name of the jinja2 template used by rendering.
             Default to 'locust.jinja2'.
 
@@ -293,9 +295,23 @@ def rendering(
     if set(har) != {"session", "requests", "responses", "resources_types"}:
         raise ValueError("har dict has wrong format. Must be first preprocessed with preprocessing(har).")
 
+    logging.debug(f'template name "{template_name}"')
+    if pathlib.Path(template_name).exists():
+        template_path = pathlib.Path(template_name)
+    else:
+        template_path = pathlib.Path(__file__).parents[0].joinpath(pathlib.Path(template_name))
+        if not template_path.exists():
+            raise Exception(f"Template {template_name} does not exist, neither in current directory nor as built in")
+
+    # print(template_filename)
+    # import os
+    # os._exit(1)
+    template_dir = template_path.parents[0]
+    logging.debug(f"template_dir {template_dir}")
     env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
-    template = env.get_template(template_name)
-    logging.debug(f'render har with "{template.name}" template')
+    template = env.get_template(template_path.name)
+
+    logging.debug(f'render har with "{template_name}" template')
 
     py = template.render(
         session=har["session"],
