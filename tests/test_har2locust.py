@@ -67,3 +67,16 @@ def test_main(har_file, py_file):
     stdout, stderr = proc.communicate()
     assert proc.returncode == 0, f"Bad return code {proc.returncode}, stderr: {stderr}"
     assert stdout.strip() == expected_output.strip()
+
+
+def test_locust_run():
+    proc = subprocess.Popen(
+        ["locust", "-f", "tests/outputs/reqres.in.py", "-i", "1", "--headless"],
+        stderr=subprocess.PIPE,
+        text=True,
+        encoding="utf-8",
+        cwd=os.path.join(os.path.dirname(__file__), "../"),
+    )
+    _, stderr = proc.communicate()
+    assert proc.returncode == 0, f"Bad return code {proc.returncode}, stderr: {stderr}"
+    assert "Iteration limit reached" in stderr, stderr
