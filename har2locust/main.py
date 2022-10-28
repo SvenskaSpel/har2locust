@@ -111,8 +111,8 @@ def main(
 def preprocessing(
     har: dict,
     resource_type=["xhr", "document", "other"],
-    url_filters: List[re.Pattern] = [],
-    header_filters: List[re.Pattern] = [],
+    url_filters: List[str] = [],
+    header_filters: List[str] = [],
 ) -> dict:
     """Scan the har dict for common headers and cookies and group them into
     session headers and session cookies.
@@ -274,7 +274,7 @@ def preprocessing(
 
 def rendering(
     har: dict,
-    template_dir: str = pathlib.Path(__file__).parents[0],
+    template_dir: str = str(pathlib.Path(__file__).parents[0]),
     template_name: str = "locust.jinja2",
 ):
     """Generate valid python code from preprocessed har using jinja2 template.
