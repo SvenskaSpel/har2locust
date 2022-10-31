@@ -11,7 +11,9 @@
             "program": "/usr/local/bin/har2locust",
             "console": "integratedTerminal",
             "args": [
-                "tests/inputs/login.har",
+                "tests/inputs/reqres.in.har",
+                "-L",
+                "DEBUG"
             ],
             "env": {
                 "LC_ALL": "en_US.UTF-8"
