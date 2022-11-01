@@ -31,7 +31,7 @@ data in HAR file. Here is an example with Chrome Devs Tools
 ```
 
 > har2locust --help
-usage: har2locust [-h] [-t TEMPLATE] [-p [PLUGINS ...]] [-f FILTERS] [--version] [--loglevel LOGLEVEL] input
+usage: har2locust [-h] [-t TEMPLATE] [-p PLUGINS] [-f FILTERS] [--version] [--loglevel LOGLEVEL] input
 
 positional arguments:
   input                 har input file
@@ -40,18 +40,23 @@ options:
   -h, --help            show this help message and exit
   -t TEMPLATE, --template TEMPLATE
                         jinja2 template used to generate locustfile. Default to locust.jinja2. Will check current
-                        directory/absolute paths first and har2locust built-ins second
-  -p [PLUGINS ...], --plugins [PLUGINS ...]
-                        Plugin class(es) to apply
+                        directory/relative paths first and har2locust built-ins second
+  -p PLUGINS, --plugins PLUGINS
+                        Comma separated list of extra python files to source, containing a method decorated with
+                        @ProcessEntries for processing har-entries before generating the locustfile
   -f FILTERS, --filters FILTERS
-                        commas value separeted string of the resource type you want to include in py generated code.
-                        Supported type are `xhr`, `script`, `stylesheet`, `image`, `font`, `document`, `other`.
-                        Default to xhr,document,other.
+                        Commas separated list of resource types to be included in the locustfile. Supported type are
+                        `xhr`, `script`, `stylesheet`, `image`, `font`, `document`, `other`. Default to
+                        xhr,document,other.
   --version, -V         show program's version number and exit
   --loglevel LOGLEVEL, -L LOGLEVEL
+
+Example usage: har2locust myrecording.har --plugins myplugin1.py > locustfile.py
 ```
 
-3. har2locust also reads two files, .urlignore and .headerignore (from your current directory).
+3. You can define "plugins" to process your input using the ProcessEntries decorator. The [rest.py](https://github.com/SvenskaSpel/har2locust/tree/master/har2locust/rest.py) plugin is used by default, and serves as an example for how to make your own.
+
+4. har2locust also reads two files, .urlignore and .headerignore (from your current directory).
 Populate them with regexes to filter any unwanted requests or headers from your recordings. 
 Some headers are always ignored (cookie, content-length and chrome's "fake" headers)
 Here are some examples: [.urlignore](https://github.com/SvenskaSpel/har2locust/tree/master/.urlignore), 
