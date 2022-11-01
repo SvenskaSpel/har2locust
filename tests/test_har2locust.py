@@ -84,9 +84,9 @@ def test_plugins(har_file, py_file):
         cwd=os.path.join(os.path.dirname(__file__), "../"),
     )
     stdout, stderr = proc.communicate()
-    assert "hello" in stderr, stderr
-    assert stdout.strip() == expected_output.strip()
     assert proc.returncode == 0, f"Bad return code {proc.returncode}, stderr: {stderr}"
+    assert stdout.strip() == expected_output.strip()
+    assert "hello" in stderr, stderr
 
 
 def test_locust_run():
