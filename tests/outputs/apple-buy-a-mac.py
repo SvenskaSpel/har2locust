@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
-from locust import FastHttpUser, task, run_single_user, events
+from locust import task, run_single_user, events
 from locust_plugins.listeners import RescheduleTaskOnFail
+from locust_plugins.users import RestUser
 
 
-class MyUser(FastHttpUser):
-    host = "https://nowhere"
+class MyUser(RestUser):
+    host = "https://secure2.store.apple.com/"
 
     @task
     def t(self):
         self.client.get(
-            "https://secure2.store.apple.com/shop/sign_in?c=aHR0cHM6Ly93d3cuYXBwbGUuY29tL3Nob3AvYmFnfDFhb3NjY2QxZjg4ZGZjYjY4YWRhNWZmMmY5ZTY5YWMzNjE0OTYyMjZlOWMz&o=O01HTjYz&r=SXYD4UDAPXU7P7KXF&s=aHR0cHM6Ly9zZWN1cmUyLnN0b3JlLmFwcGxlLmNvbS9zaG9wL2NoZWNrb3V0L3N0YXJ0P3BsdG49QTZGNDNFMER8MWFvczg4MjgzMjY3MzJkNWEzNjIxMTQxMDE0ZTU4NmZiNTY5MjEzZGEyY2M&t=SXYD4UDAPXU7P7KXF&up=t",
+            "shop/sign_in?c=aHR0cHM6Ly93d3cuYXBwbGUuY29tL3Nob3AvYmFnfDFhb3NjY2QxZjg4ZGZjYjY4YWRhNWZmMmY5ZTY5YWMzNjE0OTYyMjZlOWMz&o=O01HTjYz&r=SXYD4UDAPXU7P7KXF&s=aHR0cHM6Ly9zZWN1cmUyLnN0b3JlLmFwcGxlLmNvbS9zaG9wL2NoZWNrb3V0L3N0YXJ0P3BsdG49QTZGNDNFMER8MWFvczg4MjgzMjY3MzJkNWEzNjIxMTQxMDE0ZTU4NmZiNTY5MjEzZGEyY2M&t=SXYD4UDAPXU7P7KXF&up=t",
             headers={
                 "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
                 "Accept-Encoding": "gzip, deflate, br",
@@ -178,7 +179,8 @@ class MyUser(FastHttpUser):
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
         )
-        self.client.get(
+        with self.rest(
+            "get",
             "https://www.apple.com/ac/localeswitcher/3/it_IT/content/localeswitcher.json",
             headers={
                 "accept": "*/*",
@@ -188,8 +190,10 @@ class MyUser(FastHttpUser):
                 "pragma": "no-cache",
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/search-services/suggestions/defaultlinks/?src=globalnav&locale=en_US",
             headers={
                 "accept": "*/*",
@@ -199,7 +203,8 @@ class MyUser(FastHttpUser):
                 "pragma": "no-cache",
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
-        )
+        ) as resp:
+            pass
         self.client.get(
             "https://www.apple.com/favicon.ico",
             headers={
@@ -211,7 +216,8 @@ class MyUser(FastHttpUser):
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
         )
-        self.client.get(
+        with self.rest(
+            "get",
             "https://www.apple.com/ac/localeswitcher/3/it_IT/content/localeswitcher.json",
             headers={
                 "accept": "*/*",
@@ -221,8 +227,10 @@ class MyUser(FastHttpUser):
                 "pragma": "no-cache",
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/search-services/suggestions/defaultlinks/?src=globalnav&locale=en_US",
             headers={
                 "accept": "*/*",
@@ -232,8 +240,10 @@ class MyUser(FastHttpUser):
                 "pragma": "no-cache",
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/us/shop/mcm/product-price?parts=MACBOOKAIR_M1,MBP2020_13_M1,MACMINI_M1,MBP2019_16",
             headers={
                 "accept": "*/*",
@@ -243,7 +253,8 @@ class MyUser(FastHttpUser):
                 "pragma": "no-cache",
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
-        )
+        ) as resp:
+            pass
         self.client.get(
             "https://www.apple.com/favicon.ico",
             headers={
@@ -255,7 +266,8 @@ class MyUser(FastHttpUser):
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
         )
-        self.client.get(
+        with self.rest(
+            "get",
             "https://www.apple.com/ac/localeswitcher/3/it_IT/content/localeswitcher.json",
             headers={
                 "accept": "*/*",
@@ -265,8 +277,10 @@ class MyUser(FastHttpUser):
                 "pragma": "no-cache",
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/search-services/suggestions/defaultlinks/?src=globalnav&locale=en_US",
             headers={
                 "accept": "*/*",
@@ -276,8 +290,10 @@ class MyUser(FastHttpUser):
                 "pragma": "no-cache",
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/us/shop/mcm/product-price?parts=MACBOOKAIR_M1,MBP2020_13_M1,MBP2019_16",
             headers={
                 "accept": "*/*",
@@ -287,8 +303,10 @@ class MyUser(FastHttpUser):
                 "pragma": "no-cache",
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/us/shop/mcm/tradein-credit?ids=6822",
             headers={
                 "accept": "*/*",
@@ -298,7 +316,8 @@ class MyUser(FastHttpUser):
                 "pragma": "no-cache",
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
-        )
+        ) as resp:
+            pass
         self.client.get(
             "https://www.apple.com/favicon.ico",
             headers={
@@ -310,7 +329,8 @@ class MyUser(FastHttpUser):
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
         )
-        self.client.get(
+        with self.rest(
+            "get",
             "https://www.apple.com/shop/bag/status?apikey=SJHJUH4YFCTTPD4F4",
             headers={
                 "accept": "*/*",
@@ -320,8 +340,10 @@ class MyUser(FastHttpUser):
                 "pragma": "no-cache",
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/shop/delivery-message?parts.0=MGN63LL%2FA&parts.1=MGND3LL%2FA&parts.2=MGN93LL%2FA&mt=regular&_=1606564751169",
             headers={
                 "accept": "*/*",
@@ -332,8 +354,10 @@ class MyUser(FastHttpUser):
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
                 "x-requested-with": "XMLHttpRequest",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/shop/delivery-message?parts.0=MGN73LL%2FA&parts.1=MGNE3LL%2FA&parts.2=MGNA3LL%2FA&mt=regular&_=1606564751170",
             headers={
                 "accept": "*/*",
@@ -344,8 +368,10 @@ class MyUser(FastHttpUser):
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
                 "x-requested-with": "XMLHttpRequest",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/shop/retail/pickup-message?parts.0=MGN63LL%2FA&parts.1=MGND3LL%2FA&parts.2=MGN93LL%2FA",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
@@ -356,8 +382,10 @@ class MyUser(FastHttpUser):
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
                 "x-requested-with": "XMLHttpRequest",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/shop/retail/pickup-message?parts.0=MGN73LL%2FA&parts.1=MGNE3LL%2FA&parts.2=MGNA3LL%2FA",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
@@ -368,8 +396,10 @@ class MyUser(FastHttpUser):
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
                 "x-requested-with": "XMLHttpRequest",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/shop/updateFinanceSummary?node=home/shop_mac/family/macbook_air&parts.0=MGN63LL%2FA&parts.1=MGND3LL%2FA&parts.2=MGN93LL%2FA&parts.3=MGN73LL%2FA&parts.4=MGNE3LL%2FA&parts.5=MGNA3LL%2FA&tia=&bfil=2",
             headers={
                 "accept": "*/*",
@@ -380,7 +410,8 @@ class MyUser(FastHttpUser):
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
                 "x-requested-with": "XMLHttpRequest",
             },
-        )
+        ) as resp:
+            pass
         self.client.post(
             "https://securemetrics.apple.com/b/ss/applestoreww,appleglobal/1/JS-2.17.0/s55089049129067?AQB=1&ndh=1&pf=1&t=28%2F10%2F2020%2012%3A59%3A13%206%20-60&fid=0EE10F1DE7BC5EFE-229AB97ADA08D75A&ce=UTF-8&pageName=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fselect&g=https%3A%2F%2Fwww.apple.com%2Fshop%2Fbuy-mac%2Fmacbook-air&r=https%3A%2F%2Fwww.apple.com%2Fmacbook-air%2F&cc=USD&server=as-13.5.0&events=event210%3D1.07%2Cevent246&v3=AOS%3A%20US%20Consumer&c4=D%3Dg&v4=D%3DpageName&c5=macintel&c8=AOS%3A%20Mac&c14=macbook%20air%20-%20overview%20%28us%29&v14=en-us&c19=AOS%3A%20US%20Consumer%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fselect&v19=D%3Dc19&c20=AOS%3A%20US%20Consumer&v35=web%20apply%7Cdenied%7Cpre%3Anot%20safari&c40=10078&v49=D%3Dr&v54=D%3Dg&v94=1.07&v97=s.tl-o&pe=lnk_o&pev2=Step%201&s=1920x1080&c=24&j=1.6&v=N&k=Y&bw=1420&bh=630&lrt=724&AQE=1",
             headers={
@@ -389,7 +420,8 @@ class MyUser(FastHttpUser):
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
         )
-        self.client.get(
+        with self.rest(
+            "get",
             "https://www.apple.com/search-services/suggestions/defaultlinks/?src=globalnav&locale=en_US",
             headers={
                 "accept": "*/*",
@@ -399,7 +431,8 @@ class MyUser(FastHttpUser):
                 "pragma": "no-cache",
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
-        )
+        ) as resp:
+            pass
         self.client.post(
             "https://securemetrics.apple.com/b/ss/applestoreww,appleglobal/1/JS-2.17.0/s57395114027206?AQB=1&ndh=1&pf=1&t=28%2F10%2F2020%2012%3A59%3A13%206%20-60&fid=0EE10F1DE7BC5EFE-229AB97ADA08D75A&ce=UTF-8&pageName=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fselect&g=https%3A%2F%2Fwww.apple.com%2Fshop%2Fbuy-mac%2Fmacbook-air&r=https%3A%2F%2Fwww.apple.com%2Fmacbook-air%2F&cc=USD&server=as-13.5.0&events=event33%2Cevent210%3D1.39%2Cevent246&v3=AOS%3A%20US%20Consumer&c4=D%3Dg&v4=D%3DpageName&c5=macintel&c8=AOS%3A%20Mac&c14=macbook%20air%20-%20overview%20%28us%29&v14=en-us&c19=AOS%3A%20US%20Consumer%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fselect&v19=D%3Dc19&c20=AOS%3A%20US%20Consumer&c37=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fselect%7Ccold%20start&c40=10078&v49=D%3Dr&v54=D%3Dg&v94=1.39&v97=s.tl-o&pe=lnk_o&pev2=Cold&s=1920x1080&c=24&j=1.6&v=N&k=Y&bw=1420&bh=630&lrt=1&AQE=1",
             headers={
@@ -417,24 +450,6 @@ class MyUser(FastHttpUser):
                 "cache-control": "no-cache",
                 "pragma": "no-cache",
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
-            },
-        )
-        self.client.get(
-            "https://store.storeimages.cdn-apple.com/4982/store.apple.com/shop/rs-external/rel/external.js",
-            headers={
-                "Accept": "*/*",
-                "Accept-Encoding": "gzip, deflate, br",
-                "Accept-Language": "en-US,en;q=0.9",
-                "Cache-Control": "no-cache",
-                "Connection": "keep-alive",
-                "Host": "store.storeimages.cdn-apple.com",
-                "Origin": "https://www.apple.com",
-                "Pragma": "no-cache",
-                "Referer": "https://www.apple.com/",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "cross-site",
-                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
         )
         self.client.options(
@@ -465,7 +480,8 @@ class MyUser(FastHttpUser):
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
         )
-        self.client.get(
+        with self.rest(
+            "get",
             "https://www.apple.com/shop/delivery-message?parts.0=MGN63LL%2FA&option.0=065-C99M%2C065-C99Q%2C065-C9DG%2C065-C171%2C065-C172&mt=regular&_=1606564760188",
             headers={
                 "accept": "*/*",
@@ -476,7 +492,8 @@ class MyUser(FastHttpUser):
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
                 "x-requested-with": "XMLHttpRequest",
             },
-        )
+        ) as resp:
+            pass
         self.client.post(
             "https://securemetrics.apple.com/b/ss/applestoreww,appleglobal/1/JS-2.17.0/s54378695892321?AQB=1&ndh=1&pf=1&t=28%2F10%2F2020%2012%3A59%3A21%206%20-60&fid=0EE10F1DE7BC5EFE-229AB97ADA08D75A&ce=UTF-8&pageName=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fconfig&g=https%3A%2F%2Fwww.apple.com%2Fshop%2Fbuy-mac%2Fmacbook-air%2Fspace-gray-apple-m1-chip-with-8%25E2%2580%2591core-cpu-and-7%25E2%2580%2591core-gpu-256gb%23&r=https%3A%2F%2Fwww.apple.com%2Fshop%2Fbuy-mac%2Fmacbook-air&cc=USD&server=as-13.5.0&events=event210%3D0.96%2Cevent246&v3=AOS%3A%20US%20Consumer&c4=D%3Dg&v4=D%3DpageName&c5=macintel&c8=AOS%3A%20Mac&c14=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fselect&v14=en-us&c19=AOS%3A%20US%20Consumer%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fconfig&v19=D%3Dc19&c20=AOS%3A%20US%20Consumer&v35=web%20apply%7Cdenied%7Cpre%3Anot%20safari&c40=10078&v49=D%3Dr&v54=D%3Dg&v94=0.96&v97=s.tl-o&pe=lnk_o&pev2=Step%201&s=1920x1080&c=24&j=1.6&v=N&k=Y&bw=1420&bh=630&lrt=598&AQE=1",
             headers={
@@ -485,7 +502,8 @@ class MyUser(FastHttpUser):
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
         )
-        self.client.get(
+        with self.rest(
+            "get",
             "https://www.apple.com/search-services/suggestions/defaultlinks/?src=globalnav&locale=en_US",
             headers={
                 "accept": "*/*",
@@ -495,8 +513,10 @@ class MyUser(FastHttpUser):
                 "pragma": "no-cache",
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/shop/retail/pickup-message?parts.0=MGN63LL%2FA&option.0=065-C99M%2C065-C99Q%2C065-C9DG%2C065-C171%2C065-C172",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
@@ -507,8 +527,10 @@ class MyUser(FastHttpUser):
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
                 "x-requested-with": "XMLHttpRequest",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/shop/configUpdate/MGN63LL/A?node=home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fconfig&option.memory__dummy_z124=065-C99M&option.hard_drivesolid_state_drive__dummy_z124=065-C99Q&option.keyboard_and_documentation_z124=065-C9DG&option.sw_final_cut_pro_x_z124=065-C171&option.sw_logic_pro_x_z124=065-C172&product=MGN63LL%2FA&step=config&bfil=2",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
@@ -519,7 +541,8 @@ class MyUser(FastHttpUser):
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
                 "x-requested-with": "XMLHttpRequest",
             },
-        )
+        ) as resp:
+            pass
         self.client.post(
             "https://securemetrics.apple.com/b/ss/applestoreww,appleglobal/1/JS-2.17.0/s5719408662668?AQB=1&ndh=1&pf=1&t=28%2F10%2F2020%2012%3A59%3A22%206%20-60&fid=0EE10F1DE7BC5EFE-229AB97ADA08D75A&ce=UTF-8&pageName=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fconfig&g=https%3A%2F%2Fwww.apple.com%2Fshop%2Fbuy-mac%2Fmacbook-air%2Fspace-gray-apple-m1-chip-with-8%25E2%2580%2591core-cpu-and-7%25E2%2580%2591core-gpu-256gb%23&r=https%3A%2F%2Fwww.apple.com%2Fshop%2Fbuy-mac%2Fmacbook-air&cc=USD&server=as-13.5.0&events=event33%2Cevent210%3D1.33%2Cevent246&v3=AOS%3A%20US%20Consumer&c4=D%3Dg&v4=D%3DpageName&c5=macintel&c8=AOS%3A%20Mac&c14=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fselect&v14=en-us&c19=AOS%3A%20US%20Consumer%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fconfig&v19=D%3Dc19&c20=AOS%3A%20US%20Consumer&c37=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fconfig%7Ccold%20start&c40=10078&v49=D%3Dr&v54=D%3Dg&v94=1.33&v97=s.tl-o&pe=lnk_o&pev2=Cold&s=1920x1080&c=24&j=1.6&v=N&k=Y&bw=1420&bh=630&lrt=1&AQE=1",
             headers={
@@ -528,7 +551,8 @@ class MyUser(FastHttpUser):
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
         )
-        self.client.get(
+        with self.rest(
+            "get",
             "https://www.apple.com/shop/delivery-message?parts.0=MGN63LL%2FA&option.0=065-C99J%2C065-C99M%2C065-C99Q%2C065-C9CL%2C065-C9DG%2C065-C9CK%2C065-C9CH%2C065-C9CJ%2C065-C171%2C065-C172&mt=regular&_=1606564760189",
             headers={
                 "accept": "*/*",
@@ -539,8 +563,10 @@ class MyUser(FastHttpUser):
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
                 "x-requested-with": "XMLHttpRequest",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/shop/retail/pickup-message?parts.0=MGN63LL%2FA&option.0=065-C99J%2C065-C99M%2C065-C99Q%2C065-C9CL%2C065-C9DG%2C065-C9CK%2C065-C9CH%2C065-C9CJ%2C065-C171%2C065-C172",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
@@ -551,7 +577,8 @@ class MyUser(FastHttpUser):
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
                 "x-requested-with": "XMLHttpRequest",
             },
-        )
+        ) as resp:
+            pass
         self.client.get(
             "https://www.apple.com/favicon.ico",
             headers={
@@ -561,24 +588,6 @@ class MyUser(FastHttpUser):
                 "cache-control": "no-cache",
                 "pragma": "no-cache",
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
-            },
-        )
-        self.client.get(
-            "https://store.storeimages.cdn-apple.com/4982/store.apple.com/shop/rs-external/rel/external.js",
-            headers={
-                "Accept": "*/*",
-                "Accept-Encoding": "gzip, deflate, br",
-                "Accept-Language": "en-US,en;q=0.9",
-                "Cache-Control": "no-cache",
-                "Connection": "keep-alive",
-                "Host": "store.storeimages.cdn-apple.com",
-                "Origin": "https://www.apple.com",
-                "Pragma": "no-cache",
-                "Referer": "https://www.apple.com/",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "cross-site",
-                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
         )
         self.client.options(
@@ -609,7 +618,8 @@ class MyUser(FastHttpUser):
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
         )
-        self.client.get(
+        with self.rest(
+            "get",
             "https://www.apple.com/shop/bag/status?apikey=SJHJUH4YFCTTPD4F4",
             headers={
                 "accept": "*/*",
@@ -619,8 +629,10 @@ class MyUser(FastHttpUser):
                 "pragma": "no-cache",
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/shop/buyFlowAttachConfigProductSummary/MGN63LL/A?node=home/shop_mac/family/macbook_air&step=attach&bfil=2&product=MGN63LL%2FA&step=attach&option.sw_logic_pro_x_z124=065-C172&option.keyboard_and_documentation_z124=065-C9DG&option.memory__dummy_z124=065-C99M&complete=true&option.hard_drivesolid_state_drive__dummy_z124=065-C99Q&option.sw_final_cut_pro_x_z124=065-C171&proceed=proceed",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
@@ -631,8 +643,10 @@ class MyUser(FastHttpUser):
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
                 "x-requested-with": "XMLHttpRequest",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/shop/delivery-message?parts.0=S6124LL%2FA&parts.1=MJ1M2AM%2FA&parts.2=MX0K2AM%2FA&mt=compact&_=1606564765355",
             headers={
                 "accept": "*/*",
@@ -643,8 +657,10 @@ class MyUser(FastHttpUser):
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
                 "x-requested-with": "XMLHttpRequest",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/shop/delivery-message?parts.0=MLA02LL%2FA&parts.1=MUF82AM%2FA&parts.2=MRQM2ZM%2FA&mt=compact&_=1606564765356",
             headers={
                 "accept": "*/*",
@@ -655,8 +671,10 @@ class MyUser(FastHttpUser):
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
                 "x-requested-with": "XMLHttpRequest",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/shop/delivery-message?parts.0=MUFG2AM%2FA&parts.1=MQ4H2AM%2FA&parts.2=MWP22AM%2FA&mt=compact&_=1606564765357",
             headers={
                 "accept": "*/*",
@@ -667,8 +685,10 @@ class MyUser(FastHttpUser):
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
                 "x-requested-with": "XMLHttpRequest",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/shop/delivery-message?parts.0=MV7N2AM%2FA&parts.1=MRXJ2AM%2FA&parts.2=MMEL2AM%2FA&mt=compact&_=1606564765358",
             headers={
                 "accept": "*/*",
@@ -679,8 +699,10 @@ class MyUser(FastHttpUser):
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
                 "x-requested-with": "XMLHttpRequest",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/shop/delivery-message?parts.0=HMUA2VC%2FA&parts.1=HMUB2LL%2FA&parts.2=MK122LL%2FA&mt=compact&_=1606564765359",
             headers={
                 "accept": "*/*",
@@ -691,8 +713,10 @@ class MyUser(FastHttpUser):
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
                 "x-requested-with": "XMLHttpRequest",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/shop/delivery-message?parts.0=HMU22ZM%2FA&parts.1=HPA02ZM%2FA&mt=compact&_=1606564765360",
             headers={
                 "accept": "*/*",
@@ -703,8 +727,10 @@ class MyUser(FastHttpUser):
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
                 "x-requested-with": "XMLHttpRequest",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/shop/retail/pickup-message?parts.0=S6124LL%2FA&parts.1=MJ1M2AM%2FA&parts.2=MX0K2AM%2FA&little=true",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
@@ -715,8 +741,10 @@ class MyUser(FastHttpUser):
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
                 "x-requested-with": "XMLHttpRequest",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/shop/retail/pickup-message?parts.0=MLA02LL%2FA&parts.1=MUF82AM%2FA&parts.2=MRQM2ZM%2FA&little=true",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
@@ -727,8 +755,10 @@ class MyUser(FastHttpUser):
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
                 "x-requested-with": "XMLHttpRequest",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/shop/retail/pickup-message?parts.0=MUFG2AM%2FA&parts.1=MQ4H2AM%2FA&parts.2=MWP22AM%2FA&little=true",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
@@ -739,8 +769,10 @@ class MyUser(FastHttpUser):
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
                 "x-requested-with": "XMLHttpRequest",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/shop/retail/pickup-message?parts.0=MV7N2AM%2FA&parts.1=MRXJ2AM%2FA&parts.2=MMEL2AM%2FA&little=true",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
@@ -751,8 +783,10 @@ class MyUser(FastHttpUser):
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
                 "x-requested-with": "XMLHttpRequest",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/shop/retail/pickup-message?parts.0=HMUA2VC%2FA&parts.1=HMUB2LL%2FA&parts.2=MK122LL%2FA&little=true",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
@@ -763,8 +797,10 @@ class MyUser(FastHttpUser):
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
                 "x-requested-with": "XMLHttpRequest",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/shop/retail/pickup-message?parts.0=HMU22ZM%2FA&parts.1=HPA02ZM%2FA&little=true",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
@@ -775,8 +811,10 @@ class MyUser(FastHttpUser):
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
                 "x-requested-with": "XMLHttpRequest",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/search-services/suggestions/defaultlinks/?src=globalnav&locale=en_US",
             headers={
                 "accept": "*/*",
@@ -786,7 +824,8 @@ class MyUser(FastHttpUser):
                 "pragma": "no-cache",
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
-        )
+        ) as resp:
+            pass
         self.client.post(
             "https://securemetrics.apple.com/b/ss/applestoreww,appleglobal/1/JS-2.17.0/s52456596436101?AQB=1&ndh=1&pf=1&t=28%2F10%2F2020%2012%3A59%3A28%206%20-60&fid=0EE10F1DE7BC5EFE-229AB97ADA08D75A&ce=UTF-8&pageName=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fattach&g=https%3A%2F%2Fwww.apple.com%2Fshop%2Fbuy-mac%2Fmacbook-air%3Fbfil%3D2%26product%3DMGN63LL%2FA%26step%3Dattach&r=https%3A%2F%2Fwww.apple.com%2Fshop%2Fbuy-mac%2Fmacbook-air%2Fspace-gray-apple-m1-chip-with-8%25E2%2580%2591core-cpu-and-7%25E2%2580%2591core-gpu-256gb&cc=USD&server=as-13.5.0&events=event33%2Cevent210%3D2.88%2Cevent246&v3=AOS%3A%20US%20Consumer&c4=D%3Dg&v4=D%3DpageName&c5=macintel&c8=AOS%3A%20Mac&c14=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fconfig&v14=en-us&c19=AOS%3A%20US%20Consumer%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fattach&v19=D%3Dc19&c20=AOS%3A%20US%20Consumer&c37=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fattach%7Ccold%20start&c40=10078&v49=D%3Dr&v54=D%3Dg&v94=2.88&v97=s.tl-o&pe=lnk_o&pev2=Cold&s=1920x1080&c=24&j=1.6&v=N&k=Y&bw=1420&bh=630&lrt=2503&AQE=1",
             headers={
@@ -804,24 +843,6 @@ class MyUser(FastHttpUser):
                 "cache-control": "no-cache",
                 "pragma": "no-cache",
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
-            },
-        )
-        self.client.get(
-            "https://store.storeimages.cdn-apple.com/4982/store.apple.com/shop/rs-external/rel/external.js",
-            headers={
-                "Accept": "*/*",
-                "Accept-Encoding": "gzip, deflate, br",
-                "Accept-Language": "en-US,en;q=0.9",
-                "Cache-Control": "no-cache",
-                "Connection": "keep-alive",
-                "Host": "store.storeimages.cdn-apple.com",
-                "Origin": "https://www.apple.com",
-                "Pragma": "no-cache",
-                "Referer": "https://www.apple.com/",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "cross-site",
-                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
         )
         self.client.options(
@@ -844,7 +865,8 @@ class MyUser(FastHttpUser):
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
         )
-        self.client.get(
+        with self.rest(
+            "get",
             "https://www.apple.com/shop/bag/status?apikey=SJHJUH4YFCTTPD4F4",
             headers={
                 "accept": "*/*",
@@ -854,15 +876,16 @@ class MyUser(FastHttpUser):
                 "pragma": "no-cache",
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
-        )
-        self.client.post(
+        ) as resp:
+            pass
+        with self.rest(
+            "post",
             "https://www.apple.com/shop/recommendedForYou-full?partsInCart.0=MGN63LL/A&inline=true&recentAddedPart=MGN63LL/A",
             headers={
                 "accept": "*/*",
                 "accept-encoding": "gzip, deflate, br",
                 "accept-language": "en-US,en;q=0.9",
                 "cache-control": "no-cache",
-                "content-type": "application/x-www-form-urlencoded",
                 "modelversion": "v2",
                 "origin": "https://www.apple.com",
                 "pragma": "no-cache",
@@ -872,8 +895,10 @@ class MyUser(FastHttpUser):
                 "x-aos-stk": "9b49e9bc",
                 "x-requested-with": "XMLHttpRequest",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/search-services/suggestions/defaultlinks/?src=globalnav&locale=en_US",
             headers={
                 "accept": "*/*",
@@ -883,7 +908,8 @@ class MyUser(FastHttpUser):
                 "pragma": "no-cache",
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
-        )
+        ) as resp:
+            pass
         self.client.get(
             "https://www.apple.com/favicon.ico",
             headers={
@@ -893,24 +919,6 @@ class MyUser(FastHttpUser):
                 "cache-control": "no-cache",
                 "pragma": "no-cache",
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
-            },
-        )
-        self.client.get(
-            "https://store.storeimages.cdn-apple.com/4982/store.apple.com/shop/rs-external/rel/external.js",
-            headers={
-                "Accept": "*/*",
-                "Accept-Encoding": "gzip, deflate, br",
-                "Accept-Language": "en-US,en;q=0.9",
-                "Cache-Control": "no-cache",
-                "Connection": "keep-alive",
-                "Host": "store.storeimages.cdn-apple.com",
-                "Origin": "https://www.apple.com",
-                "Pragma": "no-cache",
-                "Referer": "https://www.apple.com/",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "cross-site",
-                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
         )
         self.client.options(
@@ -960,8 +968,9 @@ class MyUser(FastHttpUser):
             },
             data="shoppingCart.recommendations.recommendedItem.part=&shoppingCart.items.item-3dedbef6-e7e0-423c-a6a2-3afc452d63f7.isIntentToGift=false&shoppingCart.items.item-3dedbef6-e7e0-423c-a6a2-3afc452d63f7.itemQuantity.quantity=1&shoppingCart.summary.promoCode.promoCode=&shoppingCart.actions.fcscounter=&shoppingCart.actions.fcsdata=",
         )
-        self.client.get(
-            "https://secure2.store.apple.com/shop/bag/status?apikey=SKCXTKATUYT9JK4HD",
+        with self.rest(
+            "get",
+            "shop/bag/status?apikey=SKCXTKATUYT9JK4HD",
             headers={
                 "Accept": "*/*",
                 "Accept-Encoding": "gzip, deflate, br",
@@ -977,9 +986,10 @@ class MyUser(FastHttpUser):
                 "Sec-Fetch-Site": "same-origin",
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
-        )
+        ) as resp:
+            pass
         self.client.get(
-            "https://secure2.store.apple.com/search-services/suggestions/defaultlinks/?src=globalnav&locale=en_US",
+            "search-services/suggestions/defaultlinks/?src=globalnav&locale=en_US",
             headers={
                 "Accept": "*/*",
                 "Accept-Encoding": "gzip, deflate, br",
@@ -1012,24 +1022,6 @@ class MyUser(FastHttpUser):
                 "Sec-Fetch-Mode": "navigate",
                 "Sec-Fetch-Site": "same-site",
                 "Upgrade-Insecure-Requests": "1",
-                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
-            },
-        )
-        self.client.get(
-            "https://store.storeimages.cdn-apple.com/4982/store.apple.com/shop/rs-external/rel/external.js",
-            headers={
-                "Accept": "*/*",
-                "Accept-Encoding": "gzip, deflate, br",
-                "Accept-Language": "en-US,en;q=0.9",
-                "Cache-Control": "no-cache",
-                "Connection": "keep-alive",
-                "Host": "store.storeimages.cdn-apple.com",
-                "Origin": "https://secure2.store.apple.com",
-                "Pragma": "no-cache",
-                "Referer": "https://secure2.store.apple.com/",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "cross-site",
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
         )
@@ -1078,7 +1070,7 @@ class MyUser(FastHttpUser):
             data='{"type":"INFO","title":"AppleAuthDebug","message":"APPLE ID : Launching AppleAuth application.{"data":{"initApp":{"startTime":1400.0300000188872}},"order":["initApp"]}","iframeId":"auth-bbfc2b43-ol01-rowz-a4jz-l79n3zhj","details":"{"pageVisibilityState":"visible"}"}',
         )
         self.client.get(
-            "https://secure2.store.apple.com/favicon.ico",
+            "favicon.ico",
             headers={
                 "Accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
                 "Accept-Encoding": "gzip, deflate, br",

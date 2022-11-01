@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
-from locust import FastHttpUser, task, run_single_user, events
+from locust import task, run_single_user, events
 from locust_plugins.listeners import RescheduleTaskOnFail
+from locust_plugins.users import RestUser
 
 
-class MyUser(FastHttpUser):
-    host = "https://nowhere"
+class MyUser(RestUser):
+    host = "https://apple.com/"
 
     @task
     def t(self):
         self.client.get(
-            "https://apple.com/",
+            "",
             headers={
                 "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
                 "Accept-Encoding": "gzip, deflate, br",
@@ -45,7 +46,8 @@ class MyUser(FastHttpUser):
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
         )
-        self.client.get(
+        with self.rest(
+            "get",
             "https://www.apple.com/us/shop/bag/status?apikey=SFX9YPYY9PPXCU9KH",
             headers={
                 "accept": "*/*",
@@ -55,8 +57,10 @@ class MyUser(FastHttpUser):
                 "pragma": "no-cache",
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/ac/localeswitcher/3/it_IT/content/localeswitcher.json",
             headers={
                 "accept": "*/*",
@@ -66,8 +70,10 @@ class MyUser(FastHttpUser):
                 "pragma": "no-cache",
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
-        )
-        self.client.get(
+        ) as resp:
+            pass
+        with self.rest(
+            "get",
             "https://www.apple.com/search-services/suggestions/defaultlinks/?src=globalnav&locale=en_US",
             headers={
                 "accept": "*/*",
@@ -77,7 +83,8 @@ class MyUser(FastHttpUser):
                 "pragma": "no-cache",
                 "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
-        )
+        ) as resp:
+            pass
         self.client.get(
             "https://www.apple.com/favicon.ico",
             headers={

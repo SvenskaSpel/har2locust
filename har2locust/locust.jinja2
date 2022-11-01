@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-from locust import FastHttpUser, task, run_single_user, events
+from locust import task, run_single_user, events
 from locust_plugins.listeners import RescheduleTaskOnFail
+from locust_plugins.users import RestUser
 
-class MyUser(FastHttpUser):
-    host = "https://nowhere"
+class MyUser(RestUser):
+    host = '{{host}}'
 
     {%- if session.headers %}
     default_headers = {
@@ -16,6 +17,19 @@ class MyUser(FastHttpUser):
     @task
     def t(self):
         {% for request in requests -%}
+        {% if request.rest -%}
+        with self.rest("{{ request.method }}", "{{ request.url }}"
+        {%- if request.headers -%}, headers={
+            {%- for (key, value) in request.headers | sort %}
+            {%- if key|lower != "content-type" -%}
+            '{{ key }}': '{{ value }}',
+            {%- endif -%}    
+            {%- endfor %}}
+        {%- endif -%}
+        {%- if request.post_data -%}, json={{ request.post_data }}
+        {%- endif -%}) as resp:
+            pass
+        {%- else -%}
         self.client.{{ request.method }}("{{ request.url }}"
         {%- if request.headers -%}, headers={
             {%- for (key, value) in request.headers | sort %}
@@ -24,6 +38,7 @@ class MyUser(FastHttpUser):
         {%- endif -%}
         {%- if request.post_data -%}, data='{{ request.post_data }}'
         {%- endif -%})
+        {%- endif %}
         {% endfor %}
 
 @events.init.add_listener

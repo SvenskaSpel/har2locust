@@ -3,10 +3,14 @@ import json
 import logging
 import pathlib
 import subprocess
-
+from urllib.parse import urlsplit
 import re
 import jinja2
 from typing import List
+import sys
+import os
+import importlib
+from .plugin import ProcessEntries
 from ._version import version
 
 
@@ -14,13 +18,11 @@ def cli():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "input",
-        action="store",
         help="har input file",
     )
     parser.add_argument(
         "-t",
         "--template",
-        action="store",
         default="locust.jinja2",
         type=str,
         help=(
@@ -28,9 +30,15 @@ def cli():
         ),
     )
     parser.add_argument(
+        "-p",
+        "--plugins",
+        nargs="*",
+        default=["har2locust/rest.py"],
+        help="Plugin class(es) to apply",
+    )
+    parser.add_argument(
         "-f",
         "--filters",
-        action="store",
         default="xhr,document,other",
         type=str,
         help=(
@@ -57,6 +65,7 @@ def cli():
 
     main(
         args.input,
+        args.plugins,
         resource_type=args.filters.split(","),
         template_name=args.template,
     )
@@ -64,6 +73,7 @@ def cli():
 
 def main(
     har_file: str,
+    plugins: List[str] = [],
     resource_type=["xhr", "document", "other"],
     template_name="locust.jinja2",
 ):
@@ -84,6 +94,13 @@ def main(
     with open(har_path, encoding="utf8", errors="ignore") as f:
         har = json.load(f)
     logging.debug(f"load {har_path}")
+
+    entry_processors: List[function] = []
+    for plugin in plugins or []:
+        p = pathlib.Path(plugin)
+        sys.path.append(os.path.curdir)
+        import_path = plugin.replace("/", ".").rstrip(".py")
+        importlib.import_module(import_path)
 
     urlignore_file = pathlib.Path(".urlignore")
     url_filters = []
@@ -209,6 +226,9 @@ def preprocessing(
         for e in har["log"]["entries"]
         if e["_resourceType"] in resource_type and not any(re.search(r, e["request"]["url"]) for r in url_filters)
     ]
+
+    entries = ProcessEntries.run_plugins(entries)
+
     logging.debug(f"resource type allowed {resource_type}")
     logging.debug(f"{len(entries)} entries filter by resource_type")
 
@@ -240,16 +260,18 @@ def preprocessing(
         "headers": set.intersection(*headers_req),
         "cookies": set.intersection(*cookies_req),
     }
-
+    urlparts = urlsplit(urls[0])
+    host = f"{urlparts.scheme}://{urlparts.netloc}/"
     # requests is a list of dictionary with value specific to single requests
     requests = [
         {
-            "url": urls[i],
+            "url": urls[i].removeprefix(host),
             "method": methods[i],
             "headers": headers_req[i] - session["headers"],
             "cookies": cookies_req[i] - session["cookies"],
             # "params": params[i],
             "post_data": post_datas[i],
+            "rest": e["rest"] if "rest" in e else False,
         }
         for i, e in enumerate(entries)
     ]
@@ -265,15 +287,13 @@ def preprocessing(
         for i, e in enumerate(entries)
     ]
 
-    resources_types = [e["_resourceType"] for e in entries]
-
     logging.debug("preprocessed har dict")
 
     return {
+        "host": host,
         "session": session,
         "requests": requests,
         "responses": responses,
-        "resources_types": resources_types,
     }
 
 
@@ -292,7 +312,7 @@ def rendering(
         str: generated python code
     """
     # check for the correctness of the har structure
-    if set(har) != {"session", "requests", "responses", "resources_types"}:
+    if set(har) != {"host", "session", "requests", "responses"}:
         raise ValueError("har dict has wrong format. Must be first preprocessed with preprocessing(har).")
 
     logging.debug(f'template name "{template_name}"')
@@ -303,9 +323,6 @@ def rendering(
         if not template_path.exists():
             raise Exception(f"Template {template_name} does not exist, neither in current directory nor as built in")
 
-    # print(template_filename)
-    # import os
-    # os._exit(1)
     template_dir = template_path.parents[0]
     logging.debug(f"template_dir {template_dir}")
     env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
@@ -314,17 +331,18 @@ def rendering(
     logging.debug(f'render har with "{template_name}" template')
 
     py = template.render(
+        host=har["host"],
         session=har["session"],
         requests=har["requests"],
         responses=har["responses"],
-        resources_types=har["resources_types"],
     )
-
     p = subprocess.Popen(["black", "-q", "-"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
     assert p.stdin  # keep linter happy
     p.stdin.write(py)
     stdout, _stderr = p.communicate()
-    assert not p.returncode, "Black failed to format the output - perhaps your template is broken?"
+    assert (
+        not p.returncode
+    ), f"Black failed to format the output - perhaps your template is broken? unformatted output was: {py}"
 
     # for some reason the subprocess returns an extra newline, get rid of that
     return stdout[:-1]
