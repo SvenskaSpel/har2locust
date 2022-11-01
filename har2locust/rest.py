@@ -1,8 +1,8 @@
-from har2locust.plugin import ProcessEntries
+from har2locust.plugin import entryprocessor
 import logging
 
 
-@ProcessEntries
+@entryprocessor
 def process(entries):
     output = []
     for e in entries:

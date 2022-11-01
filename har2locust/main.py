@@ -13,7 +13,7 @@ from urllib.parse import urlsplit
 import jinja2
 
 from ._version import version
-from .plugin import ProcessEntries
+from .plugin import entryprocessor
 
 
 def cli():
@@ -170,7 +170,8 @@ def preprocessing(
         if e["_resourceType"] in resource_type and not any(re.search(r, e["request"]["url"]) for r in url_filters)
     ]
 
-    entries = ProcessEntries.run_plugins(entries)
+    for p in entryprocessor.processors:
+        entries = p(entries)
 
     logging.debug(f"{resource_type=}")
     logging.debug(f"{len(entries)} entries after filtering by resource_type")
