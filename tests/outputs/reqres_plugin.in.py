@@ -16,7 +16,8 @@ class MyUser(RestUser):
 
     @task
     def t(self):
-        self.client.post("api/users", data='{"name":"morpheus","job":"leader"}')
+        with self.rest("post", "api/users", json={"name": "morpheus", "job": "leader"}) as resp:
+            pass
 
 
 @events.init.add_listener

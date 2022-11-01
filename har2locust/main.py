@@ -32,11 +32,10 @@ def cli():
         ),
     )
     parser.add_argument(
-        "-p",
         "--plugins",
         type=str,
-        default="har2locust/rest.py",
-        help="Comma separated list of extra python files to source, containing a method decorated with @ProcessEntries for processing har-entries before generating the locustfile",
+        default="",
+        help="Comma separated list of extra python files to source, containing a method decorated with @ProcessEntries for processing har-entries before generating the locustfile.",
     )
     parser.add_argument(
         "-f",
@@ -67,7 +66,7 @@ def cli():
 
     main(
         args.input,
-        plugins=args.plugins.split(","),
+        plugins=args.plugins.split(",") if args.plugins else [],
         resource_type=args.filters.split(","),
         template_name=args.template,
     )
@@ -84,10 +83,11 @@ def main(
         har = json.load(f)
     logging.debug(f"loaded {har_path}")
 
-    for plugin in plugins or []:
+    for plugin in ["har2locust/rest.py"] + plugins:
         sys.path.append(os.path.curdir)
         import_path = plugin.replace("/", ".").rstrip(".py")
         importlib.import_module(import_path)
+
     logging.debug(f"loaded plugins {plugins}")
 
     urlignore_file = pathlib.Path(".urlignore")
