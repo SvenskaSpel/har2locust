@@ -69,6 +69,26 @@ def test_main(har_file, py_file):
     assert stdout.strip() == expected_output.strip()
 
 
+@pytest.mark.parametrize("har_file, py_file", zip(har_files, py_files))
+def test_plugins(har_file, py_file):
+    har_file = "tests/inputs/reqres.in.har"
+    py_file = "tests/outputs/reqres_plugin.in.py"
+    with open(py_file, encoding="utf-8") as f:
+        expected_output = f.read()
+    proc = subprocess.Popen(
+        ["har2locust", har_file, "--plugins", "tests/plugin_example.py"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        encoding="utf-8",
+        cwd=os.path.join(os.path.dirname(__file__), "../"),
+    )
+    stdout, stderr = proc.communicate()
+    assert "hello" in stderr, stderr
+    assert stdout.strip() == expected_output.strip()
+    assert proc.returncode == 0, f"Bad return code {proc.returncode}, stderr: {stderr}"
+
+
 def test_locust_run():
     proc = subprocess.Popen(
         ["locust", "-f", "tests/outputs/reqres.in.py", "-i", "1", "--headless"],

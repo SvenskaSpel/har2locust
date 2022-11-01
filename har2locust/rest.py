@@ -1,4 +1,4 @@
-from .plugin import ProcessEntries
+from har2locust.plugin import ProcessEntries
 import logging
 
 

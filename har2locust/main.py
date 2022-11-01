@@ -95,7 +95,6 @@ def main(
         har = json.load(f)
     logging.debug(f"load {har_path}")
 
-    entry_processors: List[function] = []
     for plugin in plugins or []:
         p = pathlib.Path(plugin)
         sys.path.append(os.path.curdir)
