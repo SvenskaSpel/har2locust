@@ -16,7 +16,9 @@ class ProcessEntries:
 
 
 # example:
-
+#
+# from har2locust.plugin import ProcessEntries
+#
 # @ProcessEntries
 # def process(entries: List[Dict]) -> List[Dict]:
 #     return entries
