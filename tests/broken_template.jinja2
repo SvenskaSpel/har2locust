@@ -17,7 +17,6 @@ mport requests
 
 ###############################################################################
 # request number: {{ loop.index }}
-# resource type: {{ resources_types[loop.index0] }}
 
 url = '{{ request.url.split('?')[0] }}'
 {%- if request.headers %}
