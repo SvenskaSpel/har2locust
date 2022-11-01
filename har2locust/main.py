@@ -7,7 +7,7 @@ import pathlib
 import re
 import subprocess
 import sys
-from typing import Dict, List, Set
+from typing import List
 from urllib.parse import urlsplit
 
 import jinja2

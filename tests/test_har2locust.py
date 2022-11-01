@@ -80,6 +80,7 @@ def test_plugins():
     stdout, stderr = proc.communicate()
     assert proc.returncode == 0, f"Bad return code {proc.returncode}, stderr: {stderr}"
     assert stdout.strip() == expected_output.strip()
+    assert "NewName" in stdout
     assert "hello" in stderr, stderr
 
 
