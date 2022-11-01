@@ -1,3 +1,8 @@
+[![PyPI](https://img.shields.io/pypi/v/har2locust.svg)](https://pypi.org/project/har2locust/)
+[![PyPI](https://img.shields.io/pypi/pyversions/har2locust.svg)](https://pypi.org/project/har2locust/)
+[![Build Status](https://github.com/SvenskaSpel/har2locust/workflows/Tests/badge.svg)](https://github.com/SvenskaSpel/har2locustlocust/actions?query=workflow%3ATests)
+[![license](https://img.shields.io/github/license/har2locust/har2locust.svg)](https://github.com/SvenskaSpel/har2locust/blob/master/LICENSE)
+
 # har2locust
 
 When browsing the web with the Developer Tools open you can record the Network
