@@ -145,9 +145,6 @@ def process(
     if har_version != "1.2":
         logging.warning(f"Untested har version {har_version}")
 
-    pages = har["log"]["pages"]
-    logging.debug(f"found {len(pages)} pages")
-
     entries = har["log"]["entries"]
     logging.debug(f"found {len(entries)} entries")
 
@@ -163,30 +160,23 @@ def process(
     # organize request variable in a useful format
     # [[{'name': key, 'value': value}, ...], ...] list of list of dict ->
     # [{(key, value), ...}, ...] list of set of tuple
-    urls, methods, headers_req, post_datas = [], [], [], []
-    headers_res = []
+    headers_req, headers_res = [], []
     for e in entries:
-        req = e["request"]
-        urls.append(req["url"])
-        methods.append(req["method"].lower())
-        headers_req.append({(h["name"], h["value"]) for h in req["headers"]})
-        post_datas.append(req["postData"]["text"] if "postData" in req else None)
-        res = e["response"]
-        headers_res.append({(h["name"], h["value"]) for h in res["headers"]})
+        headers_req.append({(h["name"], h["value"]) for h in e["request"]["headers"]})
+        headers_res.append({(h["name"], h["value"]) for h in e["response"]["headers"]})
 
     # collect headers common to all requests
     default_headers = set.intersection(*headers_req)
 
-    urlparts = urlsplit(urls[0])
+    urlparts = urlsplit(entries[0]["request"]["url"])
     host = f"{urlparts.scheme}://{urlparts.netloc}/"
     # requests is a list of dictionary with value specific to single requests
     requests = [
         {
-            "url": urls[i].removeprefix(host),
-            "method": methods[i],
+            "url": e["request"]["url"].removeprefix(host),
+            "method": e["request"]["method"].lower(),
             "headers": headers_req[i] - default_headers,
-            # "params": params[i],
-            "post_data": post_datas[i],
+            "post_data": e["request"]["postData"]["text"] if "postData" in e["request"] else None,
             "rest": e["rest"] if "rest" in e else False,
         }
         for i, e in enumerate(entries)
