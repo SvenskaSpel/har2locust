@@ -1,4 +1,4 @@
-from har2locust.plugin import entriesprocessor
+from har2locust.plugin import entriesprocessor, valuesprocessor
 import logging
 
 
@@ -22,4 +22,10 @@ def process(entries):
         else:
             logging.debug(f"appending request {e['request']['url']}")
             output.append(e)
-    return output
+    entries[:] = output  # overwrite entries, in place
+
+
+@valuesprocessor
+def process_values(values):
+    values["baseuser_module"] = "locust_plugins.users"
+    values["baseuser_class"] = "RestUser"

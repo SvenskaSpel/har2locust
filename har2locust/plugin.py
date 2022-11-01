@@ -5,14 +5,14 @@ from typing import Callable
 
 
 class entriesprocessor:
-    processors: List[Callable[[List[Dict]], List[Dict]]] = []
+    processors: List[Callable[[List[Dict]], None]] = []
 
-    def __init__(self, func: Callable[[List[Dict]], List[Dict]]):
+    def __init__(self, func: Callable[[List[Dict]], None]):
         self.processors.append(func)
 
 
 class valuesprocessor:
-    processors: List[Callable[[Dict], List[Dict]]] = []
+    processors: List[Callable[[Dict], None]] = []
 
-    def __init__(self, func: Callable[[Dict], List[Dict]]):
+    def __init__(self, func: Callable[[Dict], None]):
         self.processors.append(func)

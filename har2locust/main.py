@@ -174,7 +174,7 @@ def process(
     ]
 
     for p in entriesprocessor.processors:
-        entries = p(entries)
+        p(entries)
 
     logging.debug(f"{resource_type=}")
     logging.debug(f"{len(entries)} entries after filtering by resource_type")
@@ -234,7 +234,7 @@ def process(
 
 def rendering(template_name: str, values: dict) -> str:
     for p in valuesprocessor.processors:
-        entries = p(values)
+        p(values)
 
     logging.debug(f'about to load template "{template_name}"')
     if pathlib.Path(template_name).exists():
