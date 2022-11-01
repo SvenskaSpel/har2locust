@@ -244,10 +244,10 @@ def rendering(host, session, requests, responses, template_name: str = "locust.j
 
     env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
     template = env.get_template(template_path.name)
-    logging.debug(f"template loaded")
+    logging.debug("template loaded")
 
     py = template.render(host=host, session=session, requests=requests, responses=responses)
-    logging.debug(f"template rendered, about to autoformat output using Black")
+    logging.debug("template rendered, about to autoformat output using Black")
 
     p = subprocess.Popen(["black", "-q", "-"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
     assert p.stdin  # keep linter happy
