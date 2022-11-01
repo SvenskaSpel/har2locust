@@ -3,7 +3,7 @@ from locust_plugins.listeners import RescheduleTaskOnFail
 from locust_plugins.users import RestUser
 
 
-class MyUser(RestUser):
+class apple_with_cookies(RestUser):
     host = "https://apple.com/"
 
     @task

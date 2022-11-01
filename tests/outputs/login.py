@@ -3,7 +3,7 @@ from locust_plugins.listeners import RescheduleTaskOnFail
 from locust_plugins.users import RestUser
 
 
-class MyUser(RestUser):
+class login(RestUser):
     host = "https://api.spela.test3.svenskaspel.se/"
     default_headers = {
         "accept-encoding": "gzip, deflate, br",

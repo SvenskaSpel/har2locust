@@ -9,3 +9,10 @@ class entriesprocessor:
 
     def __init__(self, func: Callable[[List[Dict]], List[Dict]]):
         self.processors.append(func)
+
+
+class valuesprocessor:
+    processors: List[Callable[[Dict], List[Dict]]] = []
+
+    def __init__(self, func: Callable[[Dict], List[Dict]]):
+        self.processors.append(func)

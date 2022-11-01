@@ -2,7 +2,7 @@ from locust import task, run_single_user, events
 from locust_plugins.listeners import RescheduleTaskOnFail
 from locust_plugins.users import RestUser
 
-class MyUser(RestUser):
+class {{name}}(RestUser):
     host = '{{host}}'
 
     {%- if default_headers %}

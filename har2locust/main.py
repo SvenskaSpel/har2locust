@@ -13,7 +13,7 @@ from urllib.parse import urlsplit
 import jinja2
 
 from ._version import version
-from .plugin import entriesprocessor
+from .plugin import entriesprocessor, valuesprocessor
 
 
 def cli():
@@ -81,6 +81,10 @@ def main(
     template_name="locust.jinja2",
 ):
     har_path = pathlib.Path(har_file)
+
+    # build safe class name from filename
+    name = pathlib.Path(har_file).stem.replace("-", "_").replace(".", "_")
+
     with open(har_path, encoding="utf8", errors="ignore") as f:
         har = json.load(f)
     logging.debug(f"loaded {har_path}")
@@ -112,20 +116,19 @@ def main(
     # always filter this, because it is not a real header
     header_filters.extend(["^:"])
 
-    host, default_headers, requests, responses = preprocessing(
-        har, resource_type=resource_type, url_filters=url_filters, header_filters=header_filters
-    )
-    py = rendering(host, default_headers, requests, responses, template_name=template_name)
+    pp_dict = process(har, resource_type=resource_type, url_filters=url_filters, header_filters=header_filters)
+
+    py = rendering(template_name, {"name": name, **pp_dict})
 
     print(py)
 
 
-def preprocessing(
+def process(
     har: dict,
     resource_type=["xhr", "document", "other"],
     url_filters: List[str] = [],
     header_filters: List[str] = [],
-) -> tuple[str, Set[List], List[Dict], List[Dict]]:
+) -> dict:
     """Scan the har dict for common headers
 
     In doing so request and reponse variables are organized in a useful format:
@@ -226,10 +229,13 @@ def preprocessing(
 
     logging.debug("preprocessed har dict")
 
-    return host, default_headers, requests, responses
+    return dict(host=host, default_headers=default_headers, requests=requests, responses=responses)
 
 
-def rendering(host, default_headers, requests, responses, template_name: str = "locust.jinja2") -> str:
+def rendering(template_name: str, values: dict) -> str:
+    for p in valuesprocessor.processors:
+        entries = p(values)
+
     logging.debug(f'about to load template "{template_name}"')
     if pathlib.Path(template_name).exists():
         template_path = pathlib.Path(template_name)
@@ -244,7 +250,7 @@ def rendering(host, default_headers, requests, responses, template_name: str = "
     template = env.get_template(template_path.name)
     logging.debug("template loaded")
 
-    py = template.render(host=host, default_headers=list(default_headers), requests=requests, responses=responses)
+    py = template.render(values)
     logging.debug("template rendered, about to autoformat output using Black")
 
     p = subprocess.Popen(["black", "-q", "-"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)

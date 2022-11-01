@@ -3,7 +3,7 @@ from locust_plugins.listeners import RescheduleTaskOnFail
 from locust_plugins.users import RestUser
 
 
-class MyUser(RestUser):
+class apple_buy_a_mac(RestUser):
     host = "https://secure2.store.apple.com/"
 
     @task

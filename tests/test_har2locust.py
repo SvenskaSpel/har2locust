@@ -4,7 +4,7 @@ import pathlib
 import subprocess
 import os
 import pytest
-from har2locust.main import main, preprocessing, rendering
+from har2locust.main import main, process, rendering
 
 inputs_dir = pathlib.Path(__file__).parents[0] / "inputs"
 outputs_dir = pathlib.Path(__file__).parents[0] / "outputs"
@@ -27,7 +27,7 @@ def test_har_file_not_found():
 
 def test_preprocessing_unsupported_resource_type():
     with pytest.raises(NotImplementedError, match="are not supported"):
-        preprocessing(har, resource_type=["xhr", "foo", "bar"])
+        process(har, resource_type=["xhr", "foo", "bar"])
 
 
 def test_rendering_syntax_error():
@@ -35,8 +35,7 @@ def test_rendering_syntax_error():
         AssertionError,
         match="Black failed to format the output - perhaps your template is broken?",
     ):
-        host, default_headers, requests, responses = preprocessing(har)
-        rendering(host, default_headers, requests, responses, template_name="tests/broken_template.jinja2")
+        rendering("tests/broken_template.jinja2", process(har))
 
 
 def test_rendering_missing_template():
@@ -44,8 +43,7 @@ def test_rendering_missing_template():
         Exception,
         match="Template this_doesnt_exist.jinja2 does not exist, neither in current directory nor as built in",
     ):
-        host, headers, requests, responses = preprocessing(har)
-        rendering(host, headers, requests, responses, template_name="this_doesnt_exist.jinja2")
+        rendering("this_doesnt_exist.jinja2", process(har))
 
 
 # writing py file in tests/output for manual inspection
@@ -66,8 +64,7 @@ def test_main(har_file, py_file):
     assert stdout.strip() == expected_output.strip()
 
 
-@pytest.mark.parametrize("har_file, py_file", zip(har_files, py_files))
-def test_plugins(har_file, py_file):
+def test_plugins():
     har_file = "tests/inputs/reqres.in.har"
     py_file = "tests/outputs/reqres_plugin.in.py"
     with open(py_file, encoding="utf-8") as f:

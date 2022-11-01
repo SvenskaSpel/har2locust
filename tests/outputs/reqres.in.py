@@ -3,7 +3,7 @@ from locust_plugins.listeners import RescheduleTaskOnFail
 from locust_plugins.users import RestUser
 
 
-class MyUser(RestUser):
+class reqres_in(RestUser):
     host = "https://reqres.in/"
     default_headers = {
         "accept": "*/*",
