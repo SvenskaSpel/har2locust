@@ -6,6 +6,8 @@ Then you can export all these data into an [HAR](https://en.wikipedia.org/wiki/H
 file (Http ARchive). With **har2locust** you can convert HAR file into valid python
 code that reproduce the requests perform by your browser.
 
+[Here's an example of the auto-generated output](https://github.com/SvenskaSpel/har2locust/tree/master/tests/outputs/reqs.in.py)
+
 har2locust builds upon [har2py](https://github.com/S1M0N38/har2py), modified to generate a locustfile 
 instead of a basic Python file.
 
