@@ -85,12 +85,13 @@ def main(
         har = json.load(f)
     logging.debug(f"loaded {har_path}")
 
-    for plugin in ["har2locust/rest.py"] + plugins:
+    default_plugins = ["har2locust/rest.py"]
+    default_and_extra_plugins = default_plugins + plugins
+    for plugin in default_and_extra_plugins:
         sys.path.append(os.path.curdir)
         import_path = plugin.replace("/", ".").rstrip(".py")
         importlib.import_module(import_path)
-
-    logging.debug(f"loaded plugins {plugins}")
+    logging.debug(f"loaded plugins {default_and_extra_plugins}")
 
     urlignore_file = pathlib.Path(".urlignore")
     url_filters = []
