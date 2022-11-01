@@ -89,7 +89,11 @@ def main(
         har = json.load(f)
     logging.debug(f"loaded {har_path}")
 
-    default_plugins = ["har2locust/rest.py"]
+    default_plugins = [
+        "har2locust/plugins/rest.py",
+        "har2locust/plugins/urlignore.py",
+        "har2locust/plugins/headerignore.py",
+    ]
     default_and_extra_plugins = default_plugins + plugins
     for plugin in default_and_extra_plugins:
         sys.path.append(os.path.curdir)
@@ -97,28 +101,11 @@ def main(
         importlib.import_module(import_path)
     logging.debug(f"loaded plugins {default_and_extra_plugins}")
 
-    urlignore_file = pathlib.Path(".urlignore")
-    url_filters = []
-    if urlignore_file.is_file():
-        with open(urlignore_file) as f:
-            url_filters = f.readlines()
-            url_filters = [line.rstrip() for line in url_filters]
+    pp_dict = process(har, resource_type=resource_type)
 
-    headerignore_path = pathlib.Path(".headerignore")
-    header_filters = []
-    if headerignore_path.is_file():
-        with open(headerignore_path) as f:
-            header_filters = f.readlines()
-            header_filters = [line.rstrip() for line in header_filters]
-
-    # always filter these, because they will be added by locust automatically
-    header_filters.extend(["^cookie", "^content-length"])
-    # always filter this, because it is not a real header
-    header_filters.extend(["^:"])
-
-    pp_dict = process(har, resource_type=resource_type, url_filters=url_filters, header_filters=header_filters)
-
-    py = rendering(template_name, {"name": name, **pp_dict})
+    py = rendering(
+        template_name, {"name": name, "baseuser_module": "locust", "baseuser_class": "FastHttpUser", **pp_dict}
+    )
 
     print(py)
 
@@ -126,8 +113,6 @@ def main(
 def process(
     har: dict,
     resource_type=["xhr", "document", "other"],
-    url_filters: List[str] = [],
-    header_filters: List[str] = [],
 ) -> dict:
     """Scan the har dict for common headers
 
@@ -167,11 +152,7 @@ def process(
     logging.debug(f"found {len(entries)} entries")
 
     # filtering entries
-    entries = [
-        e
-        for e in har["log"]["entries"]
-        if e["_resourceType"] in resource_type and not any(re.search(r, e["request"]["url"]) for r in url_filters)
-    ]
+    entries = [e for e in har["log"]["entries"] if e["_resourceType"] in resource_type]
 
     for p in entriesprocessor.processors:
         p(entries)
@@ -188,13 +169,7 @@ def process(
         req = e["request"]
         urls.append(req["url"])
         methods.append(req["method"].lower())
-        headers_req.append(
-            {
-                (h["name"], h["value"])
-                for h in req["headers"]
-                if not any(re.search(r, h["name"]) for r in header_filters)
-            }
-        )
+        headers_req.append({(h["name"], h["value"]) for h in req["headers"]})
         post_datas.append(req["postData"]["text"] if "postData" in req else None)
         res = e["response"]
         headers_res.append({(h["name"], h["value"]) for h in res["headers"]})
