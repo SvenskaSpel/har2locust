@@ -5,9 +5,9 @@ from locust_plugins.users import RestUser
 class MyUser(RestUser):
     host = '{{host}}'
 
-    {%- if session.headers %}
+    {%- if default_headers %}
     default_headers = {
-        {%- for (key, value) in session.headers | sort %}
+        {%- for (key, value) in default_headers | sort %}
         '{{ key }}': '{{ value }}',
         {%- endfor %}
     }

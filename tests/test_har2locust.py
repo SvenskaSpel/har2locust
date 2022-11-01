@@ -35,8 +35,8 @@ def test_rendering_syntax_error():
         AssertionError,
         match="Black failed to format the output - perhaps your template is broken?",
     ):
-        host, headers, requests, responses = preprocessing(har)
-        rendering(host, headers, requests, responses, template_name="tests/broken_template.jinja2")
+        host, default_headers, requests, responses = preprocessing(har)
+        rendering(host, default_headers, requests, responses, template_name="tests/broken_template.jinja2")
 
 
 def test_rendering_missing_template():

@@ -7,7 +7,7 @@ import pathlib
 import re
 import subprocess
 import sys
-from typing import Dict, List
+from typing import Dict, List, Set
 from urllib.parse import urlsplit
 
 import jinja2
@@ -112,10 +112,10 @@ def main(
     # always filter this, because it is not a real header
     header_filters.extend(["^:"])
 
-    host, headers, requests, responses = preprocessing(
+    host, default_headers, requests, responses = preprocessing(
         har, resource_type=resource_type, url_filters=url_filters, header_filters=header_filters
     )
-    py = rendering(host, headers, requests, responses, template_name=template_name)
+    py = rendering(host, default_headers, requests, responses, template_name=template_name)
 
     print(py)
 
@@ -125,7 +125,7 @@ def preprocessing(
     resource_type=["xhr", "document", "other"],
     url_filters: List[str] = [],
     header_filters: List[str] = [],
-) -> tuple[str, Dict, List[Dict], List[Dict]]:
+) -> tuple[str, Set[List], List[Dict], List[Dict]]:
     """Scan the har dict for common headers
 
     In doing so request and reponse variables are organized in a useful format:
@@ -196,11 +196,9 @@ def preprocessing(
         res = e["response"]
         headers_res.append({(h["name"], h["value"]) for h in res["headers"]})
 
-    # inside session dict are collect all varibles common to all requests
-    session = {
-        "name": "s",  # name of the Session() object
-        "headers": set.intersection(*headers_req),
-    }
+    # collect headers common to all requests
+    default_headers = set.intersection(*headers_req)
+
     urlparts = urlsplit(urls[0])
     host = f"{urlparts.scheme}://{urlparts.netloc}/"
     # requests is a list of dictionary with value specific to single requests
@@ -208,7 +206,7 @@ def preprocessing(
         {
             "url": urls[i].removeprefix(host),
             "method": methods[i],
-            "headers": headers_req[i] - session["headers"],
+            "headers": headers_req[i] - default_headers,
             # "params": params[i],
             "post_data": post_datas[i],
             "rest": e["rest"] if "rest" in e else False,
@@ -228,10 +226,10 @@ def preprocessing(
 
     logging.debug("preprocessed har dict")
 
-    return host, session, requests, responses
+    return host, default_headers, requests, responses
 
 
-def rendering(host, session, requests, responses, template_name: str = "locust.jinja2") -> str:
+def rendering(host, default_headers, requests, responses, template_name: str = "locust.jinja2") -> str:
     logging.debug(f'about to load template "{template_name}"')
     if pathlib.Path(template_name).exists():
         template_path = pathlib.Path(template_name)
@@ -246,7 +244,7 @@ def rendering(host, session, requests, responses, template_name: str = "locust.j
     template = env.get_template(template_path.name)
     logging.debug("template loaded")
 
-    py = template.render(host=host, session=session, requests=requests, responses=responses)
+    py = template.render(host=host, default_headers=list(default_headers), requests=requests, responses=responses)
     logging.debug("template rendered, about to autoformat output using Black")
 
     p = subprocess.Popen(["black", "-q", "-"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)

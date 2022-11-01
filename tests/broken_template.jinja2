@@ -1,18 +1,6 @@
 mport requests
 
 
-{{ session.name }} = requests.Session()
-{%- if session.headers %}
-{{ session.name }}.headers = {
-    {%- for (key, value) in session.headers %}
-    '{{ key }}': '{{value}}',
-    {%- endfor %}
-}
-{%- endif %}
-{%- for (key, value) in session.cookies %}
-{{ session.name }}.cookies.set('{{ key }}', '{{ value }}')
-{%- endfor %}
-
 {% for request in requests -%}
 
 ###############################################################################
@@ -40,7 +28,7 @@ params = [
     {%- endfor %}
 ]
 {%- endif %}
-rc = {{ session.name }}.{{ request.method }}(url
+rc = s.{{ request.method }}(url
 {%- if request.headers -%}, headers=headers{%- endif -%}
 {%- if request.cookies -%}, cookies=cookies{%- endif -%}
 {%- if request.params -%}, params=params{%- endif -%})
