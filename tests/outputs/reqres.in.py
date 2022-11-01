@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 from locust import task, run_single_user, events
 from locust_plugins.listeners import RescheduleTaskOnFail
 from locust_plugins.users import RestUser
