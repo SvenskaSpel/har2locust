@@ -96,7 +96,6 @@ def main(
     logging.debug(f"load {har_path}")
 
     for plugin in plugins or []:
-        p = pathlib.Path(plugin)
         sys.path.append(os.path.curdir)
         import_path = plugin.replace("/", ".").rstrip(".py")
         importlib.import_module(import_path)
