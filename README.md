@@ -30,7 +30,7 @@ This will also install locust and locust-plugins, because they are needed to run
 data in HAR file. Here is an example with Chrome Devs Tools
 ![har.gif](https://github.com/S1M0N38/har2py/blob/main/har.gif?raw=true)
 
-2. Run `har2locust myharfile.har > locustfile.py`.
+2. Run `har2locust myharfile.har > locustfile.py`
 
 ```
 
