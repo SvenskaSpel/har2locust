@@ -15,7 +15,9 @@ from ._version import version
 
 
 def cli():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        epilog="Example usage: har2locust myrecording.har --plugins myplugin1.py > locustfile.py"
+    )
     parser.add_argument(
         "input",
         help="har input file",
@@ -26,15 +28,15 @@ def cli():
         default="locust.jinja2",
         type=str,
         help=(
-            "jinja2 template used to generate locustfile. Default to locust.jinja2. Will check current directory/absolute paths first and har2locust built-ins second"
+            "jinja2 template used to generate locustfile. Default to locust.jinja2. Will check current directory/relative paths first and har2locust built-ins second"
         ),
     )
     parser.add_argument(
         "-p",
         "--plugins",
-        nargs="*",
-        default=["har2locust/rest.py"],
-        help="Plugin class(es) to apply",
+        type=str,
+        default="har2locust/rest.py",
+        help="Comma separated list of extra python files to source, containing a method decorated with @ProcessEntries for processing har-entries before generating the locustfile",
     )
     parser.add_argument(
         "-f",
@@ -42,8 +44,8 @@ def cli():
         default="xhr,document,other",
         type=str,
         help=(
-            "commas value separeted string of the resource type you want to "
-            "include in py generated code. Supported type are `xhr`, "
+            "Commas separated list of resource types to be included "
+            "in the locustfile. Supported type are `xhr`, "
             "`script`, `stylesheet`, `image`, `font`, `document`, `other`. "
             "Default to xhr,document,other."
         ),
@@ -65,7 +67,7 @@ def cli():
 
     main(
         args.input,
-        args.plugins,
+        plugins=args.plugins.split(","),
         resource_type=args.filters.split(","),
         template_name=args.template,
     )
@@ -77,28 +79,16 @@ def main(
     resource_type=["xhr", "document", "other"],
     template_name="locust.jinja2",
 ):
-    """Load .har file and produce .py
-
-    Args:
-        har_file (str): path to the input har file.
-        resource_type (list): list of resource type to include in the python
-            generated code. Supported type are `xhr`, `script`, `stylesheet`,
-            `image`, `font`, `document`, `other`.
-            Default to ['xhr', 'document', 'other'].
-        template_name (str): name of the jinja2 template used by rendering.
-            Default to 'locust.jinja2'.
-    """
-
     har_path = pathlib.Path(har_file)
-
     with open(har_path, encoding="utf8", errors="ignore") as f:
         har = json.load(f)
-    logging.debug(f"load {har_path}")
+    logging.debug(f"loaded {har_path}")
 
     for plugin in plugins or []:
         sys.path.append(os.path.curdir)
         import_path = plugin.replace("/", ".").rstrip(".py")
         importlib.import_module(import_path)
+    logging.debug(f"loaded plugins {plugins}")
 
     urlignore_file = pathlib.Path(".urlignore")
     url_filters = []
@@ -117,13 +107,13 @@ def main(
     # always filter these, because they will be added by locust automatically
     header_filters.extend(["^cookie", "^content-length", "^:"])
 
-    har = preprocessing(
+    host, headers, requests, responses = preprocessing(
         har,
         resource_type=resource_type,
         url_filters=url_filters,
         header_filters=header_filters,
     )
-    py = rendering(har, template_name=template_name)
+    py = rendering(host, headers, requests, responses, template_name=template_name)
 
     print(py)
 
@@ -227,8 +217,8 @@ def preprocessing(
 
     entries = ProcessEntries.run_plugins(entries)
 
-    logging.debug(f"resource type allowed {resource_type}")
-    logging.debug(f"{len(entries)} entries filter by resource_type")
+    logging.debug(f"{resource_type=}")
+    logging.debug(f"{len(entries)} entries after filtering by resource_type")
 
     # organize request variable in a useful format
     # [[{'name': key, 'value': value}, ...], ...] list of list of dict ->
@@ -295,25 +285,8 @@ def preprocessing(
     }
 
 
-def rendering(
-    har: dict,
-    template_name: str = "locust.jinja2",
-):
-    """Generate valid python code from preprocessed har using jinja2 template.
-
-    Args:
-        har (dict): preprocessed har dict
-        template_name (str): name of the jinja2 template used by rendering.
-            Default to 'locust.jinja2'.
-
-    Returns:
-        str: generated python code
-    """
-    # check for the correctness of the har structure
-    if set(har) != {"host", "session", "requests", "responses"}:
-        raise ValueError("har dict has wrong format. Must be first preprocessed with preprocessing(har).")
-
-    logging.debug(f'template name "{template_name}"')
+def rendering(host, session, requests, responses, template_name: str = "locust.jinja2") -> str:
+    logging.debug(f'about to load template "{template_name}"')
     if pathlib.Path(template_name).exists():
         template_path = pathlib.Path(template_name)
     else:
@@ -322,18 +295,12 @@ def rendering(
             raise Exception(f"Template {template_name} does not exist, neither in current directory nor as built in")
 
     template_dir = template_path.parents[0]
-    logging.debug(f"template_dir {template_dir}")
+    logging.debug(f"{template_dir=}")
+
     env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
     template = env.get_template(template_path.name)
 
-    logging.debug(f'render har with "{template_name}" template')
-
-    py = template.render(
-        host=har["host"],
-        session=har["session"],
-        requests=har["requests"],
-        responses=har["responses"],
-    )
+    py = template.render(host=host, session=session, requests=requests, responses=responses)
     p = subprocess.Popen(["black", "-q", "-"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
     assert p.stdin  # keep linter happy
     p.stdin.write(py)

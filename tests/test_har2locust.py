@@ -30,17 +30,13 @@ def test_preprocessing_unsupported_resource_type():
         preprocessing(har, resource_type=["xhr", "foo", "bar"])
 
 
-def test_rendering_without_preprocess():
-    with pytest.raises(ValueError, match="har dict has wrong format."):
-        rendering(har)
-
-
 def test_rendering_syntax_error():
     with pytest.raises(
         AssertionError,
         match="Black failed to format the output - perhaps your template is broken?",
     ):
-        rendering(preprocessing(har), template_name="tests/broken_template.jinja2")
+        host, headers, requests, responses = preprocessing(har)
+        rendering(host, headers, requests, responses, template_name="tests/broken_template.jinja2")
 
 
 def test_rendering_missing_template():
@@ -48,7 +44,8 @@ def test_rendering_missing_template():
         Exception,
         match="Template this_doesnt_exist.jinja2 does not exist, neither in current directory nor as built in",
     ):
-        rendering(preprocessing(har), template_name="this_doesnt_exist.jinja2")
+        host, headers, requests, responses = preprocessing(har)
+        rendering(host, headers, requests, responses, template_name="this_doesnt_exist.jinja2")
 
 
 # writing py file in tests/output for manual inspection
