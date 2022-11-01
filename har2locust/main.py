@@ -6,7 +6,7 @@ import subprocess
 from urllib.parse import urlsplit
 import re
 import jinja2
-from typing import List
+from typing import List, Dict
 import sys
 import os
 import importlib
@@ -105,13 +105,12 @@ def main(
             header_filters = [line.rstrip() for line in header_filters]
 
     # always filter these, because they will be added by locust automatically
-    header_filters.extend(["^cookie", "^content-length", "^:"])
+    header_filters.extend(["^cookie", "^content-length"])
+    # always filter this, because it is not a real header
+    header_filters.extend(["^:"])
 
     host, headers, requests, responses = preprocessing(
-        har,
-        resource_type=resource_type,
-        url_filters=url_filters,
-        header_filters=header_filters,
+        har, resource_type=resource_type, url_filters=url_filters, header_filters=header_filters
     )
     py = rendering(host, headers, requests, responses, template_name=template_name)
 
@@ -123,7 +122,7 @@ def preprocessing(
     resource_type=["xhr", "document", "other"],
     url_filters: List[str] = [],
     header_filters: List[str] = [],
-) -> dict:
+) -> tuple[str, Dict, List[Dict], List[Dict]]:
     """Scan the har dict for common headers and cookies and group them into
     session headers and session cookies.
 
@@ -138,52 +137,6 @@ def preprocessing(
             generated code. Supported type are `xhr`, `script`, `stylesheet`,
             `image`, `font`, `document`, `other`.
             Default to ['xhr', 'document', 'other'].
-
-    Returns:
-        dict: new har dict structured in the following way:
-        ```python
-        {
-            'session': {
-                'cookies': [{key, value}, {key, value}, ...],
-                'headers': [{key, value}, {key, value}, ...],
-            },
-
-            'requests: [
-                {
-                    # request url without params
-                    'url': urls[0],
-                    # request method (lowercase): get, post, put, option, ...
-                    'method': methods[0],
-                    # headers for the specific requests
-                    'headers': headers[0] - session['headers'],
-                    # cookies for the specific requests
-                    'cookies': cookies[0] - session['cookies'],
-                    # requests parameters
-                    'params': params[0],
-                },
-                ...
-            ],
-
-            response: [
-                {
-                    #
-                    'url': urls[0],
-                    # request method (lowercase): get, post, put, option, ...
-                    'method': methods[0],
-                    # headers for the specific requests
-                    'headers': headers[0] - session['headers'],
-                    # cookies for the specific requests
-                    'cookies': cookies[0] - session['cookies'],
-                    # requests parameters
-                    'params': params[0],
-                },
-                ...
-            ],
-
-            resources_types: ['document', 'xhr', 'xhr', 'script', ...],
-        }
-
-        ```
     """
     supported_resource_type = {
         "xhr",
@@ -277,12 +230,7 @@ def preprocessing(
 
     logging.debug("preprocessed har dict")
 
-    return {
-        "host": host,
-        "session": session,
-        "requests": requests,
-        "responses": responses,
-    }
+    return host, session, requests, responses
 
 
 def rendering(host, session, requests, responses, template_name: str = "locust.jinja2") -> str:
