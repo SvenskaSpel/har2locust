@@ -1,17 +1,19 @@
 import argparse
+import importlib
 import json
 import logging
-import pathlib
-import subprocess
-from urllib.parse import urlsplit
-import re
-import jinja2
-from typing import List, Dict
-import sys
 import os
-import importlib
-from .plugin import ProcessEntries
+import pathlib
+import re
+import subprocess
+import sys
+from typing import Dict, List
+from urllib.parse import urlsplit
+
+import jinja2
+
 from ._version import version
+from .plugin import ProcessEntries
 
 
 def cli():
