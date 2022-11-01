@@ -1,6 +1,8 @@
 from typing import List, Dict
 from typing import Callable
 
+# For an example of how to write a plugin, see rest.py
+
 
 class ProcessEntries:
     plugins: List[Callable[[List[Dict]], List[Dict]]] = []
@@ -13,12 +15,3 @@ class ProcessEntries:
         for p in cls.plugins:
             entries = p(entries)
         return entries
-
-
-# example:
-#
-# from har2locust.plugin import ProcessEntries
-#
-# @ProcessEntries
-# def process(entries: List[Dict]) -> List[Dict]:
-#     return entries

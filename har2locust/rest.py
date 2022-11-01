@@ -9,7 +9,6 @@ def process(entries):
         headers = e["response"]["headers"]
         for h in headers:
             if h["name"].lower() == "content-type":
-                logging.debug(h)
                 if h["value"] == "application/javascript":
                     logging.debug(f"ignoring request {e['request']['url']}")
                     break
@@ -21,5 +20,6 @@ def process(entries):
                         logging.debug(f"{e['request']['url']} is a rest request!")
                         e["rest"] = True
         else:
+            logging.debug(f"appending request {e['request']['url']}")
             output.append(e)
     return output
