@@ -126,10 +126,9 @@ def preprocessing(
     url_filters: List[str] = [],
     header_filters: List[str] = [],
 ) -> tuple[str, Dict, List[Dict], List[Dict]]:
-    """Scan the har dict for common headers and cookies and group them into
-    session headers and session cookies.
+    """Scan the har dict for common headers
 
-    In doing sorequest and reponse variables  are organized in a useful format:
+    In doing so request and reponse variables are organized in a useful format:
     from [[{'name': key, 'value': value}, ...], ...] list of list of dict
     to   [{(key, value), ...}, ...] list of set of tuple.
     Moreover requests can be filter by resource type.
@@ -180,8 +179,8 @@ def preprocessing(
     # organize request variable in a useful format
     # [[{'name': key, 'value': value}, ...], ...] list of list of dict ->
     # [{(key, value), ...}, ...] list of set of tuple
-    urls, methods, headers_req, cookies_req, post_datas = [], [], [], [], []
-    headers_res, cookies_res = [], []
+    urls, methods, headers_req, post_datas = [], [], [], []
+    headers_res = []
     for e in entries:
         req = e["request"]
         urls.append(req["url"])
@@ -193,17 +192,14 @@ def preprocessing(
                 if not any(re.search(r, h["name"]) for r in header_filters)
             }
         )
-        cookies_req.append({(c["name"], c["value"]) for c in req["cookies"]})
         post_datas.append(req["postData"]["text"] if "postData" in req else None)
         res = e["response"]
         headers_res.append({(h["name"], h["value"]) for h in res["headers"]})
-        cookies_res.append({(c["name"], c["value"]) for c in res["cookies"]})
 
     # inside session dict are collect all varibles common to all requests
     session = {
         "name": "s",  # name of the Session() object
         "headers": set.intersection(*headers_req),
-        "cookies": set.intersection(*cookies_req),
     }
     urlparts = urlsplit(urls[0])
     host = f"{urlparts.scheme}://{urlparts.netloc}/"
@@ -213,7 +209,6 @@ def preprocessing(
             "url": urls[i].removeprefix(host),
             "method": methods[i],
             "headers": headers_req[i] - session["headers"],
-            "cookies": cookies_req[i] - session["cookies"],
             # "params": params[i],
             "post_data": post_datas[i],
             "rest": e["rest"] if "rest" in e else False,
@@ -225,7 +220,6 @@ def preprocessing(
         {
             "status": e["response"]["status"],
             "headers": headers_res[i],
-            "cookies": cookies_res[i],
             "redirect_url": e["response"]["redirectURL"],
             "content": e["response"]["content"],
         }
@@ -247,12 +241,14 @@ def rendering(host, session, requests, responses, template_name: str = "locust.j
             raise Exception(f"Template {template_name} does not exist, neither in current directory nor as built in")
 
     template_dir = template_path.parents[0]
-    logging.debug(f"{template_dir=}")
 
     env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir))
     template = env.get_template(template_path.name)
+    logging.debug(f"template loaded")
 
     py = template.render(host=host, session=session, requests=requests, responses=responses)
+    logging.debug(f"template rendered, about to autoformat output using Black")
+
     p = subprocess.Popen(["black", "-q", "-"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
     assert p.stdin  # keep linter happy
     p.stdin.write(py)
