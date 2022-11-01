@@ -22,7 +22,7 @@ with open(har_file) as f:
 def test_har_file_not_found():
     har_file_foo = inputs_dir / "foo.har"
     with pytest.raises(FileNotFoundError):
-        main(har_file_foo)
+        main(str(har_file_foo))
 
 
 def test_preprocessing_unsupported_resource_type():
@@ -43,7 +43,7 @@ def test_rendering_syntax_error():
         rendering(preprocessing(har), template_name="tests/broken_template.jinja2")
 
 
-def test_rendering_syntax_error():
+def test_rendering_missing_template():
     with pytest.raises(
         Exception,
         match="Template this_doesnt_exist.jinja2 does not exist, neither in current directory nor as built in",
