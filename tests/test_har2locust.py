@@ -48,7 +48,7 @@ def test_rendering_missing_template():
 
 # writing py file in tests/output for manual inspection
 @pytest.mark.parametrize("har_file, py_file", zip(har_files, py_files))
-def test_main(har_file, py_file):
+def test_output(har_file, py_file):
     with open(py_file, encoding="utf-8") as f:
         expected_output = f.read()
     proc = subprocess.Popen(
@@ -62,6 +62,19 @@ def test_main(har_file, py_file):
     stdout, stderr = proc.communicate()
     assert proc.returncode == 0, f"Bad return code {proc.returncode}, stderr: {stderr}"
     assert stdout.strip() == expected_output.strip()
+
+
+def test_helptext():
+    proc = subprocess.Popen(
+        ["har2locust", "--help"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        encoding="utf-8",
+    )
+    stdout, stderr = proc.communicate()
+    assert proc.returncode == 0, f"Bad return code {proc.returncode}, stderr: {stderr}"
+    assert "usage: har2locust" in stdout
 
 
 def test_plugins():
@@ -84,13 +97,14 @@ def test_plugins():
     assert "hello" in stderr, stderr
 
 
+# this test is intended to be run AFTER regenerating the output using make update_tests
 def test_locust_run():
     proc = subprocess.Popen(
-        ["locust", "-f", "tests/outputs/reqres.in.py", "-i", "1", "--headless"],
+        ["locust", "-f", "outputs/reqres.in.py", "-i", "1", "--headless"],
         stderr=subprocess.PIPE,
         text=True,
         encoding="utf-8",
-        cwd=os.path.join(os.path.dirname(__file__), "../"),
+        cwd=os.path.join(os.path.dirname(__file__)),
     )
     _, stderr = proc.communicate()
     assert proc.returncode == 0, f"Bad return code {proc.returncode}, stderr: {stderr}"

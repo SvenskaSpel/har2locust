@@ -1,71 +1,20 @@
-import argparse
 import importlib
 import json
 import logging
 import os
 import pathlib
-import re
 import subprocess
 import sys
 from typing import List
 from urllib.parse import urlsplit
-
 import jinja2
-
-from ._version import version
+from .argument_parser import get_parser
 from .plugin import entriesprocessor, valuesprocessor
 
 
 def cli():
-    parser = argparse.ArgumentParser(
-        epilog="Example usage: har2locust myrecording.har --plugins myplugin1.py > locustfile.py"
-    )
-    parser.add_argument(
-        "input",
-        help="har input file",
-    )
-    parser.add_argument(
-        "-t",
-        "--template",
-        default="locust.jinja2",
-        type=str,
-        help=(
-            "jinja2 template used to generate locustfile. Default to locust.jinja2. Will check current directory/relative paths first and har2locust built-ins second"
-        ),
-    )
-    parser.add_argument(
-        "--plugins",
-        type=str,
-        default="",
-        help="Comma separated list of extra python files to source, containing a method decorated with @ProcessEntries for processing har-entries before generating the locustfile.",
-    )
-    parser.add_argument(
-        "-f",
-        "--filters",
-        default="xhr,document,other",
-        type=str,
-        help=(
-            "Commas separated list of resource types to be included "
-            "in the locustfile. Supported type are `xhr`, "
-            "`script`, `stylesheet`, `image`, `font`, `document`, `other`. "
-            "Default to xhr,document,other."
-        ),
-    )
-    parser.add_argument(
-        "--version",
-        "-V",
-        action="version",
-        version=f"%(prog)s {version}",
-    )
-    parser.add_argument(
-        "--loglevel",
-        "-L",
-        default="INFO",
-    )
-    args = parser.parse_args()
-
+    args = get_parser().parse_args()
     logging.basicConfig(level=args.loglevel.upper())
-
     main(
         args.input,
         plugins=args.plugins.split(",") if args.plugins else [],
