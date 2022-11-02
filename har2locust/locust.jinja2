@@ -4,6 +4,7 @@ from {{baseuser_module}} import {{baseuser_class}}
 
 class {{name}}({{baseuser_class}}):
     host = '{{host}}'
+    {{extra_class_text}}
 
     {%- if default_headers %}
     default_headers = {
@@ -45,4 +46,4 @@ def on_locust_init(environment, **_kwargs):
     RescheduleTaskOnFail(environment)
 
 if __name__ == "__main__":
-    run_single_user(MyUser)
+    run_single_user({{name}})

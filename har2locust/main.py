@@ -53,7 +53,14 @@ def main(
     pp_dict = process(har, resource_type=resource_type)
 
     py = rendering(
-        template_name, {"name": name, "baseuser_module": "locust", "baseuser_class": "FastHttpUser", **pp_dict}
+        template_name,
+        {
+            "name": name,
+            "baseuser_module": "locust",
+            "baseuser_class": "FastHttpUser",
+            "extra_class_text": "",
+            **pp_dict,
+        },
     )
 
     print(py)
