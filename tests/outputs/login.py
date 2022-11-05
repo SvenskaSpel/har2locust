@@ -5,6 +5,7 @@ from locust_plugins.users import RestUser
 
 class login(RestUser):
     host = "https://api.spela.test3.svenskaspel.se/"
+
     default_headers = {
         "accept-encoding": "gzip, deflate, br",
         "accept-language": "sv,en;q=0.9",
@@ -73,4 +74,4 @@ def on_locust_init(environment, **_kwargs):
 
 
 if __name__ == "__main__":
-    run_single_user(MyUser)
+    run_single_user(login)

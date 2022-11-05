@@ -1118,4 +1118,4 @@ def on_locust_init(environment, **_kwargs):
 
 
 if __name__ == "__main__":
-    run_single_user(MyUser)
+    run_single_user(apple_buy_a_mac)

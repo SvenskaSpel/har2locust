@@ -5,6 +5,7 @@ from locust_plugins.users import RestUser
 
 class reqres_in(RestUser):
     host = "https://reqres.in/"
+
     default_headers = {
         "accept": "*/*",
         "accept-encoding": "gzip, deflate, br",
@@ -29,4 +30,4 @@ def on_locust_init(environment, **_kwargs):
 
 
 if __name__ == "__main__":
-    run_single_user(MyUser)
+    run_single_user(reqres_in)
