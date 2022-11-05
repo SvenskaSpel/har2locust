@@ -10,7 +10,7 @@ def process(entries):
     if headerignore_path.is_file():
         with open(headerignore_path) as f:
             header_filters = f.readlines()
-            header_filters = [line.rstrip() for line in header_filters]
+            header_filters = [line.rstrip() for line in header_filters if not line.strip().startswith("#")]
 
     # always filter these, because they will be added by locust automatically
     header_filters.extend(["^cookie", "^content-length"])

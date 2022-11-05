@@ -66,9 +66,9 @@ Parameters can also be set using environment variables or config files (har2locu
 or ~/.har2locust.conf) For details, see https://goo.gl/R74nmi
 ```
 
-3. You can define "plugins" to process your input using the ProcessEntries decorator. The built in plugins (e.g. [rest.py](https://github.com/SvenskaSpel/har2locust/tree/master/har2locust/plugins/rest.py) are used by default, and serve as examples for how to make your own.
+3. You can define "plugins" to process your input and add custom output. The built in plugins (e.g. [rest.py](https://github.com/SvenskaSpel/har2locust/tree/master/har2locust/plugins/rest.py)) are used by default, and serve as examples for how to make your own.
 
-4. har2locust also reads two files, .urlignore and .headerignore (from your current directory).
+4. Those built in plugins also read two files: .urlignore and .headerignore (from your current directory).
 Populate them with regexes to filter any unwanted requests or headers from your recordings. 
 Some headers are always ignored (cookie, content-length and chrome's "fake" headers)
 Here are some examples: [.urlignore](https://github.com/SvenskaSpel/har2locust/tree/master/.urlignore), 

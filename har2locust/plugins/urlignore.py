@@ -10,6 +10,6 @@ def process(entries):
     if urlignore_file.is_file():
         with open(urlignore_file) as f:
             url_filters = f.readlines()
-            url_filters = [line.rstrip() for line in url_filters]
+            url_filters = [line.rstrip() for line in url_filters if not line.strip().startswith("#")]
 
     entries[:] = [e for e in entries if not any(re.search(r, e["request"]["url"]) for r in url_filters)]

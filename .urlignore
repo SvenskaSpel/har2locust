@@ -1,3 +1,4 @@
+# url:s containing the following regular expressions will not be included in the output
 luna/i.gif
 www.google-analytics.com
 adobedtm.com
