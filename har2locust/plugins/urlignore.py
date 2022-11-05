@@ -6,10 +6,10 @@ import pathlib
 @entriesprocessor
 def process(entries):
     urlignore_file = pathlib.Path(".urlignore")
-    url_filters = []
+    filters = []
     if urlignore_file.is_file():
         with open(urlignore_file) as f:
-            url_filters = f.readlines()
-            url_filters = [line.rstrip() for line in url_filters if not line.strip().startswith("#")]
+            filters = f.readlines()
+            filters = [line.rstrip() for line in filters if line.strip() and not line.strip().startswith("#")]
 
-    entries[:] = [e for e in entries if not any(re.search(r, e["request"]["url"]) for r in url_filters)]
+    entries[:] = [e for e in entries if not any(re.search(r, e["request"]["url"]) for r in filters)]
