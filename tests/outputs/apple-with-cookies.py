@@ -52,7 +52,7 @@ class apple_with_cookies(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/us/shop/bag/status?apikey=SFX9YPYY9PPXCU9KH",
             headers={
                 "accept": "*/*",
@@ -65,7 +65,7 @@ class apple_with_cookies(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/ac/localeswitcher/3/it_IT/content/localeswitcher.json",
             headers={
                 "accept": "*/*",
@@ -78,7 +78,7 @@ class apple_with_cookies(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/search-services/suggestions/defaultlinks/?src=globalnav&locale=en_US",
             headers={
                 "accept": "*/*",

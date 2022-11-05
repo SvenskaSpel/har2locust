@@ -56,6 +56,7 @@ def main(
         template_name,
         {
             "name": name,
+            "prefix": "from locust import task, run_single_user",
             "baseuser_module": "locust",
             "baseuser_class": "FastHttpUser",
             "extra_class_text": "",

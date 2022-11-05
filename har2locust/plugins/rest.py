@@ -29,3 +29,18 @@ def process(entries):
 def process_values(values):
     values["baseuser_module"] = "locust_plugins.users"
     values["baseuser_class"] = "RestUser"
+    # Black formatting fail on these...
+    values[
+        "prefix"
+    ] = """
+from locust import task, run_single_user, events
+from locust_plugins.listeners import RescheduleTaskOnFail"""
+    values[
+        "postfix"
+    ] = f"""@events.init.add_listener
+def on_locust_init(environment, **_kwargs):
+    RescheduleTaskOnFail(environment)
+    
+if __name__ == "__main__":
+    run_single_user({values['name']})
+    """

@@ -209,7 +209,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/ac/localeswitcher/3/it_IT/content/localeswitcher.json",
             headers={
                 "accept": "*/*",
@@ -222,7 +222,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/search-services/suggestions/defaultlinks/?src=globalnav&locale=en_US",
             headers={
                 "accept": "*/*",
@@ -248,7 +248,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/ac/localeswitcher/3/it_IT/content/localeswitcher.json",
             headers={
                 "accept": "*/*",
@@ -261,7 +261,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/search-services/suggestions/defaultlinks/?src=globalnav&locale=en_US",
             headers={
                 "accept": "*/*",
@@ -274,7 +274,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/us/shop/mcm/product-price?parts=MACBOOKAIR_M1,MBP2020_13_M1,MACMINI_M1,MBP2019_16",
             headers={
                 "accept": "*/*",
@@ -300,7 +300,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/ac/localeswitcher/3/it_IT/content/localeswitcher.json",
             headers={
                 "accept": "*/*",
@@ -313,7 +313,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/search-services/suggestions/defaultlinks/?src=globalnav&locale=en_US",
             headers={
                 "accept": "*/*",
@@ -326,7 +326,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/us/shop/mcm/product-price?parts=MACBOOKAIR_M1,MBP2020_13_M1,MBP2019_16",
             headers={
                 "accept": "*/*",
@@ -339,7 +339,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/us/shop/mcm/tradein-credit?ids=6822",
             headers={
                 "accept": "*/*",
@@ -365,7 +365,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/shop/bag/status?apikey=SJHJUH4YFCTTPD4F4",
             headers={
                 "accept": "*/*",
@@ -378,7 +378,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/shop/delivery-message?parts.0=MGN63LL%2FA&parts.1=MGND3LL%2FA&parts.2=MGN93LL%2FA&mt=regular&_=1606564751169",
             headers={
                 "accept": "*/*",
@@ -392,7 +392,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/shop/delivery-message?parts.0=MGN73LL%2FA&parts.1=MGNE3LL%2FA&parts.2=MGNA3LL%2FA&mt=regular&_=1606564751170",
             headers={
                 "accept": "*/*",
@@ -406,7 +406,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/shop/retail/pickup-message?parts.0=MGN63LL%2FA&parts.1=MGND3LL%2FA&parts.2=MGN93LL%2FA",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
@@ -420,7 +420,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/shop/retail/pickup-message?parts.0=MGN73LL%2FA&parts.1=MGNE3LL%2FA&parts.2=MGNA3LL%2FA",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
@@ -434,7 +434,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/shop/updateFinanceSummary?node=home/shop_mac/family/macbook_air&parts.0=MGN63LL%2FA&parts.1=MGND3LL%2FA&parts.2=MGN93LL%2FA&parts.3=MGN73LL%2FA&parts.4=MGNE3LL%2FA&parts.5=MGNA3LL%2FA&tia=&bfil=2",
             headers={
                 "accept": "*/*",
@@ -458,7 +458,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/search-services/suggestions/defaultlinks/?src=globalnav&locale=en_US",
             headers={
                 "accept": "*/*",
@@ -526,7 +526,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/shop/delivery-message?parts.0=MGN63LL%2FA&option.0=065-C99M%2C065-C99Q%2C065-C9DG%2C065-C171%2C065-C172&mt=regular&_=1606564760188",
             headers={
                 "accept": "*/*",
@@ -550,7 +550,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/search-services/suggestions/defaultlinks/?src=globalnav&locale=en_US",
             headers={
                 "accept": "*/*",
@@ -563,7 +563,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/shop/retail/pickup-message?parts.0=MGN63LL%2FA&option.0=065-C99M%2C065-C99Q%2C065-C9DG%2C065-C171%2C065-C172",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
@@ -577,7 +577,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/shop/configUpdate/MGN63LL/A?node=home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fconfig&option.memory__dummy_z124=065-C99M&option.hard_drivesolid_state_drive__dummy_z124=065-C99Q&option.keyboard_and_documentation_z124=065-C9DG&option.sw_final_cut_pro_x_z124=065-C171&option.sw_logic_pro_x_z124=065-C172&product=MGN63LL%2FA&step=config&bfil=2",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
@@ -601,7 +601,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/shop/delivery-message?parts.0=MGN63LL%2FA&option.0=065-C99J%2C065-C99M%2C065-C99Q%2C065-C9CL%2C065-C9DG%2C065-C9CK%2C065-C9CH%2C065-C9CJ%2C065-C171%2C065-C172&mt=regular&_=1606564760189",
             headers={
                 "accept": "*/*",
@@ -615,7 +615,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/shop/retail/pickup-message?parts.0=MGN63LL%2FA&option.0=065-C99J%2C065-C99M%2C065-C99Q%2C065-C9CL%2C065-C9DG%2C065-C9CK%2C065-C9CH%2C065-C9CJ%2C065-C171%2C065-C172",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
@@ -674,7 +674,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/shop/bag/status?apikey=SJHJUH4YFCTTPD4F4",
             headers={
                 "accept": "*/*",
@@ -687,7 +687,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/shop/buyFlowAttachConfigProductSummary/MGN63LL/A?node=home/shop_mac/family/macbook_air&step=attach&bfil=2&product=MGN63LL%2FA&step=attach&option.sw_logic_pro_x_z124=065-C172&option.keyboard_and_documentation_z124=065-C9DG&option.memory__dummy_z124=065-C99M&complete=true&option.hard_drivesolid_state_drive__dummy_z124=065-C99Q&option.sw_final_cut_pro_x_z124=065-C171&proceed=proceed",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
@@ -701,7 +701,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/shop/delivery-message?parts.0=S6124LL%2FA&parts.1=MJ1M2AM%2FA&parts.2=MX0K2AM%2FA&mt=compact&_=1606564765355",
             headers={
                 "accept": "*/*",
@@ -715,7 +715,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/shop/delivery-message?parts.0=MLA02LL%2FA&parts.1=MUF82AM%2FA&parts.2=MRQM2ZM%2FA&mt=compact&_=1606564765356",
             headers={
                 "accept": "*/*",
@@ -729,7 +729,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/shop/delivery-message?parts.0=MUFG2AM%2FA&parts.1=MQ4H2AM%2FA&parts.2=MWP22AM%2FA&mt=compact&_=1606564765357",
             headers={
                 "accept": "*/*",
@@ -743,7 +743,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/shop/delivery-message?parts.0=MV7N2AM%2FA&parts.1=MRXJ2AM%2FA&parts.2=MMEL2AM%2FA&mt=compact&_=1606564765358",
             headers={
                 "accept": "*/*",
@@ -757,7 +757,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/shop/delivery-message?parts.0=HMUA2VC%2FA&parts.1=HMUB2LL%2FA&parts.2=MK122LL%2FA&mt=compact&_=1606564765359",
             headers={
                 "accept": "*/*",
@@ -771,7 +771,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/shop/delivery-message?parts.0=HMU22ZM%2FA&parts.1=HPA02ZM%2FA&mt=compact&_=1606564765360",
             headers={
                 "accept": "*/*",
@@ -785,7 +785,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/shop/retail/pickup-message?parts.0=S6124LL%2FA&parts.1=MJ1M2AM%2FA&parts.2=MX0K2AM%2FA&little=true",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
@@ -799,7 +799,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/shop/retail/pickup-message?parts.0=MLA02LL%2FA&parts.1=MUF82AM%2FA&parts.2=MRQM2ZM%2FA&little=true",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
@@ -813,7 +813,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/shop/retail/pickup-message?parts.0=MUFG2AM%2FA&parts.1=MQ4H2AM%2FA&parts.2=MWP22AM%2FA&little=true",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
@@ -827,7 +827,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/shop/retail/pickup-message?parts.0=MV7N2AM%2FA&parts.1=MRXJ2AM%2FA&parts.2=MMEL2AM%2FA&little=true",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
@@ -841,7 +841,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/shop/retail/pickup-message?parts.0=HMUA2VC%2FA&parts.1=HMUB2LL%2FA&parts.2=MK122LL%2FA&little=true",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
@@ -855,7 +855,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/shop/retail/pickup-message?parts.0=HMU22ZM%2FA&parts.1=HPA02ZM%2FA&little=true",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
@@ -869,7 +869,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/search-services/suggestions/defaultlinks/?src=globalnav&locale=en_US",
             headers={
                 "accept": "*/*",
@@ -927,7 +927,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/shop/bag/status?apikey=SJHJUH4YFCTTPD4F4",
             headers={
                 "accept": "*/*",
@@ -940,7 +940,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "post",
+            "POST",
             "https://www.apple.com/shop/recommendedForYou-full?partsInCart.0=MGN63LL/A&inline=true&recentAddedPart=MGN63LL/A",
             headers={
                 "accept": "*/*",
@@ -959,7 +959,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "https://www.apple.com/search-services/suggestions/defaultlinks/?src=globalnav&locale=en_US",
             headers={
                 "accept": "*/*",
@@ -1038,7 +1038,7 @@ class apple_buy_a_mac(RestUser):
         ) as resp:
             pass
         with self.rest(
-            "get",
+            "GET",
             "shop/bag/status?apikey=SKCXTKATUYT9JK4HD",
             headers={
                 "Accept": "*/*",
