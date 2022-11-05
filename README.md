@@ -39,8 +39,8 @@ data in HAR file. Here is an example with Chrome Devs Tools
 
 ```
 > har2locust --help
-usage: har2locust [-h] [-t TEMPLATE] [--plugins PLUGINS] [--resource-types RESOURCE_TYPES] [--version]
-                  [--loglevel LOGLEVEL]
+usage: har2locust [-h] [-t TEMPLATE] [--plugins PLUGINS] [--resource-types RESOURCE_TYPES]
+                  [--version] [--loglevel LOGLEVEL]
                   input
 
 positional arguments:
@@ -49,21 +49,21 @@ positional arguments:
 options:
   -h, --help            show this help message and exit
   -t TEMPLATE, --template TEMPLATE
-                        jinja2 template used to generate locustfile. Defaults to locust.jinja2. Will check current
-                        directory/relative paths first and har2locust built-ins second
-  --plugins PLUGINS     Comma separated list of extra python files to source, containing decorated methods for
-                        processing the har file.
+                        jinja2 template used to generate locustfile. Defaults to locust.jinja2. Will
+                        check current directory/relative paths first and har2locust built-ins second
+  --plugins PLUGINS     Comma separated list of extra python files to source, containing decorated
+                        methods for processing the har file.
   --resource-types RESOURCE_TYPES
-                        Commas separated list of resource types to be included in the locustfile. Supported type are
-                        `xhr`, `script`, `stylesheet`, `image`, `font`, `document`, `other`. Defaults to
-                        xhr,document,other.
+                        Commas separated list of resource types to be included in the locustfile.
+                        Supported type are `xhr`, `script`, `stylesheet`, `image`, `font`,
+                        `document`, `other`. Defaults to xhr,document,other.
   --version, -V         show program's version number and exit
   --loglevel LOGLEVEL, -L LOGLEVEL
 
 Example usage: har2locust myrecording.har --plugins myplugin1.py > locustfile
 
-Parameters can also be set using environment variables or config files (har2locust.conf or ~/.har2locust.conf)
-for details, see syntax at https://goo.gl/R74nmi
+Parameters can also be set using environment variables or config files (har2locust.conf
+or ~/.har2locust.conf) For details, see https://goo.gl/R74nmi
 ```
 
 3. You can define "plugins" to process your input using the ProcessEntries decorator. The built in plugins (e.g. [rest.py](https://github.com/SvenskaSpel/har2locust/tree/master/har2locust/plugins/rest.py) are used by default, and serve as examples for how to make your own.

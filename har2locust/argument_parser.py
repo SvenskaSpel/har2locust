@@ -10,8 +10,8 @@ def get_parser() -> configargparse.ArgumentParser:
     parser = configargparse.ArgumentParser(
         epilog="""Example usage: har2locust myrecording.har --plugins myplugin1.py > locustfile
 
-Parameters can also be set using environment variables or config files (har2locust.conf or ~/.har2locust.conf)
-for details, see syntax at https://goo.gl/R74nmi""",
+Parameters can also be set using environment variables or config files (har2locust.conf 
+or ~/.har2locust.conf) For details, see https://goo.gl/R74nmi""",
         auto_env_var_prefix="HAR2LOCUST_",
         add_env_var_help=False,
         add_config_file_help=False,
