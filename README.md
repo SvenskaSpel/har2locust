@@ -38,7 +38,6 @@ data in HAR file. Here is an example with Chrome Devs Tools
 2. Run `har2locust myharfile.har > locustfile.py`
 
 ```
-
 > har2locust --help
 usage: har2locust [-h] [-t TEMPLATE] [--plugins PLUGINS] [--resource-types RESOURCE_TYPES] [--version]
                   [--loglevel LOGLEVEL]
