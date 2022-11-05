@@ -18,7 +18,7 @@ def cli():
     main(
         args.input,
         plugins=args.plugins.split(",") if args.plugins else [],
-        resource_type=args.filters.split(","),
+        resource_type=args.resource_types.split(","),
         template_name=args.template,
     )
 

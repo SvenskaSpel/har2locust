@@ -21,7 +21,8 @@ class reqres_in(RestUser):
             pass
         with self.rest("patch", "api/users/2", json={"name": "morpheus", "job": "zion resident"}) as resp:
             pass
-        self.client.delete("api/users/2")
+        with self.client.delete("api/users/2", catch_response=True) as resp:
+            pass
 
 
 @events.init.add_listener

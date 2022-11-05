@@ -35,18 +35,22 @@ class login(RestUser):
             },
         ) as resp:
             pass
-        self.client.get(
+        with self.client.get(
             "https://spela.test3.svenskaspel.se/",
             headers={
                 "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
             },
-        )
-        self.client.get(
+            catch_response=True,
+        ) as resp:
+            pass
+        with self.client.get(
             "https://spela.test3.svenskaspel.se/logga-in/uppdaterade-villkor?returnUrl=%2F",
             headers={
                 "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
             },
-        )
+            catch_response=True,
+        ) as resp:
+            pass
         with self.rest(
             "post",
             "player/1/terms",

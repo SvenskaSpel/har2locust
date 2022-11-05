@@ -1,7 +1,7 @@
 from typing import List, Dict
 from typing import Callable
 
-# For an example of how to write a plugin, see rest.py
+# For an example of how to write a plugin, see plugins/
 
 
 class entriesprocessor:

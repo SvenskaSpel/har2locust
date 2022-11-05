@@ -27,18 +27,18 @@ class {{name}}({{baseuser_class}}):
             {%- endfor %}}
         {%- endif -%}
         {%- if request.post_data -%}, json={{ request.post_data }}
-        {%- endif -%}) as resp:
-            pass
+        {%- endif -%}
         {%- else -%}
-        self.client.{{ request.method }}("{{ request.url }}"
+        with self.client.{{ request.method }}("{{ request.url }}"
         {%- if request.headers -%}, headers={
             {%- for (key, value) in request.headers | sort %}
             '{{ key }}': '{{ value }}',
             {%- endfor %}}
         {%- endif -%}
-        {%- if request.post_data -%}, data='{{ request.post_data }}'
-        {%- endif -%})
-        {%- endif %}
+        {%- if request.post_data -%}, data='{{ request.post_data }}'{%- endif -%}
+        , catch_response=True
+        {%- endif %}) as resp:
+            pass
         {% endfor %}
 
 @events.init.add_listener
