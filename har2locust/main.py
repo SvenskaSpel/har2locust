@@ -82,7 +82,6 @@ def process(
         resource_type (list): list of resource type to include in the python
             generated code. Supported type are `xhr`, `script`, `stylesheet`,
             `image`, `font`, `document`, `other`.
-            Default to ['xhr', 'document', 'other'].
     """
     supported_resource_type = {
         "xhr",

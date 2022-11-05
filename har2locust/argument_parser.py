@@ -28,7 +28,7 @@ for details, see syntax at https://goo.gl/R74nmi""",
         default="locust.jinja2",
         type=str,
         help=(
-            "jinja2 template used to generate locustfile. Default to locust.jinja2. Will check current directory/relative paths first and har2locust built-ins second"
+            "jinja2 template used to generate locustfile. Defaults to locust.jinja2. Will check current directory/relative paths first and har2locust built-ins second"
         ),
     )
     parser.add_argument(
@@ -45,7 +45,7 @@ for details, see syntax at https://goo.gl/R74nmi""",
             "Commas separated list of resource types to be included "
             "in the locustfile. Supported type are `xhr`, "
             "`script`, `stylesheet`, `image`, `font`, `document`, `other`. "
-            "Default to xhr,document,other."
+            "Defaults to xhr,document,other."
         ),
     )
     parser.add_argument(
