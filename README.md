@@ -8,19 +8,9 @@ Creating a [locust file](https://docs.locust.io/en/stable/writing-a-locustfile.h
 
 Well, now you can!
 
-1. Browse a web page with the Developer Tools open. This will record requests & responses.
+har2locust converts your browser recordings ([HAR](https://en.wikipedia.org/wiki/HAR_(file_format)) files) into locust files.
 
-2. Export the recording into a [HAR](https://en.wikipedia.org/wiki/HAR_(file_format)) file.
-
-3. Use har2locust to convert that into a locustfile - [here's an example](https://github.com/SvenskaSpel/har2locust/tree/master/tests/outputs/reqres.in.py).
-
-har2locust builds upon [har2py](https://github.com/S1M0N38/har2py), modified to generate a locustfile 
-instead of a basic Python file and extended to support plugins.
-
-Note: It is currently in early beta. It mostly works, but there may be changes to behaviour 
-and interface without notice. If you encounter an issue, PRs are very welcome.
-
-Also, dont expect that the generated file will always work out of the box. You'll need to add [response validations](https://docs.locust.io/en/stable/writing-a-locustfile.html#validating-responses) to ensure the quality of your test, and perhaps parametrize dynamic data like usernames. 
+[Here's an example of a generated file](https://github.com/SvenskaSpel/har2locust/tree/master/tests/outputs/reqres.in.py).
 
 ## Installation
 
@@ -72,3 +62,13 @@ Populate them with regexes to filter any unwanted requests or headers from your 
 Some headers are always ignored (cookie, content-length and chrome's "fake" headers)
 Here are some examples: [.urlignore](https://github.com/SvenskaSpel/har2locust/tree/master/.urlignore), 
 [.headerignore](https://github.com/SvenskaSpel/har2locust/tree/master/.headerignore)
+
+## Notes
+
+har2locust builds upon [har2py](https://github.com/S1M0N38/har2py), modified to generate a locustfile 
+instead of a basic Python file and extended to support plugins.
+
+Note: It is currently in early beta. It mostly works, but there may be changes to behaviour 
+and interface without notice. If you encounter an issue, PRs are very welcome.
+
+Also, dont expect that the generated file will always work out of the box. You'll need to add [response validations](https://docs.locust.io/en/stable/writing-a-locustfile.html#validating-responses) to ensure the quality of your test, and perhaps parametrize dynamic data like usernames. 
