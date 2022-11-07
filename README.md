@@ -8,12 +8,11 @@ Creating a [locust file](https://docs.locust.io/en/stable/writing-a-locustfile.h
 
 Well, now you can!
 
-When browsing the web with the Developer Tools open you can record the Network
-Activities (requests perform by your browser & responses you get from servers).
-Then you can export all these data into an [HAR](https://en.wikipedia.org/wiki/HAR_(file_format))
-file (Http ARchive).
+1. Browse a web page with the Developer Tools open. This will record requests & responses.
 
-[Here's an example of har2locust's output](https://github.com/SvenskaSpel/har2locust/tree/master/tests/outputs/reqres.in.py)
+2. Export the recording into a [HAR](https://en.wikipedia.org/wiki/HAR_(file_format)) file.
+
+3. Use har2locust to convert that into a locustfile - [here's an example](https://github.com/SvenskaSpel/har2locust/tree/master/tests/outputs/reqres.in.py).
 
 har2locust builds upon [har2py](https://github.com/S1M0N38/har2py), modified to generate a locustfile 
 instead of a basic Python file and extended to support plugins.
