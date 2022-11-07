@@ -8,10 +8,7 @@ Creating a [locust file](https://docs.locust.io/en/stable/writing-a-locustfile.h
 
 Well, now you can! har2locust converts your browser recordings ([HAR](https://en.wikipedia.org/wiki/HAR_(file_format)) files) into locust files.
 
-
-```python
-# tests/outputs/reqres.in.py
-```
+[Here's an example of a generated file](https://github.com/SvenskaSpel/har2locust/tree/master/tests/outputs/reqres.in.py).
 
 ## Installation
 
