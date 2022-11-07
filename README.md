@@ -60,13 +60,13 @@ options:
   --version, -V         show program's version number and exit
   --loglevel LOGLEVEL, -L LOGLEVEL
 
-Example usage: har2locust myrecording.har --plugins myplugin1.py > locustfile
+Example usage: har2locust myrecording.har myplugin1.py > locustfile
 
 Parameters can also be set using environment variables or config files (har2locust.conf
 or ~/.har2locust.conf) For details, see https://goo.gl/R74nmi
 ```
 
-3. You can define "plugins" to process your input and add custom output. The built in plugins (e.g. [rest.py](https://github.com/SvenskaSpel/har2locust/tree/master/har2locust/plugins/rest.py)) are used by default, and serve as examples for how to make your own.
+3. You can define "plugins" to process your input and add custom output. The built in plugins (e.g. [rest.py](https://github.com/SvenskaSpel/har2locust/tree/master/har2locust/plugins/rest.py)) are used by default, and also serve as examples for how to make your own.
 
 4. Those built in plugins also read two files: .urlignore and .headerignore (from your current directory).
 Populate them with regexes to filter any unwanted requests or headers from your recordings. 
