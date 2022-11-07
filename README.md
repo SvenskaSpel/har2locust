@@ -60,7 +60,7 @@ options:
   --version, -V         show program's version number and exit
   --loglevel LOGLEVEL, -L LOGLEVEL
 
-Example usage: har2locust myrecording.har myplugin1.py > locustfile
+Example usage: har2locust myrecording.har > locustfile
 
 Parameters can also be set using environment variables or config files (har2locust.conf
 or ~/.har2locust.conf) For details, see https://goo.gl/R74nmi
