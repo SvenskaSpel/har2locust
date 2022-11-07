@@ -14,12 +14,11 @@ Well, now you can! har2locust converts your browser recordings ([HAR](https://en
 
 `pip install har2locust`
 
-This will also install locust and [locust-plugins](https://github.com/SvenskaSpel/locust-plugins/), because they are needed to run the generated locustfiles.
+This will also install [locust](https://github.com/locustio/locust/) and [locust-plugins](https://github.com/SvenskaSpel/locust-plugins/), because they are needed to run the generated locustfiles.
 
 ## Usage
 
-1. Navigate the web with your browser while recording your activity. Then save the
-data in HAR file. Here is an example with Chrome Devs Tools
+1. Navigate the web with your browser while recording your activity. Then export the recording into a HAR file. Here is an example with Chrome Devs Tools
 ![har.gif](https://github.com/SvenskaSpel/har2locust/blob/main/har.gif?raw=true)
 
 2. Run `har2locust myharfile.har > locustfile.py`
