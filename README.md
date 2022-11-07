@@ -6,11 +6,12 @@
 
 Creating a [locust file](https://docs.locust.io/en/stable/writing-a-locustfile.html) from scratch is sometimes hard. Don't you wish you could just generate it automatically from a browser session?
 
-Well, now you can!
+Well, now you can! har2locust converts your browser recordings ([HAR](https://en.wikipedia.org/wiki/HAR_(file_format)) files) into locust files.
 
-har2locust converts your browser recordings ([HAR](https://en.wikipedia.org/wiki/HAR_(file_format)) files) into locust files.
 
-[Here's an example of a generated file](https://github.com/SvenskaSpel/har2locust/tree/master/tests/outputs/reqres.in.py).
+```python
+# tests/outputs/reqres.in.py
+```
 
 ## Installation
 
