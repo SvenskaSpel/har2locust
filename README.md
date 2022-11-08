@@ -10,7 +10,7 @@ Well, now you can! har2locust converts your browser recordings ([HAR](https://en
 
 [Here's an example of a generated file](https://github.com/SvenskaSpel/har2locust/tree/main/tests/outputs/reqres.in.py).
 
-At its core har2locust uses a [jinja2 template](https://github.com/SvenskaSpel/har2locust/tree/main/har2locust/locust.jinja2) to define the output, but it also provides some [integration points](https://github.com/SvenskaSpel/har2locust/tree/main/har2locust/plugin.py) to allow you to customize the output.
+At its core har2locust uses a [jinja2 template](https://github.com/SvenskaSpel/har2locust/tree/main/har2locust/locust.jinja2) to define the output. You can easily change that to customize your output, or you can go even further and use the [plugin system](https://github.com/SvenskaSpel/har2locust/tree/main/har2locust/plugin.py) to make any kind of changes to the processing/output.
 
 ## Installation
 
