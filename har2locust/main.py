@@ -185,7 +185,7 @@ def rendering(template_name: str, values: dict) -> str:
 
     for p in astprocessor.processors:
         p(tree)
-    py = ast.unparse(tree)
+    py = ast.unparse(ast.fix_missing_locations(tree))
     logging.debug("astprocessors applied")
 
     for p in outputstringprocessor.processors:
