@@ -2,10 +2,10 @@ from typing import List, Dict
 from typing import Callable
 import libcst as cst
 
-# For examples of how to write a plugin, see plugins/
+# For examples of how to write a plugin, see plugins/ or tests/plugin_example.py
 # The processors allow you to interact with your recording at various stages,
 
-# immediately after reading the HAR
+# immediately after reading the HAR JSON
 class entriesprocessor:
     processors: List[Callable[[List[Dict]], None]] = []
 
@@ -13,7 +13,7 @@ class entriesprocessor:
         self.processors.append(func)
 
 
-# just before passing values to template
+# just before passing values to jinja2 template
 class valuesprocessor:
     processors: List[Callable[[Dict], None]] = []
 
