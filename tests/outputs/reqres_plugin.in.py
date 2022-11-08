@@ -15,7 +15,7 @@ class NewName(RestUser):
     }
 
     @task
-    def t(self):
+    def renamed_function(self):
         with self.rest("POST", "api/users", json={"name": "morpheus", "job": "leader"}) as resp:
             pass
 

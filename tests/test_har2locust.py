@@ -5,6 +5,7 @@ import subprocess
 import os
 import pytest
 from har2locust.main import main, process, rendering
+from libcst import ParserSyntaxError
 
 inputs_dir = pathlib.Path(__file__).parents[0] / "inputs"
 outputs_dir = pathlib.Path(__file__).parents[0] / "outputs"
@@ -31,10 +32,7 @@ def test_preprocessing_unsupported_resource_type():
 
 
 def test_rendering_syntax_error():
-    with pytest.raises(
-        AssertionError,
-        match="Black failed to format the output - perhaps your template is broken?",
-    ):
+    with pytest.raises(SystemExit):
         rendering("tests/broken_template.jinja2", process(har))
 
 
@@ -94,6 +92,7 @@ def test_plugins():
     assert proc.returncode == 0, f"Bad return code {proc.returncode}, stderr: {stderr}"
     assert stdout.strip() == expected_output.strip()
     assert "NewName" in stdout
+    assert "renamed_function(self)" in stdout
     assert "hello" in stderr, stderr
 
 

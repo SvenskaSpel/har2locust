@@ -3,13 +3,13 @@ import json
 import logging
 import os
 import pathlib
-import subprocess
+import libcst as cst
 import sys
 from typing import List
 from urllib.parse import urlsplit
 import jinja2
 from .argument_parser import get_parser
-from .plugin import entriesprocessor, valuesprocessor
+from .plugin import cstprocessor, entriesprocessor, valuesprocessor, outputstringprocessor
 
 
 def cli():
@@ -42,6 +42,7 @@ def main(
         "har2locust/plugins/rest.py",
         "har2locust/plugins/urlignore.py",
         "har2locust/plugins/headerignore.py",
+        "har2locust/plugins/black.py",
     ]
     default_and_extra_plugins = default_plugins + plugins
     for plugin in default_and_extra_plugins:
@@ -156,6 +157,7 @@ def process(
 def rendering(template_name: str, values: dict) -> str:
     for p in valuesprocessor.processors:
         p(values)
+    logging.debug("valueprocessors applied")
 
     logging.debug(f'about to load template "{template_name}"')
     if pathlib.Path(template_name).exists():
@@ -172,15 +174,24 @@ def rendering(template_name: str, values: dict) -> str:
     logging.debug("template loaded")
 
     py = template.render(values)
-    logging.debug("template rendered, about to autoformat output using Black")
+    logging.debug("template rendered")
 
-    p = subprocess.Popen(["black", "-q", "-"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
-    assert p.stdin  # keep linter happy
-    p.stdin.write(py)
-    stdout, _stderr = p.communicate()
-    assert (
-        not p.returncode
-    ), f"Black failed to format the output - perhaps your template is broken? unformatted output was: {py}"
+    try:
+        tree = cst.parse_module(py)
+    except cst.ParserSyntaxError as e:
+        levelmessage = " Set log level DEBUG to see the whole output." if logging.DEBUG < logging.root.level else ""
+        logging.error(
+            f"Generated python code was invalid. Check your template.{levelmessage}\n{e.message} at:\n{e.context} ({e.raw_line}:{e.raw_column})"
+        )
+        logging.debug(py)
+        sys.exit(1)
+    for p in cstprocessor.processors:
+        tree = p(tree)
+    py = tree.code
+    logging.debug("cstprocessors applied")
 
-    # for some reason the subprocess returns an extra newline, get rid of that
-    return stdout[:-1]
+    for p in outputstringprocessor.processors:
+        py = p(py)
+    logging.debug("outputstringprocessors applied")
+
+    return py
