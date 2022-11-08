@@ -5,7 +5,6 @@ import subprocess
 import os
 import pytest
 from har2locust.main import main, process, rendering
-from libcst import ParserSyntaxError
 
 inputs_dir = pathlib.Path(__file__).parents[0] / "inputs"
 outputs_dir = pathlib.Path(__file__).parents[0] / "outputs"
