@@ -32,7 +32,10 @@ def test_preprocessing_unsupported_resource_type():
 
 
 def test_rendering_syntax_error():
-    with pytest.raises(SystemExit):
+    with pytest.raises(
+        SyntaxError,
+        match="Generated code was invalid",
+    ):
         rendering("tests/broken_template.jinja2", process(har))
 
 

@@ -1,6 +1,6 @@
-from har2locust.plugin import entriesprocessor, valuesprocessor, cstprocessor
+from har2locust.plugin import entriesprocessor, valuesprocessor, astprocessor
 import logging
-import libcst as cst
+import ast
 import re
 
 
@@ -27,12 +27,12 @@ def rename_and_do_stuff(values):
     values["name"] = "NewName"
 
 
-@cstprocessor
-def rename_task_function(tree: cst.Module) -> cst.Module:
-    class RenameTaskFunction(cst.CSTTransformer):
-        def leave_FunctionDef(self, node: cst.FunctionDef, updated_node: cst.FunctionDef) -> cst.FunctionDef:
-            if node.name.value == "t":
-                updated_node = updated_node.with_changes(name=cst.Name("renamed_function"))
-            return updated_node
+@astprocessor
+def rename_task_function(tree: ast.Module):
+    class RenameTaskFunction(ast.NodeTransformer):
+        def visit_FunctionDef(self, node: ast.FunctionDef) -> ast.FunctionDef:
+            if node.name == "t":
+                node.name = "renamed_function"
+            return node
 
-    return tree.visit(RenameTaskFunction())
+    RenameTaskFunction().visit(tree)

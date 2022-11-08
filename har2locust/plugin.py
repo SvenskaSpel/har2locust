@@ -1,6 +1,6 @@
 from typing import List, Dict
 from typing import Callable
-import libcst as cst
+import ast
 
 # For examples of how to write a plugin, see plugins/ or tests/plugin_example.py
 # The processors allow you to interact with your recording at various stages,
@@ -22,10 +22,10 @@ class valuesprocessor:
 
 
 # after rendering template, working with the syntax tree
-class cstprocessor:
-    processors: List[Callable[[cst.Module], cst.Module]] = []
+class astprocessor:
+    processors: List[Callable[[ast.Module], None]] = []
 
-    def __init__(self, func: Callable[[cst.Module], cst.Module]):
+    def __init__(self, func: Callable[[ast.Module], None]):
         self.processors.append(func)
 
 

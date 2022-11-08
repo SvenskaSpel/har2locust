@@ -3,13 +3,13 @@ import json
 import logging
 import os
 import pathlib
-import libcst as cst
+import ast
 import sys
 from typing import List
 from urllib.parse import urlsplit
 import jinja2
 from .argument_parser import get_parser
-from .plugin import cstprocessor, entriesprocessor, valuesprocessor, outputstringprocessor
+from .plugin import astprocessor, entriesprocessor, valuesprocessor, outputstringprocessor
 
 
 def cli():
@@ -177,18 +177,16 @@ def rendering(template_name: str, values: dict) -> str:
     logging.debug("template rendered")
 
     try:
-        tree = cst.parse_module(py)
-    except cst.ParserSyntaxError as e:
-        levelmessage = " Set log level DEBUG to see the whole output." if logging.DEBUG < logging.root.level else ""
-        logging.error(
-            f"Generated python code was invalid. Check your template.{levelmessage}\n{e.message} at:\n{e.context} ({e.raw_line}:{e.raw_column})"
-        )
+        tree = ast.parse(py)
+    except SyntaxError as e:
         logging.debug(py)
-        sys.exit(1)
-    for p in cstprocessor.processors:
-        tree = p(tree)
-    py = tree.code
-    logging.debug("cstprocessors applied")
+        levelmessage = " Set log level DEBUG to see the whole output." if logging.DEBUG < logging.root.level else ""
+        raise SyntaxError("Generated code was invalid" + levelmessage) from e
+
+    for p in astprocessor.processors:
+        p(tree)
+    py = ast.unparse(tree)
+    logging.debug("astprocessors applied")
 
     for p in outputstringprocessor.processors:
         py = p(py)
