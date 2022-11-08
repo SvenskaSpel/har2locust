@@ -8,9 +8,9 @@ Creating a [locust file](https://docs.locust.io/en/stable/writing-a-locustfile.h
 
 Well, now you can! har2locust converts your browser recordings ([HAR](https://en.wikipedia.org/wiki/HAR_(file_format)) files) into locust files.
 
-[Here's an example of a generated file](https://github.com/SvenskaSpel/har2locust/tree/master/tests/outputs/reqres.in.py).
+[Here's an example of a generated file](https://github.com/SvenskaSpel/har2locust/tree/main/tests/outputs/reqres.in.py).
 
-At its core har2locust uses a [jinja2 template](https://github.com/SvenskaSpel/har2locust/tree/master/har2locust/locust.jinja2) to define the output, but it also provides some [integration points](https://github.com/SvenskaSpel/har2locust/tree/master/har2locust/plugin.py) to allow you to customize the output.
+At its core har2locust uses a [jinja2 template](https://github.com/SvenskaSpel/har2locust/tree/main/har2locust/locust.jinja2) to define the output, but it also provides some [integration points](https://github.com/SvenskaSpel/har2locust/tree/main/har2locust/plugin.py) to allow you to customize the output.
 
 ## Installation
 
@@ -54,13 +54,13 @@ Parameters can also be set using environment variables or config files (har2locu
 or ~/.har2locust.conf) For details, see https://goo.gl/R74nmi
 ```
 
-3. You can define "plugins" to process your input and add custom output. The built in plugins (e.g. [rest.py](https://github.com/SvenskaSpel/har2locust/tree/master/har2locust/plugins/rest.py)) are used by default, and also serve as examples for how to make your own.
+3. You can define "plugins" to process your input and add custom output. The built in plugins (e.g. [rest.py](https://github.com/SvenskaSpel/har2locust/tree/main/har2locust/plugins/rest.py)) are used by default, and also serve as examples for how to make your own.
 
 4. Those built in plugins also read two files: .urlignore and .headerignore (from your current directory).
 Populate them with regexes to filter any unwanted requests or headers from your recordings. 
 Some headers are always ignored (cookie, content-length and chrome's "fake" headers)
-Here are some examples: [.urlignore](https://github.com/SvenskaSpel/har2locust/tree/master/.urlignore), 
-[.headerignore](https://github.com/SvenskaSpel/har2locust/tree/master/.headerignore)
+Here are some examples: [.urlignore](https://github.com/SvenskaSpel/har2locust/tree/main/.urlignore), 
+[.headerignore](https://github.com/SvenskaSpel/har2locust/tree/main/.headerignore)
 
 ## Notes
 
