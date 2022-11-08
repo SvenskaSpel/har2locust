@@ -29,7 +29,7 @@ class cstprocessor:
         self.processors.append(func)
 
 
-# just before printing outputm working with the string output
+# just before printing output, working with the string output
 class outputstringprocessor:
     processors: List[Callable[[str], str]] = []
 
