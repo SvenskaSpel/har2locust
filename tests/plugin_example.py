@@ -15,12 +15,11 @@ def rename_and_do_stuff(values):
 
 
 @cstprocessor
-def add_nice_comment(tree: cst.Module):
+def rename_task_function(tree: cst.Module):
     class RenameTaskFunction(cst.CSTTransformer):
         def leave_FunctionDef(self, node: cst.FunctionDef, updated_node: cst.FunctionDef) -> cst.FunctionDef:
             if node.name.value == "t":
                 updated_node = updated_node.with_changes(name=cst.Name("renamed_function"))
             return updated_node
 
-    t = RenameTaskFunction()
-    return tree.visit(t)
+    return tree.visit(RenameTaskFunction())
