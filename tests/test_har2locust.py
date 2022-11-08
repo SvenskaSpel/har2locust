@@ -94,7 +94,7 @@ def test_plugins():
     assert proc.returncode == 0, f"Bad return code {proc.returncode}, stderr: {stderr}"
     assert stdout.strip() == expected_output.strip()
     assert "NewName" in stdout
-    assert "renamed_function(self)" in stdout
+    assert "renamed_function(" in stdout
     assert "hello" in stderr, stderr
 
 
