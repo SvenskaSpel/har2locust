@@ -15,13 +15,14 @@ class NewName(RestUser):
     }
 
     @task
-    def renamed_function(self):
-        with self.rest("POST", "api/users", json={"name": "morpheus", "job": "leader"}) as resp:
-            pass
+    def t(self):
+        with self.reader.user() as self.customer:
+            with self.rest("POST", "api/users", json={"name": "morpheus", "job": "leader"}) as resp:
+                pass
 
 
 @events.init.add_listener
-def on_locust_init(environment, **_kwargs):
+def renamed_function(environment, **_kwargs):
     RescheduleTaskOnFail(environment)
 
 
