@@ -15,7 +15,7 @@ def rename_and_do_stuff(values):
 
 
 @cstprocessor
-def rename_task_function(tree: cst.Module):
+def rename_task_function(tree: cst.Module) -> cst.Module:
     class RenameTaskFunction(cst.CSTTransformer):
         def leave_FunctionDef(self, node: cst.FunctionDef, updated_node: cst.FunctionDef) -> cst.FunctionDef:
             if node.name.value == "t":
