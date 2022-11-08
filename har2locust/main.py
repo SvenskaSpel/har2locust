@@ -180,8 +180,9 @@ def rendering(template_name: str, values: dict) -> str:
         tree = ast.parse(py)
     except SyntaxError as e:
         logging.debug(py)
-        levelmessage = " Set log level DEBUG to see the whole output." if logging.DEBUG < logging.root.level else ""
-        raise SyntaxError("Generated code was invalid" + levelmessage) from e
+        levelmessage = " (set log level DEBUG to see the whole output)" if logging.DEBUG < logging.root.level else ""
+        logging.error(f"{e.msg} when parsing rendered template{levelmessage}")
+        raise
 
     for p in astprocessor.processors:
         p(tree)

@@ -4,6 +4,7 @@ import pathlib
 import subprocess
 import os
 import pytest
+import re
 from har2locust.main import main, process, rendering
 
 inputs_dir = pathlib.Path(__file__).parents[0] / "inputs"
@@ -33,7 +34,7 @@ def test_preprocessing_unsupported_resource_type():
 def test_rendering_syntax_error():
     with pytest.raises(
         SyntaxError,
-        match="Generated code was invalid",
+        match=re.escape("invalid syntax (<unknown>, line 1)"),
     ):
         rendering("tests/broken_template.jinja2", process(har))
 
