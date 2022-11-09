@@ -57,7 +57,6 @@ def main(
         template_name,
         {
             "name": name,
-            "extra_class_text": "",
             **pp_dict,
         },
     )

@@ -4,7 +4,6 @@ from locust import FastHttpUser
 
 class {{name}}(FastHttpUser):
     host = '{{host}}'
-    {{-extra_class_text}}
     {%- if default_headers %}
     default_headers = {
         {%- for (key, value) in default_headers | sort %}
