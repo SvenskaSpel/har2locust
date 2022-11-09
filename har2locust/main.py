@@ -39,6 +39,7 @@ def main(
     logging.debug(f"loaded {har_path}")
 
     default_plugins = [
+        "har2locust/plugins/fasthttpuser.py",
         "har2locust/plugins/rest.py",
         "har2locust/plugins/urlignore.py",
         "har2locust/plugins/headerignore.py",
@@ -147,7 +148,7 @@ def process(
 
     logging.debug("preprocessed har dict")
 
-    return dict(host=host, default_headers=default_headers, requests=requests, responses=responses)
+    return dict(host=host, default_headers=sorted(default_headers), requests=requests, responses=responses)
 
 
 def rendering(template_name: str, values: dict) -> str:

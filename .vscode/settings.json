@@ -113,6 +113,9 @@
         "**/*~": true,
         "**/tags": true,
         "**/[._]*.un~": true,
-        "**/_version.py": true
-    }
+        "**/_version.py": true,
+    },
+    "python.analysis.diagnosticSeverityOverrides": {
+        "reportWildcardImportFromLibrary": "none"
+    },
 }

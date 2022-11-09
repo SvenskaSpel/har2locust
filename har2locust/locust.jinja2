@@ -2,15 +2,8 @@
 from locust import task, run_single_user
 from locust import FastHttpUser
 
-class {{name}}(FastHttpUser):
-    host = '{{host}}'
-    {%- if default_headers %}
-    default_headers = {
-        {%- for (key, value) in default_headers | sort %}
-        '{{ key }}': '{{ value }}',
-        {%- endfor %}
-    }
-    {%- endif %}
+class MyUser(FastHttpUser):
+    host = ...
 
     @task
     def t(self):
