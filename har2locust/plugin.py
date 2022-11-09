@@ -6,7 +6,7 @@ import ast
 
 # immediately after reading the HAR JSON
 class entriesprocessor:
-    processors: list[callable[[list[dict]], None]] = []
+    processors: list[Callable[[list[dict]], None]] = []
 
     def __init__(self, func: Callable[[list[dict]], None]):
         self.processors.append(func)
