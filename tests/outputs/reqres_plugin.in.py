@@ -1,7 +1,7 @@
 from locust import events
 from locust_plugins.listeners import RescheduleTaskOnFail
 from locust import task, run_single_user
-from locust_plugins import RestUser
+from locust_plugins.users import RestUser
 
 
 class NewName(RestUser):
