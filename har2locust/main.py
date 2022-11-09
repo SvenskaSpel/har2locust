@@ -57,9 +57,6 @@ def main(
         template_name,
         {
             "name": name,
-            "prefix": "from locust import task, run_single_user",
-            "baseuser_module": "locust",
-            "baseuser_class": "FastHttpUser",
             "extra_class_text": "",
             **pp_dict,
         },
@@ -185,7 +182,7 @@ def rendering(template_name: str, values: dict) -> str:
         raise
 
     for p in astprocessor.processors:
-        p(tree)
+        p(tree, values)
     py = ast.unparse(ast.fix_missing_locations(tree))
     logging.debug("astprocessors applied")
 

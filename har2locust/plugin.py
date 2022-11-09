@@ -1,5 +1,4 @@
-from typing import List, Dict
-from typing import Callable
+from typing import List, Dict, Callable, cast
 import ast
 
 # For examples of how to write a plugin, see plugins/ or tests/plugin_example.py
@@ -23,9 +22,9 @@ class valuesprocessor:
 
 # after rendering template, working with the syntax tree
 class astprocessor:
-    processors: List[Callable[[ast.Module], None]] = []
+    processors: List[Callable[[ast.Module, Dict], None]] = []
 
-    def __init__(self, func: Callable[[ast.Module], None]):
+    def __init__(self, func: Callable[[ast.Module, Dict], None]):
         self.processors.append(func)
 
 

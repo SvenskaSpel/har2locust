@@ -1,8 +1,8 @@
 # note that any comments here will be removed during AST parsing
-{{prefix}}
-from {{baseuser_module}} import {{baseuser_class}}
+from locust import task, run_single_user
+from locust import FastHttpUser
 
-class {{name}}({{baseuser_class}}):
+class {{name}}(FastHttpUser):
     host = '{{host}}'
     {{-extra_class_text}}
     {%- if default_headers %}
@@ -39,5 +39,3 @@ class {{name}}({{baseuser_class}}):
         {%- endif %}) as resp:
             pass
         {% endfor %}
-
-{{postfix}}

@@ -1,6 +1,7 @@
-from locust import task, run_single_user, events
+from locust import events
 from locust_plugins.listeners import RescheduleTaskOnFail
-from locust_plugins.users import RestUser
+from locust import task, run_single_user
+from locust_plugins import RestUser
 
 
 class NewName(RestUser):
@@ -27,4 +28,4 @@ def renamed_function(environment, **_kwargs):
 
 
 if __name__ == "__main__":
-    run_single_user(reqres_in)
+    run_single_user(NewName)

@@ -29,7 +29,7 @@ def rename_and_do_stuff(values):
 
 
 @astprocessor
-def rename_task_function(tree: ast.Module):
+def rename_task_function(tree: ast.Module, values: dict):
     class RenameTaskFunction(ast.NodeTransformer):
         def visit_FunctionDef(self, node: ast.FunctionDef) -> ast.FunctionDef:
             if node.name == "on_locust_init":
@@ -41,7 +41,7 @@ def rename_task_function(tree: ast.Module):
 
 # @astprocessor allows you to do all kinds of advanced stuff, like this function that wraps the task body in a with-block.
 @astprocessor
-def get_customer_from_reader(tree: ast.Module):
+def get_customer_from_reader(tree: ast.Module, values: dict):
     class WithReaderUser(ast.NodeTransformer):
         def visit_FunctionDef(self, node: ast.FunctionDef) -> ast.FunctionDef:
             body_double = node.body.copy()

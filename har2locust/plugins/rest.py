@@ -1,5 +1,6 @@
-from har2locust.plugin import entriesprocessor, valuesprocessor
+from har2locust.plugin import entriesprocessor, valuesprocessor, astprocessor
 import logging
+from ast import *
 
 
 @entriesprocessor
@@ -25,22 +26,45 @@ def process(entries):
     entries[:] = output  # overwrite entries, in place
 
 
-@valuesprocessor
-def process_values(values):
-    values["baseuser_module"] = "locust_plugins.users"
-    values["baseuser_class"] = "RestUser"
-    # Black formatting fail on these...
-    values[
-        "prefix"
-    ] = """
-from locust import task, run_single_user, events
-from locust_plugins.listeners import RescheduleTaskOnFail"""
-    values[
-        "postfix"
-    ] = f"""@events.init.add_listener
+@astprocessor
+def process_ast(tree: Module, values: dict):
+    class Transformer(NodeTransformer):
+        def visit_ClassDef(self, node: ClassDef) -> ClassDef:
+            node.bases[0] = Name("RestUser")
+            self.generic_visit(node)
+            return node
+
+        def visit_Import(self, node: Import) -> Import:
+            self.generic_visit(node)
+            return node
+
+        def visit_ImportFrom(self, node: ImportFrom) -> ImportFrom:
+            if node.names[0].name == "FastHttpUser":
+                node.module = "locust_plugins"
+                node.names[0].name = "RestUser"
+            self.generic_visit(node)
+            return node
+
+        def visit_Module(self, node: Module) -> Module:
+            node.body = (
+                parse(
+                    """
+from locust import events
+from locust_plugins.listeners import RescheduleTaskOnFail
+"""
+                ).body
+                + node.body
+                + parse(
+                    f"""
+@events.init.add_listener
 def on_locust_init(environment, **_kwargs):
     RescheduleTaskOnFail(environment)
-    
 if __name__ == "__main__":
     run_single_user({values['name']})
-    """
+""",
+                ).body
+            )
+            self.generic_visit(node)
+            return node
+
+    Transformer().visit(tree)

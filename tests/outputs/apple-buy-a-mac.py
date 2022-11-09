@@ -1,6 +1,7 @@
-from locust import task, run_single_user, events
+from locust import events
 from locust_plugins.listeners import RescheduleTaskOnFail
-from locust_plugins.users import RestUser
+from locust import task, run_single_user
+from locust_plugins import RestUser
 
 
 class apple_buy_a_mac(RestUser):
