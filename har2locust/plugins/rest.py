@@ -1,4 +1,4 @@
-from har2locust.plugin import entriesprocessor, valuesprocessor, astprocessor
+from har2locust.plugin import entriesprocessor, astprocessor
 import logging
 from ast import *
 
