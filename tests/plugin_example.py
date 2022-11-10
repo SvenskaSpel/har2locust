@@ -44,32 +44,17 @@ def rename_task_function(tree: ast.Module, values: dict):
 def get_customer_from_reader(tree: ast.Module, values: dict):
     class WithReaderUser(ast.NodeTransformer):
         def visit_FunctionDef(self, node: ast.FunctionDef) -> ast.FunctionDef:
-            body_double = node.body.copy()
-            # wrap it all in a with-block. this looks really complicated but it is all pretty much created from a ast.dump() of this:
-            # with self.reader.user() as self.customer:
-            #     pass
             if node.name == "t":
-                node.body = [
-                    With(
-                        items=[
-                            withitem(
-                                context_expr=Call(
-                                    func=Attribute(
-                                        value=Attribute(value=Name(id="self", ctx=Load()), attr="reader", ctx=Load()),
-                                        attr="user",
-                                        ctx=Load(),
-                                    ),
-                                    args=[],
-                                    keywords=[],
-                                ),
-                                optional_vars=Attribute(
-                                    value=Name(id="self", ctx=Load()), attr="customer", ctx=Store()
-                                ),
-                            )
-                        ],
-                        body=body_double,
-                    )
-                ]
+                with_block = parse(
+                    f"""
+with self.reader.user() as self.customer:
+    pass
+                    """
+                ).body[0]
+                assert isinstance(with_block, With), with_block
+                with_block.body = node.body
+                node.body = [with_block]
+            self.generic_visit(node)
             return node
 
     WithReaderUser().visit(tree)
