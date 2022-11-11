@@ -120,7 +120,7 @@ def process(
     for i, e in enumerate(entries):
         r = e["request"]
         r["url"] = r["url"].removeprefix(host)
-        r["headers"] = headers_req[i] - default_headers
+        r["headers"] = sorted(headers_req[i] - default_headers, key=lambda item: item[0])
 
     logging.debug("preprocessed har dict")
 

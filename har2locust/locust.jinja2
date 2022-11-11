@@ -18,7 +18,7 @@ class {{name}}(FastHttpUser):
         {% set request = e.request %}
         with self.{{request.fname}}("{{ request.method | upper }}", "{{ request.url }}"
         {%- if request.fname == "rest" -%}{%- if request.headers -%}, headers={
-            {%- for (key, value) in request.headers | sort %}
+            {%- for key, value in request.headers %}
             {%- if key|lower != "content-type" -%}
             '{{ key }}': '{{ value }}',
             {%- endif -%}    
@@ -28,7 +28,7 @@ class {{name}}(FastHttpUser):
         {%- endif -%}
         {%- else -%}
         {%- if request.headers -%}, headers={
-            {%- for (key, value) in request.headers | sort %}
+            {%- for key, value in request.headers %}
             '{{ key }}': '{{ value }}',
             {%- endfor %}}
         {%- endif -%}
