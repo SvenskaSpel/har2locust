@@ -1,6 +1,6 @@
+# This file has some advanced examples of how to massage your recording
+# Use it as inspiration for the techniques, not as a recommendation for exactly what to do
 from har2locust.plugin import entriesprocessor, valuesprocessor, astprocessor
-import logging
-import ast
 from ast import *
 import re
 
@@ -21,6 +21,18 @@ def parametrize_ssn(entries):
 @astprocessor
 def get_customer_from_reader(tree: Module, values: dict):
     class T(NodeTransformer):
+        def visit_ImportFrom(self, node: ImportFrom) -> ImportFrom:
+            if node.names[0].name == "RestUser":
+                node.module = "svs_locust"  # import a slightly different RestUser, from another package
+            self.generic_visit(node)
+            return node
+
+        def visit_ClassDef(self, node: ClassDef) -> ClassDef:
+            class_extra_props = parse("tb = True")
+            node.body[0] = class_extra_props.body[0]  # this will overwrite the "host = ..." line
+            self.generic_visit(node)
+            return node
+
         def visit_FunctionDef(self, node: FunctionDef) -> FunctionDef:
             if node.name == "t":
                 with_block = parse(
@@ -32,6 +44,15 @@ with self.reader.user() as self.customer:
                 assert isinstance(with_block, With), with_block
                 with_block.body = node.body
                 node.body = [with_block]
+            self.generic_visit(node)
+            return node
+
+        def visit_Call(self, node: Call) -> Call:
+            if isinstance(node.func, Attribute) and node.func.attr == "rest":
+                c = node.args[1]
+                if isinstance(c, Constant) and re.search(r"&_=\d+$", c.value):
+                    node.func.attr = "rest_"
+                    c.value = re.sub(r"&_=\d+$", "", c.value)
             self.generic_visit(node)
             return node
 

@@ -94,6 +94,9 @@ def test_plugins():
     assert stdout.strip() == expected_output.strip()
     assert "self.reader.user" in stdout
     assert "self.customer" in stdout
+    # test url timestamp rewriting function
+    assert "self.rest_" in stdout
+    assert "&_" not in stdout
 
 
 # this test is intended to be run AFTER regenerating the output using make update_tests

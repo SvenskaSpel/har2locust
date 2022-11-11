@@ -1,11 +1,11 @@
 from locust import events
 from locust_plugins.listeners import RescheduleTaskOnFail
 from locust import task, run_single_user
-from locust_plugins.users import RestUser
+from svs_locust import RestUser
 
 
 class login(RestUser):
-    host = "https://api.spela.test3.svenskaspel.se/"
+    tb = True
     default_headers = {
         "accept-encoding": "gzip, deflate, br",
         "accept-language": "sv,en;q=0.9",
@@ -64,9 +64,9 @@ class login(RestUser):
                 json={},
             ) as resp:
                 pass
-            with self.rest(
+            with self.rest_(
                 "GET",
-                "player/1/info?include=accountBalance&_=1636025343876",
+                "player/1/info?include=accountBalance",
                 headers={
                     "accept": "application/json, text/javascript, */*; q=0.01",
                     "origin": "https://spela.test3.svenskaspel.se",
