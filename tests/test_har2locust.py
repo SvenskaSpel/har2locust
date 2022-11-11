@@ -92,10 +92,8 @@ def test_plugins():
     stdout, stderr = proc.communicate()
     assert proc.returncode == 0, f"Bad return code {proc.returncode}, stderr: {stderr}"
     assert stdout.strip() == expected_output.strip()
-    assert "NewName" in stdout
-    assert "renamed_function(" in stdout
+    assert "self.reader.user" in stdout
     assert "self.customer" in stdout
-    assert "hello" in stderr, stderr
 
 
 # this test is intended to be run AFTER regenerating the output using make update_tests
