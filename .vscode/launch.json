@@ -11,9 +11,11 @@
             "program": "/usr/local/bin/har2locust",
             "console": "integratedTerminal",
             "args": [
-                "tests/inputs/reqres.in.har",
+                "tests/inputs/login.har",
                 "-L",
-                "DEBUG"
+                "DEBUG",
+                "--plugins",
+                "tests/plugin_example.py"
             ],
             "env": {
                 "LC_ALL": "en_US.UTF-8"
