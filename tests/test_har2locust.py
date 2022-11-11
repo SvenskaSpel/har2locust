@@ -13,10 +13,8 @@ outputs_dir = pathlib.Path(__file__).parents[0] / "outputs"
 har_files = list(inputs_dir.glob("*.har"))
 py_files = [outputs_dir / f.with_suffix(".py").name for f in har_files]
 
-har_file = har_files[0]
-py_file = py_files[0]
 
-with open(har_file) as f:
+with open(inputs_dir / "login.har") as f:
     har = json.load(f)
 
 
@@ -36,7 +34,7 @@ def test_rendering_syntax_error():
         SyntaxError,
         match=re.escape("invalid syntax (<unknown>, line 1)"),
     ):
-        rendering("tests/broken_template.jinja2", process(har))
+        main(str(inputs_dir / "login.har"), template_name="tests/broken_template.jinja2")
 
 
 def test_rendering_missing_template():
