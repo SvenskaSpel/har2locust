@@ -99,7 +99,7 @@ def process(
     for e in entries:
         # set defaults
         e["request"]["fname"] = "client.request"
-        e["request"]["extraparams"] = [("catch_response", True)]  # no catch_response=True
+        e["request"]["extraparams"] = [("catch_response", True)]
 
     for p in entriesprocessor.processors:
         p(entries)
