@@ -7,22 +7,18 @@ from ast import *
 def process(entries):
     output = []
     for e in entries:
-        headers = e["response"]["headers"]
-        for h in headers:
+        for h in e["response"]["headers"]:
             if h["name"].lower() == "content-type":
-                if h["value"] == "application/javascript":
-                    logging.debug(f"ignoring request {e['request']['url']}")
-                    break
                 if h["value"].startswith("application/json"):
+                    r = e["request"]
                     if (
-                        "postData" not in e["request"]  # not a post, ok for .rest
-                        or e["request"]["postData"]["mimeType"] == "application/json"  # json payload, also ok
+                        "postData" not in r  # not a post, ok for .rest
+                        or r["postData"]["mimeType"] == "application/json"  # json payload, also ok
                     ):
-                        logging.debug(f"{e['request']['url']} is a rest request!")
-                        e["rest"] = True
-        else:
-            logging.debug(f"appending request {e['request']['url']}")
-            output.append(e)
+                        logging.debug(f"{r['url']} is a rest request!")
+                        r["fname"] = "rest"
+                        r["extraparams"] = []  # catch_response=True is already the default for .rest()
+        output.append(e)
     entries[:] = output  # overwrite entries, in place
 
 

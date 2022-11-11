@@ -9,7 +9,8 @@ class apple_buy_a_mac(RestUser):
 
     @task
     def t(self):
-        with self.client.get(
+        with self.client.request(
+            "GET",
             "shop/sign_in?c=aHR0cHM6Ly93d3cuYXBwbGUuY29tL3Nob3AvYmFnfDFhb3NjY2QxZjg4ZGZjYjY4YWRhNWZmMmY5ZTY5YWMzNjE0OTYyMjZlOWMz&o=O01HTjYz&r=SXYD4UDAPXU7P7KXF&s=aHR0cHM6Ly9zZWN1cmUyLnN0b3JlLmFwcGxlLmNvbS9zaG9wL2NoZWNrb3V0L3N0YXJ0P3BsdG49QTZGNDNFMER8MWFvczg4MjgzMjY3MzJkNWEzNjIxMTQxMDE0ZTU4NmZiNTY5MjEzZGEyY2M&t=SXYD4UDAPXU7P7KXF&up=t",
             headers={
                 "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -31,7 +32,8 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.get(
+        with self.client.request(
+            "GET",
             "https://www.apple.com/shop/buy-mac/macbook-air?proceed=proceed&bfil=2&product=MGN63LL%2FA&step=attach",
             headers={
                 "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -44,7 +46,8 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.get(
+        with self.client.request(
+            "GET",
             "https://www.apple.com/shop/bag",
             headers={
                 "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -57,7 +60,8 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.get(
+        with self.client.request(
+            "GET",
             "https://www.apple.com/shop/buy-mac/macbook-air/space-gray-apple-m1-chip-with-8%E2%80%91core-cpu-and-7%E2%80%91core-gpu-256gb?option.memory__dummy_z124=065-C99M&option.hard_drivesolid_state_drive__dummy_z124=065-C99Q&option.keyboard_and_documentation_z124=065-C9DG&option.sw_final_cut_pro_x_z124=065-C171&option.sw_logic_pro_x_z124=065-C172&add-to-cart=add-to-cart&product=MGN63LL%2FA&step=config&bfil=2&atbtoken=bd24f42caddadc789d311b27afde1f05fc9262f2",
             headers={
                 "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -70,7 +74,8 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.get(
+        with self.client.request(
+            "GET",
             "https://www.apple.com/shop/buy-mac/macbook-air?bfil=2&product=MGN63LL/A&step=attach",
             headers={
                 "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -83,7 +88,8 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.get(
+        with self.client.request(
+            "GET",
             "https://www.apple.com/shop/buy-mac/macbook-air?proceed=proceed&product=MGN63LL%2FA&step=select",
             headers={
                 "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -96,7 +102,8 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.get(
+        with self.client.request(
+            "GET",
             "https://www.apple.com/shop/buy-mac/macbook-air?product=MGN63LL/A&step=config",
             headers={
                 "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -109,7 +116,8 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.get(
+        with self.client.request(
+            "GET",
             "https://www.apple.com/shop/buy-mac/macbook-air/space-gray-apple-m1-chip-with-8%E2%80%91core-cpu-and-7%E2%80%91core-gpu-256gb",
             headers={
                 "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -122,7 +130,8 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.get(
+        with self.client.request(
+            "GET",
             "https://www.apple.com/us/shop/goto/buy_mac/macbook_air",
             headers={
                 "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -135,7 +144,8 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.get(
+        with self.client.request(
+            "GET",
             "https://www.apple.com/us/shop/go/buy_mac/macbook_air",
             headers={
                 "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -148,7 +158,8 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.get(
+        with self.client.request(
+            "GET",
             "https://www.apple.com/shop/buy-mac/macbook-air",
             headers={
                 "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -161,7 +172,8 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.get(
+        with self.client.request(
+            "GET",
             "https://www.apple.com/macbook-air/",
             headers={
                 "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -174,7 +186,8 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.get(
+        with self.client.request(
+            "GET",
             "https://www.apple.com/mac/",
             headers={
                 "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -187,7 +200,8 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.get(
+        with self.client.request(
+            "GET",
             "https://www.apple.com/",
             headers={
                 "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -200,7 +214,8 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.get(
+        with self.client.request(
+            "GET",
             "https://securemvt.apple.com/m2/apple/mbox/json?mbox=target-global-mbox&mboxSession=bb7cc510c65f4f4eaba6b8ef81b5547f&mboxPC=&mboxPage=28a825d8368e433fb1840aed16581b46&mboxRid=e1e5810447114e1ea0db6ddfae46a383&mboxVersion=1.5.0&mboxCount=1&mboxTime=1606568330064&mboxHost=www.apple.com&mboxURL=https%3A%2F%2Fwww.apple.com%2F&mboxReferrer=&browserHeight=630&browserWidth=1420&browserTimeOffset=60&screenHeight=1080&screenWidth=1920&colorDepth=24&devicePixelRatio=1&screenOrientation=landscape&webGLRenderer=Intel%20HD%20Graphics%205000%20OpenGL%20Engine",
             headers={
                 "Referer": "https://www.apple.com/",
@@ -235,7 +250,8 @@ class apple_buy_a_mac(RestUser):
             },
         ) as resp:
             pass
-        with self.client.get(
+        with self.client.request(
+            "GET",
             "https://www.apple.com/favicon.ico",
             headers={
                 "accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
@@ -287,7 +303,8 @@ class apple_buy_a_mac(RestUser):
             },
         ) as resp:
             pass
-        with self.client.get(
+        with self.client.request(
+            "GET",
             "https://www.apple.com/favicon.ico",
             headers={
                 "accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
@@ -352,7 +369,8 @@ class apple_buy_a_mac(RestUser):
             },
         ) as resp:
             pass
-        with self.client.get(
+        with self.client.request(
+            "GET",
             "https://www.apple.com/favicon.ico",
             headers={
                 "accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
@@ -448,7 +466,8 @@ class apple_buy_a_mac(RestUser):
             },
         ) as resp:
             pass
-        with self.client.post(
+        with self.client.request(
+            "POST",
             "https://securemetrics.apple.com/b/ss/applestoreww,appleglobal/1/JS-2.17.0/s55089049129067?AQB=1&ndh=1&pf=1&t=28%2F10%2F2020%2012%3A59%3A13%206%20-60&fid=0EE10F1DE7BC5EFE-229AB97ADA08D75A&ce=UTF-8&pageName=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fselect&g=https%3A%2F%2Fwww.apple.com%2Fshop%2Fbuy-mac%2Fmacbook-air&r=https%3A%2F%2Fwww.apple.com%2Fmacbook-air%2F&cc=USD&server=as-13.5.0&events=event210%3D1.07%2Cevent246&v3=AOS%3A%20US%20Consumer&c4=D%3Dg&v4=D%3DpageName&c5=macintel&c8=AOS%3A%20Mac&c14=macbook%20air%20-%20overview%20%28us%29&v14=en-us&c19=AOS%3A%20US%20Consumer%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fselect&v19=D%3Dc19&c20=AOS%3A%20US%20Consumer&v35=web%20apply%7Cdenied%7Cpre%3Anot%20safari&c40=10078&v49=D%3Dr&v54=D%3Dg&v94=1.07&v97=s.tl-o&pe=lnk_o&pev2=Step%201&s=1920x1080&c=24&j=1.6&v=N&k=Y&bw=1420&bh=630&lrt=724&AQE=1",
             headers={
                 "Content-Type": "text/plain;charset=UTF-8",
@@ -471,7 +490,8 @@ class apple_buy_a_mac(RestUser):
             },
         ) as resp:
             pass
-        with self.client.post(
+        with self.client.request(
+            "POST",
             "https://securemetrics.apple.com/b/ss/applestoreww,appleglobal/1/JS-2.17.0/s57395114027206?AQB=1&ndh=1&pf=1&t=28%2F10%2F2020%2012%3A59%3A13%206%20-60&fid=0EE10F1DE7BC5EFE-229AB97ADA08D75A&ce=UTF-8&pageName=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fselect&g=https%3A%2F%2Fwww.apple.com%2Fshop%2Fbuy-mac%2Fmacbook-air&r=https%3A%2F%2Fwww.apple.com%2Fmacbook-air%2F&cc=USD&server=as-13.5.0&events=event33%2Cevent210%3D1.39%2Cevent246&v3=AOS%3A%20US%20Consumer&c4=D%3Dg&v4=D%3DpageName&c5=macintel&c8=AOS%3A%20Mac&c14=macbook%20air%20-%20overview%20%28us%29&v14=en-us&c19=AOS%3A%20US%20Consumer%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fselect&v19=D%3Dc19&c20=AOS%3A%20US%20Consumer&c37=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fselect%7Ccold%20start&c40=10078&v49=D%3Dr&v54=D%3Dg&v94=1.39&v97=s.tl-o&pe=lnk_o&pev2=Cold&s=1920x1080&c=24&j=1.6&v=N&k=Y&bw=1420&bh=630&lrt=1&AQE=1",
             headers={
                 "Content-Type": "text/plain;charset=UTF-8",
@@ -481,7 +501,8 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.get(
+        with self.client.request(
+            "GET",
             "https://www.apple.com/favicon.ico",
             headers={
                 "accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
@@ -494,7 +515,29 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.options(
+        with self.client.request(
+            "GET",
+            "https://store.storeimages.cdn-apple.com/4982/store.apple.com/shop/rs-external/rel/external.js",
+            headers={
+                "Accept": "*/*",
+                "Accept-Encoding": "gzip, deflate, br",
+                "Accept-Language": "en-US,en;q=0.9",
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "Host": "store.storeimages.cdn-apple.com",
+                "Origin": "https://www.apple.com",
+                "Pragma": "no-cache",
+                "Referer": "https://www.apple.com/",
+                "Sec-Fetch-Dest": "empty",
+                "Sec-Fetch-Mode": "cors",
+                "Sec-Fetch-Site": "cross-site",
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
+            },
+            catch_response=True,
+        ) as resp:
+            pass
+        with self.client.request(
+            "OPTIONS",
             "https://xp.apple.com/report/2/xp_aos_clientperf",
             headers={
                 "Accept": "*/*",
@@ -516,7 +559,8 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.post(
+        with self.client.request(
+            "POST",
             "https://securemetrics.apple.com/b/ss/applestoreww,appleglobal/1/JS-2.17.0/s56893829888064?AQB=1&ndh=1&pf=1&t=28%2F10%2F2020%2012%3A59%3A19%206%20-60&fid=0EE10F1DE7BC5EFE-229AB97ADA08D75A&ce=UTF-8&pageName=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fselect&g=https%3A%2F%2Fwww.apple.com%2Fshop%2Fbuy-mac%2Fmacbook-air&r=https%3A%2F%2Fwww.apple.com%2Fmacbook-air%2F&cc=USD&server=as-13.5.0&events=event210%3D7.01%2Cevent246%2Cevent500&v3=AOS%3A%20US%20Consumer&c4=D%3Dg&v4=D%3DpageName&c5=macintel&v6=D%3DpageName%2B%22%7C%7C%7CStep%201%20-%20Select%20Button%7Cselected%22&c8=AOS%3A%20Mac&c14=macbook%20air%20-%20overview%20%28us%29&v14=en-us&c19=AOS%3A%20US%20Consumer%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fselect&v19=D%3Dc19&c20=AOS%3A%20US%20Consumer&c40=10078&v49=D%3Dr&v54=D%3Dg&v94=7.01&v97=s.tl-o&pe=lnk_o&pev2=undefined%7CStep%201%20-%20Select%20Button%7Cselected&c.&a.&activitymap.&page=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fselect&link=select%20apple%20m1%20chip%20with%208core%20cpu%20and%207core%20gpu%20%7C%20no%20href%20%7C%20body&region=body&pageIDType=1&.activitymap&.a&.c&pid=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fselect&pidt=1&oid=proceed&oidt=3&ot=SUBMIT&s=1920x1080&c=24&j=1.6&v=N&k=Y&bw=1420&bh=630&lrt=91&AQE=1",
             headers={
                 "Content-Type": "text/plain;charset=UTF-8",
@@ -540,7 +584,8 @@ class apple_buy_a_mac(RestUser):
             },
         ) as resp:
             pass
-        with self.client.post(
+        with self.client.request(
+            "POST",
             "https://securemetrics.apple.com/b/ss/applestoreww,appleglobal/1/JS-2.17.0/s54378695892321?AQB=1&ndh=1&pf=1&t=28%2F10%2F2020%2012%3A59%3A21%206%20-60&fid=0EE10F1DE7BC5EFE-229AB97ADA08D75A&ce=UTF-8&pageName=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fconfig&g=https%3A%2F%2Fwww.apple.com%2Fshop%2Fbuy-mac%2Fmacbook-air%2Fspace-gray-apple-m1-chip-with-8%25E2%2580%2591core-cpu-and-7%25E2%2580%2591core-gpu-256gb%23&r=https%3A%2F%2Fwww.apple.com%2Fshop%2Fbuy-mac%2Fmacbook-air&cc=USD&server=as-13.5.0&events=event210%3D0.96%2Cevent246&v3=AOS%3A%20US%20Consumer&c4=D%3Dg&v4=D%3DpageName&c5=macintel&c8=AOS%3A%20Mac&c14=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fselect&v14=en-us&c19=AOS%3A%20US%20Consumer%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fconfig&v19=D%3Dc19&c20=AOS%3A%20US%20Consumer&v35=web%20apply%7Cdenied%7Cpre%3Anot%20safari&c40=10078&v49=D%3Dr&v54=D%3Dg&v94=0.96&v97=s.tl-o&pe=lnk_o&pev2=Step%201&s=1920x1080&c=24&j=1.6&v=N&k=Y&bw=1420&bh=630&lrt=598&AQE=1",
             headers={
                 "Content-Type": "text/plain;charset=UTF-8",
@@ -591,7 +636,8 @@ class apple_buy_a_mac(RestUser):
             },
         ) as resp:
             pass
-        with self.client.post(
+        with self.client.request(
+            "POST",
             "https://securemetrics.apple.com/b/ss/applestoreww,appleglobal/1/JS-2.17.0/s5719408662668?AQB=1&ndh=1&pf=1&t=28%2F10%2F2020%2012%3A59%3A22%206%20-60&fid=0EE10F1DE7BC5EFE-229AB97ADA08D75A&ce=UTF-8&pageName=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fconfig&g=https%3A%2F%2Fwww.apple.com%2Fshop%2Fbuy-mac%2Fmacbook-air%2Fspace-gray-apple-m1-chip-with-8%25E2%2580%2591core-cpu-and-7%25E2%2580%2591core-gpu-256gb%23&r=https%3A%2F%2Fwww.apple.com%2Fshop%2Fbuy-mac%2Fmacbook-air&cc=USD&server=as-13.5.0&events=event33%2Cevent210%3D1.33%2Cevent246&v3=AOS%3A%20US%20Consumer&c4=D%3Dg&v4=D%3DpageName&c5=macintel&c8=AOS%3A%20Mac&c14=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fselect&v14=en-us&c19=AOS%3A%20US%20Consumer%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fconfig&v19=D%3Dc19&c20=AOS%3A%20US%20Consumer&c37=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fconfig%7Ccold%20start&c40=10078&v49=D%3Dr&v54=D%3Dg&v94=1.33&v97=s.tl-o&pe=lnk_o&pev2=Cold&s=1920x1080&c=24&j=1.6&v=N&k=Y&bw=1420&bh=630&lrt=1&AQE=1",
             headers={
                 "Content-Type": "text/plain;charset=UTF-8",
@@ -629,7 +675,8 @@ class apple_buy_a_mac(RestUser):
             },
         ) as resp:
             pass
-        with self.client.get(
+        with self.client.request(
+            "GET",
             "https://www.apple.com/favicon.ico",
             headers={
                 "accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
@@ -642,7 +689,29 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.options(
+        with self.client.request(
+            "GET",
+            "https://store.storeimages.cdn-apple.com/4982/store.apple.com/shop/rs-external/rel/external.js",
+            headers={
+                "Accept": "*/*",
+                "Accept-Encoding": "gzip, deflate, br",
+                "Accept-Language": "en-US,en;q=0.9",
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "Host": "store.storeimages.cdn-apple.com",
+                "Origin": "https://www.apple.com",
+                "Pragma": "no-cache",
+                "Referer": "https://www.apple.com/",
+                "Sec-Fetch-Dest": "empty",
+                "Sec-Fetch-Mode": "cors",
+                "Sec-Fetch-Site": "cross-site",
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
+            },
+            catch_response=True,
+        ) as resp:
+            pass
+        with self.client.request(
+            "OPTIONS",
             "https://xp.apple.com/report/2/xp_aos_clientperf",
             headers={
                 "Accept": "*/*",
@@ -664,7 +733,8 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.post(
+        with self.client.request(
+            "POST",
             "https://securemetrics.apple.com/b/ss/applestoreww,appleglobal/1/JS-2.17.0/s5737338969557?AQB=1&ndh=1&pf=1&t=28%2F10%2F2020%2012%3A59%3A24%206%20-60&fid=0EE10F1DE7BC5EFE-229AB97ADA08D75A&ce=UTF-8&pageName=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fconfig&g=https%3A%2F%2Fwww.apple.com%2Fshop%2Fbuy-mac%2Fmacbook-air%2Fspace-gray-apple-m1-chip-with-8%25E2%2580%2591core-cpu-and-7%25E2%2580%2591core-gpu-256gb%23&r=https%3A%2F%2Fwww.apple.com%2Fshop%2Fbuy-mac%2Fmacbook-air&cc=USD&server=as-13.5.0&events=scAdd%2Cevent210%3D3.37%2Cevent246%2Cevent500&products=macbook_air%3BMGN63%3B1%3B999.00%3B%3B&v3=AOS%3A%20US%20Consumer&c4=D%3Dg&v4=D%3DpageName&c5=macintel&v5=D%3DpageName%2B%22%7C%7CCTO%7CAdd%20to%20Bag%22&c8=AOS%3A%20Mac&c14=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fselect&v14=en-us&c19=AOS%3A%20US%20Consumer%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fconfig&v19=D%3Dc19&c20=AOS%3A%20US%20Consumer&c40=10078&v49=D%3Dr&v54=D%3Dg&v94=3.37&v97=s.tl-o&pe=lnk_o&pev2=CTO&c.&a.&activitymap.&page=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fconfig&link=add%20to%20bag%20%28inner%20text%29%20%7C%20no%20href%20%7C%20body&region=body&pageIDType=1&.activitymap&.a&.c&pid=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fconfig&pidt=1&oid=add-to-cart&oidt=3&ot=SUBMIT&s=1920x1080&c=24&j=1.6&v=N&k=Y&bw=1420&bh=630&lrt=62&AQE=1",
             headers={
                 "Content-Type": "text/plain;charset=UTF-8",
@@ -882,7 +952,8 @@ class apple_buy_a_mac(RestUser):
             },
         ) as resp:
             pass
-        with self.client.post(
+        with self.client.request(
+            "POST",
             "https://securemetrics.apple.com/b/ss/applestoreww,appleglobal/1/JS-2.17.0/s52456596436101?AQB=1&ndh=1&pf=1&t=28%2F10%2F2020%2012%3A59%3A28%206%20-60&fid=0EE10F1DE7BC5EFE-229AB97ADA08D75A&ce=UTF-8&pageName=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fattach&g=https%3A%2F%2Fwww.apple.com%2Fshop%2Fbuy-mac%2Fmacbook-air%3Fbfil%3D2%26product%3DMGN63LL%2FA%26step%3Dattach&r=https%3A%2F%2Fwww.apple.com%2Fshop%2Fbuy-mac%2Fmacbook-air%2Fspace-gray-apple-m1-chip-with-8%25E2%2580%2591core-cpu-and-7%25E2%2580%2591core-gpu-256gb&cc=USD&server=as-13.5.0&events=event33%2Cevent210%3D2.88%2Cevent246&v3=AOS%3A%20US%20Consumer&c4=D%3Dg&v4=D%3DpageName&c5=macintel&c8=AOS%3A%20Mac&c14=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fconfig&v14=en-us&c19=AOS%3A%20US%20Consumer%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fattach&v19=D%3Dc19&c20=AOS%3A%20US%20Consumer&c37=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fattach%7Ccold%20start&c40=10078&v49=D%3Dr&v54=D%3Dg&v94=2.88&v97=s.tl-o&pe=lnk_o&pev2=Cold&s=1920x1080&c=24&j=1.6&v=N&k=Y&bw=1420&bh=630&lrt=2503&AQE=1",
             headers={
                 "Content-Type": "text/plain;charset=UTF-8",
@@ -892,7 +963,8 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.get(
+        with self.client.request(
+            "GET",
             "https://www.apple.com/favicon.ico",
             headers={
                 "accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
@@ -905,7 +977,29 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.options(
+        with self.client.request(
+            "GET",
+            "https://store.storeimages.cdn-apple.com/4982/store.apple.com/shop/rs-external/rel/external.js",
+            headers={
+                "Accept": "*/*",
+                "Accept-Encoding": "gzip, deflate, br",
+                "Accept-Language": "en-US,en;q=0.9",
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "Host": "store.storeimages.cdn-apple.com",
+                "Origin": "https://www.apple.com",
+                "Pragma": "no-cache",
+                "Referer": "https://www.apple.com/",
+                "Sec-Fetch-Dest": "empty",
+                "Sec-Fetch-Mode": "cors",
+                "Sec-Fetch-Site": "cross-site",
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
+            },
+            catch_response=True,
+        ) as resp:
+            pass
+        with self.client.request(
+            "OPTIONS",
             "https://xp.apple.com/report/2/xp_aos_clientperf",
             headers={
                 "Accept": "*/*",
@@ -972,7 +1066,8 @@ class apple_buy_a_mac(RestUser):
             },
         ) as resp:
             pass
-        with self.client.get(
+        with self.client.request(
+            "GET",
             "https://www.apple.com/favicon.ico",
             headers={
                 "accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
@@ -985,7 +1080,29 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.options(
+        with self.client.request(
+            "GET",
+            "https://store.storeimages.cdn-apple.com/4982/store.apple.com/shop/rs-external/rel/external.js",
+            headers={
+                "Accept": "*/*",
+                "Accept-Encoding": "gzip, deflate, br",
+                "Accept-Language": "en-US,en;q=0.9",
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "Host": "store.storeimages.cdn-apple.com",
+                "Origin": "https://www.apple.com",
+                "Pragma": "no-cache",
+                "Referer": "https://www.apple.com/",
+                "Sec-Fetch-Dest": "empty",
+                "Sec-Fetch-Mode": "cors",
+                "Sec-Fetch-Site": "cross-site",
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
+            },
+            catch_response=True,
+        ) as resp:
+            pass
+        with self.client.request(
+            "OPTIONS",
             "https://xp.apple.com/report/2/xp_aos_clientperf",
             headers={
                 "Accept": "*/*",
@@ -1007,7 +1124,8 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.post(
+        with self.client.request(
+            "POST",
             "https://securemetrics.apple.com/b/ss/applestoreww,appleglobal/1/JS-2.17.0/s52405784184661?AQB=1&ndh=1&pf=1&t=28%2F10%2F2020%2012%3A59%3A37%206%20-60&fid=0EE10F1DE7BC5EFE-229AB97ADA08D75A&ce=UTF-8&pageName=AOS%3A%20bag&g=https%3A%2F%2Fwww.apple.com%2Fshop%2Fbag&r=https%3A%2F%2Fwww.apple.com%2Fshop%2Fbuy-mac%2Fmacbook-air%3Fbfil%3D2%26product%3DMGN63LL%2FA%26step%3Dattach&cc=USD&server=as-13.5.0&events=event210%3D6.08%2Cevent246%2Cevent500&v3=AOS%3A%20US%20Consumer&c4=D%3Dg&v4=D%3DpageName&c5=macintel&c8=AOS%3A%20Bag&c14=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fattach&v14=en-us&c19=AOS%3A%20US%20Consumer%3A%20bag&v19=D%3Dc19&c20=AOS%3A%20US%20Consumer&v39=D%3DpageName%2B%22%7C%7CBag%7CStandardCheckout%22&c40=10078&v49=D%3Dr&v54=D%3Dg&v94=6.08&v97=s.tl-o&pe=lnk_o&pev2=shoppingCart.actions.t.checkout&c.&a.&activitymap.&page=AOS%3A%20bag&link=check%20out%20%28inner%20text%29%20%7C%20no%20href%20%7C%20body&region=body&pageIDType=1&.activitymap&.a&.c&pid=AOS%3A%20bag&pidt=1&oid=Check%20Out&oidt=3&ot=SUBMIT&s=1920x1080&c=24&j=1.6&v=N&k=Y&bw=1420&bh=630&lrt=61&AQE=1",
             headers={
                 "Content-Type": "text/plain;charset=UTF-8",
@@ -1017,7 +1135,8 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.post(
+        with self.client.request(
+            "POST",
             "https://www.apple.com/shop/bagx/checkout_now?_a=checkout&_m=shoppingCart.actions",
             headers={
                 "accept": "*/*",
@@ -1058,7 +1177,8 @@ class apple_buy_a_mac(RestUser):
             },
         ) as resp:
             pass
-        with self.client.get(
+        with self.client.request(
+            "GET",
             "search-services/suggestions/defaultlinks/?src=globalnav&locale=en_US",
             headers={
                 "Accept": "*/*",
@@ -1078,7 +1198,8 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.get(
+        with self.client.request(
+            "GET",
             "https://idmsa.apple.com/appleauth/auth/authorize/signin?frame_id=auth-bbfc2b43-ol01-rowz-a4jz-l79n3zhj&language=en_US&iframeId=auth-bbfc2b43-ol01-rowz-a4jz-l79n3zhj&client_id=a797929d224abb1cc663bb187bbcd02f7172ca3a84df470380522a7c6092118b&redirect_uri=https://secure2.store.apple.com&response_type=code&response_mode=web_message&state=auth-bbfc2b43-ol01-rowz-a4jz-l79n3zhj",
             headers={
                 "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -1099,7 +1220,29 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.options(
+        with self.client.request(
+            "GET",
+            "https://store.storeimages.cdn-apple.com/4982/store.apple.com/shop/rs-external/rel/external.js",
+            headers={
+                "Accept": "*/*",
+                "Accept-Encoding": "gzip, deflate, br",
+                "Accept-Language": "en-US,en;q=0.9",
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "Host": "store.storeimages.cdn-apple.com",
+                "Origin": "https://secure2.store.apple.com",
+                "Pragma": "no-cache",
+                "Referer": "https://secure2.store.apple.com/",
+                "Sec-Fetch-Dest": "empty",
+                "Sec-Fetch-Mode": "cors",
+                "Sec-Fetch-Site": "cross-site",
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
+            },
+            catch_response=True,
+        ) as resp:
+            pass
+        with self.client.request(
+            "OPTIONS",
             "https://xp.apple.com/report/2/xp_aos_clientperf",
             headers={
                 "Accept": "*/*",
@@ -1121,7 +1264,8 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.post(
+        with self.client.request(
+            "POST",
             "https://idmsa.apple.com/appleauth/jslog",
             headers={
                 "Accept": "application/json",
@@ -1147,7 +1291,8 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.get(
+        with self.client.request(
+            "GET",
             "favicon.ico",
             headers={
                 "Accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
@@ -1167,7 +1312,8 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.post(
+        with self.client.request(
+            "POST",
             "https://idmsa.apple.com/appleauth/jslog",
             headers={
                 "Accept": "application/json",

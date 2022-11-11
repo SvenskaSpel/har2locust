@@ -35,7 +35,8 @@ class login(RestUser):
             },
         ) as resp:
             pass
-        with self.client.get(
+        with self.client.request(
+            "GET",
             "https://spela.test3.svenskaspel.se/",
             headers={
                 "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
@@ -43,7 +44,8 @@ class login(RestUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.get(
+        with self.client.request(
+            "GET",
             "https://spela.test3.svenskaspel.se/logga-in/uppdaterade-villkor?returnUrl=%2F",
             headers={
                 "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"

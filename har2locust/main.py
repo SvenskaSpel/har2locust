@@ -39,7 +39,6 @@ def main(
     logging.debug(f"loaded {har_path}")
 
     default_plugins = [
-        "har2locust/plugins/fasthttpuser.py",
         "har2locust/plugins/rest.py",
         "har2locust/plugins/urlignore.py",
         "har2locust/plugins/headerignore.py",
@@ -53,15 +52,7 @@ def main(
     logging.debug(f"loaded plugins {default_and_extra_plugins}")
 
     pp_dict = process(har, resource_type=resource_type)
-
-    py = rendering(
-        template_name,
-        {
-            "name": name,
-            **pp_dict,
-        },
-    )
-
+    py = rendering(template_name, {"name": name, **pp_dict})
     print(py)
 
 
@@ -105,15 +96,17 @@ def process(
     # filtering entries
     entries = [e for e in har["log"]["entries"] if e["_resourceType"] in resource_type]
 
+    for e in entries:
+        # set defaults
+        e["request"]["fname"] = "client.request"
+        e["request"]["extraparams"] = [("catch_response", True)]  # no catch_response=True
+
     for p in entriesprocessor.processors:
         p(entries)
 
     logging.debug(f"{resource_type=}")
     logging.debug(f"{len(entries)} entries after filtering by resource_type")
 
-    # organize request variable in a useful format
-    # [[{'name': key, 'value': value}, ...], ...] list of list of dict ->
-    # [{(key, value), ...}, ...] list of set of tuple
     headers_req, headers_res = [], []
     for e in entries:
         headers_req.append({(h["name"], h["value"]) for h in e["request"]["headers"]})
@@ -124,31 +117,15 @@ def process(
 
     urlparts = urlsplit(entries[0]["request"]["url"])
     host = f"{urlparts.scheme}://{urlparts.netloc}/"
-    # requests is a list of dictionary with value specific to single requests
-    requests = [
-        {
-            "url": e["request"]["url"].removeprefix(host),
-            "method": e["request"]["method"].lower(),
-            "headers": headers_req[i] - default_headers,
-            "post_data": e["request"]["postData"]["text"] if "postData" in e["request"] else None,
-            "rest": e["rest"] if "rest" in e else False,
-        }
-        for i, e in enumerate(entries)
-    ]
-
-    responses = [
-        {
-            "status": e["response"]["status"],
-            "headers": headers_res[i],
-            "redirect_url": e["response"]["redirectURL"],
-            "content": e["response"]["content"],
-        }
-        for i, e in enumerate(entries)
-    ]
+    for i, e in enumerate(entries):
+        r = e["request"]
+        r["url"] = r["url"].removeprefix(host)
+        r["headers"] = headers_req[i] - default_headers
 
     logging.debug("preprocessed har dict")
 
-    return dict(host=host, default_headers=sorted(default_headers), requests=requests, responses=responses)
+    # return the "values"-dict for use in rendering
+    return dict(host=host, default_headers=sorted(default_headers), entries=entries)
 
 
 def rendering(template_name: str, values: dict) -> str:
@@ -174,7 +151,7 @@ def rendering(template_name: str, values: dict) -> str:
     logging.debug("template rendered")
 
     try:
-        tree = ast.parse(py)
+        tree = ast.parse(py, type_comments=True)
     except SyntaxError as e:
         logging.debug(py)
         levelmessage = " (set log level DEBUG to see the whole output)" if logging.DEBUG < logging.root.level else ""

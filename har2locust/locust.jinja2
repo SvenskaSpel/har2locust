@@ -2,32 +2,42 @@
 from locust import task, run_single_user
 from locust import FastHttpUser
 
-class MyUser(FastHttpUser):
-    host = ...
+class {{name}}(FastHttpUser):
+    host = "{{host}}"
+    {%- if default_headers %}
+    default_headers = {
+        {%- for (key, value) in default_headers | sort %}
+        '{{ key }}': '{{ value }}',
+        {%- endfor %}
+    }
+    {%- endif %}
 
     @task
     def t(self):
-        {% for request in requests -%}
-        {% if request.rest -%}
-        with self.rest("{{ request.method | upper }}", "{{ request.url }}"
-        {%- if request.headers -%}, headers={
+        {% for e in entries -%}
+        {% set request = e.request %}
+        with self.{{request.fname}}("{{ request.method | upper }}", "{{ request.url }}"
+        {%- if request.fname == "rest" -%}{%- if request.headers -%}, headers={
             {%- for (key, value) in request.headers | sort %}
             {%- if key|lower != "content-type" -%}
             '{{ key }}': '{{ value }}',
             {%- endif -%}    
             {%- endfor %}}
         {%- endif -%}
-        {%- if request.post_data -%}, json={{ request.post_data }}
+        {%- if request.postData -%}, json={{ request.postData.text }}
         {%- endif -%}
         {%- else -%}
-        with self.client.{{ request.method }}("{{ request.url }}"
         {%- if request.headers -%}, headers={
             {%- for (key, value) in request.headers | sort %}
             '{{ key }}': '{{ value }}',
             {%- endfor %}}
         {%- endif -%}
-        {%- if request.post_data -%}, data='{{ request.post_data }}'{%- endif -%}
-        , catch_response=True
-        {%- endif %}) as resp:
+        {%- if request.postData -%}
+        , data='{{ request.postData.text }}'
+        {%- endif -%}
+        {%- for (key, value) in request.extraparams -%}
+            ,{{ key }}={{ value }}
+        {%- endfor -%}
+        {% endif %}) as resp:
             pass
         {% endfor %}

@@ -39,7 +39,7 @@ def rename_task_function(tree: ast.Module, values: dict):
     RenameTaskFunction().visit(tree)
 
 
-# @astprocessor allows you to do all kinds of advanced stuff, like this function that wraps the task body in a with-block.
+# @astprocessor allows you to do all kinds of advanced stuff, like this function that wraps the entire task function body in a with-block.
 @astprocessor
 def get_customer_from_reader(tree: ast.Module, values: dict):
     class Transformer(ast.NodeTransformer):
