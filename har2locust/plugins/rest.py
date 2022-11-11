@@ -30,10 +30,6 @@ def process_ast(tree: Module, values: dict):
             self.generic_visit(node)
             return node
 
-        def visit_Import(self, node: Import) -> Import:
-            self.generic_visit(node)
-            return node
-
         def visit_ImportFrom(self, node: ImportFrom) -> ImportFrom:
             if node.names[0].name == "FastHttpUser":
                 node.module = "locust_plugins.users"
