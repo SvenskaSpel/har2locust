@@ -77,8 +77,8 @@ def test_helptext():
 
 
 def test_plugins():
-    har_file = "tests/inputs/reqres.in.har"
-    py_file = "tests/outputs/reqres_plugin.in.py"
+    har_file = "tests/inputs/login.har"
+    py_file = "tests/outputs/login_plugin.py"
     with open(py_file, encoding="utf-8") as f:
         expected_output = f.read()
     proc = subprocess.Popen(
@@ -94,6 +94,7 @@ def test_plugins():
     assert stdout.strip() == expected_output.strip()
     assert "NewName" in stdout
     assert "renamed_function(" in stdout
+    assert "self.customer" in stdout
     assert "hello" in stderr, stderr
 
 
