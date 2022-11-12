@@ -20,20 +20,14 @@ class login(RestUser):
             with self.rest(
                 "POST",
                 "player/1/authenticate/testlogin",
-                headers={
-                    "accept": "application/json, text/javascript, */*; q=0.01",
-                    "origin": "https://spela.test3.svenskaspel.se",
-                },
+                headers={"accept": "application/json, text/javascript, */*; q=0.01"},
                 json={"personalId": self.customer["ssn"], "source": 3},
             ) as resp:
                 pass
             with self.rest(
                 "GET",
                 "player/1/customizedsettings?_=1636025335990",
-                headers={
-                    "accept": "application/json, text/javascript, */*; q=0.01",
-                    "origin": "https://spela.test3.svenskaspel.se",
-                },
+                headers={"accept": "application/json, text/javascript, */*; q=0.01"},
             ) as resp:
                 pass
             with self.client.request(
@@ -55,22 +49,13 @@ class login(RestUser):
             ) as resp:
                 pass
             with self.rest(
-                "POST",
-                "player/1/terms",
-                headers={
-                    "accept": "application/json, text/javascript, */*; q=0.01",
-                    "origin": "https://spela.test3.svenskaspel.se",
-                },
-                json={},
+                "POST", "player/1/terms", headers={"accept": "application/json, text/javascript, */*; q=0.01"}, json={}
             ) as resp:
                 pass
             with self.rest_(
                 "GET",
                 "player/1/info?include=accountBalance",
-                headers={
-                    "accept": "application/json, text/javascript, */*; q=0.01",
-                    "origin": "https://spela.test3.svenskaspel.se",
-                },
+                headers={"accept": "application/json, text/javascript, */*; q=0.01"},
             ) as resp:
                 pass
 

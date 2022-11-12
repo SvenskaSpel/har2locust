@@ -1,6 +1,6 @@
 # This file has some advanced examples of how to massage your recording
 # Use it as inspiration for the techniques, not as a recommendation for exactly what to do
-from har2locust.plugin import entriesprocessor, valuesprocessor, astprocessor
+from har2locust.plugin import entriesprocessor, astprocessor
 from ast import *
 import re
 
@@ -15,6 +15,14 @@ def parametrize_ssn(entries):
                 "\"personalId\":self.customer['ssn']",
                 e["request"]["postData"]["text"],
             )
+
+
+@entriesprocessor
+def skip_origin_header(entries):
+    # my particular site doesnt care about origin header and skipping it makes the locustfile much neater
+    for e in entries:
+        request = e["request"]
+        request["headers"] = [h for h in request["headers"] if h["name"] != "origin"]
 
 
 # @astprocessor allows you to do all kinds of advanced stuff, like this function that wraps the entire task function body in a with-block.
