@@ -5,7 +5,7 @@ import subprocess
 import os
 import pytest
 import re
-from har2locust.main import main, process, rendering
+from har2locust.__main__ import main, process, rendering
 
 inputs_dir = pathlib.Path(__file__).parents[0] / "inputs"
 outputs_dir = pathlib.Path(__file__).parents[0] / "outputs"
