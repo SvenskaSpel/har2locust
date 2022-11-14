@@ -14,6 +14,17 @@ har_files = list(inputs_dir.glob("*.har"))
 py_files = [outputs_dir / f.with_suffix(".py").name for f in har_files]
 
 
+def h2l(*arguments):
+    return subprocess.Popen(
+        arguments,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        encoding="utf-8",
+        cwd=os.path.dirname(__file__),
+    )
+
+
 with open(inputs_dir / "login.har") as f:
     har = json.load(f)
 
@@ -25,13 +36,7 @@ def test_har_file_not_found():
 
 
 def test_helptext():
-    proc = subprocess.Popen(
-        ["har2locust", "--resource-types xhr,foo", "tests/inputs/login.har"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        encoding="utf-8",
-    )
+    proc = h2l("har2locust", "--resource-types xhr,foo", "tests/inputs/login.har")
     _stdout, stderr = proc.communicate()
     assert proc.returncode == 1, f"Unexpected return code {proc.returncode}, stderr: {stderr}"
     assert "are not supported" in stderr
@@ -72,13 +77,7 @@ def test_output(har_file, py_file):
 
 
 def test_helptext():
-    proc = subprocess.Popen(
-        ["har2locust", "--help"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        encoding="utf-8",
-    )
+    proc = h2l("har2locust", "--help")
     stdout, stderr = proc.communicate()
     assert proc.returncode == 0, f"Bad return code {proc.returncode}, stderr: {stderr}"
     assert "usage: har2locust" in stdout
@@ -109,13 +108,7 @@ def test_plugins():
 
 # this test is intended to be run AFTER regenerating the output using make update_tests
 def test_locust_run():
-    proc = subprocess.Popen(
-        ["locust", "-f", "outputs/reqres.in.py", "-i", "1", "--headless"],
-        stderr=subprocess.PIPE,
-        text=True,
-        encoding="utf-8",
-        cwd=os.path.join(os.path.dirname(__file__)),
-    )
+    proc = h2l("locust", "-f", "outputs/reqres.in.py", "-i", "1", "--headless")
     _, stderr = proc.communicate()
     assert proc.returncode == 0, f"Bad return code {proc.returncode}, stderr: {stderr}"
     assert "Iteration limit reached" in stderr, stderr
