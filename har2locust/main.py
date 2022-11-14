@@ -29,6 +29,14 @@ def main(
     resource_type=["xhr", "document", "other"],
     template_name="locust.jinja2",
 ):
+    default_plugins = list(pathlib.Path("har2locust/plugins").glob("*.py"))
+    default_and_extra_plugins = default_plugins + plugins
+    for plugin in default_and_extra_plugins:
+        sys.path.append(os.path.curdir)
+        import_path = str(plugin).replace("/", ".").rstrip(".py")
+        importlib.import_module(import_path)
+    logging.debug(f"loaded plugins {default_and_extra_plugins}")
+
     har_path = pathlib.Path(har_file)
 
     # build safe class name from filename
@@ -37,14 +45,6 @@ def main(
     with open(har_path, encoding="utf8", errors="ignore") as f:
         har = json.load(f)
     logging.debug(f"loaded {har_path}")
-
-    default_plugins = list(pathlib.Path("har2locust/plugins").glob("*.py"))
-    default_and_extra_plugins = default_plugins + plugins
-    for plugin in default_and_extra_plugins:
-        sys.path.append(os.path.curdir)
-        import_path = str(plugin).replace("/", ".").rstrip(".py")
-        importlib.import_module(import_path)
-    logging.debug(f"loaded plugins {default_and_extra_plugins}")
 
     pp_dict = process(har, resource_type=resource_type)
     py = rendering(template_name, {"name": name, **pp_dict})
