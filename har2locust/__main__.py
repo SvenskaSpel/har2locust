@@ -12,8 +12,8 @@ from .argument_parser import get_parser
 from .plugin import astprocessor, entriesprocessor, valuesprocessor, outputstringprocessor
 
 
-def cli():
-    args = get_parser().parse_args()
+def __main__(args=None):
+    args = get_parser().parse_args(args)
     logging.basicConfig(level=args.loglevel.upper())
     main(
         args.input,
@@ -38,10 +38,7 @@ def main(
     logging.debug(f"loaded plugins {default_and_extra_plugins}")
 
     har_path = pathlib.Path(har_file)
-
-    # build safe class name from filename
-    name = pathlib.Path(har_file).stem.replace("-", "_").replace(".", "_")
-
+    name = pathlib.Path(har_file).stem.replace("-", "_").replace(".", "_")  # build class name from filename
     with open(har_path, encoding="utf8", errors="ignore") as f:
         har = json.load(f)
     logging.debug(f"loaded {har_path}")
@@ -163,3 +160,7 @@ def rendering(template_name: str, values: dict) -> str:
     logging.debug("outputstringprocessors applied")
 
     return py
+
+
+if __name__ == "__main__":
+    __main__()
