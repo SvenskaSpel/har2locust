@@ -4,7 +4,7 @@ import pathlib
 
 
 @entriesprocessor
-def process(entries):
+def process(entries: list[dict]):
     urlignore_file = pathlib.Path(".urlignore")
     filters = []
     if urlignore_file.is_file():

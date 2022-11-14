@@ -4,7 +4,7 @@ from ast import *
 
 
 @entriesprocessor
-def process(entries):
+def process(entries: list[dict]):
     for e in entries:
         for h in e["response"]["headers"]:
             if h["name"].lower() == "content-type":

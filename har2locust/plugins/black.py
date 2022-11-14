@@ -3,7 +3,7 @@ import subprocess
 
 
 @outputstringprocessor
-def process_output(py):
+def process_output(py: str):
     p = subprocess.Popen(["black", "-q", "-"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
     assert p.stdin  # keep linter happy
     p.stdin.write(py)

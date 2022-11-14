@@ -4,7 +4,7 @@ import pathlib
 
 
 @entriesprocessor
-def process(entries):
+def process(entries: list[dict]):
     headerignore_path = pathlib.Path(".headerignore")
     filters = []
     if headerignore_path.is_file():
