@@ -5,7 +5,6 @@ from ast import *
 
 @entriesprocessor
 def process(entries):
-    output = []
     for e in entries:
         for h in e["response"]["headers"]:
             if h["name"].lower() == "content-type":
@@ -18,8 +17,6 @@ def process(entries):
                         logging.debug(f"{r['url']} is a rest request!")
                         r["fname"] = "rest"
                         r["extraparams"] = []  # catch_response=True is already the default for .rest()
-        output.append(e)
-    entries[:] = output  # overwrite entries, in place
 
 
 @astprocessor
