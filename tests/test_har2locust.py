@@ -5,7 +5,7 @@ import subprocess
 import os
 import pytest
 import re
-from har2locust.__main__ import main, process, rendering
+from har2locust.__main__ import __main__, main, process, rendering
 
 inputs_dir = pathlib.Path(__file__).parents[0] / "inputs"
 outputs_dir = pathlib.Path(__file__).parents[0] / "outputs"
@@ -24,9 +24,17 @@ def test_har_file_not_found():
         main(str(har_file_foo))
 
 
-def test_preprocessing_unsupported_resource_type():
-    with pytest.raises(NotImplementedError, match="are not supported"):
-        process(har, resource_type=["xhr", "foo", "bar"])
+def test_helptext():
+    proc = subprocess.Popen(
+        ["har2locust", "--resource-types xhr,foo", "tests/inputs/login.har"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        encoding="utf-8",
+    )
+    _stdout, stderr = proc.communicate()
+    assert proc.returncode == 1, f"Unexpected return code {proc.returncode}, stderr: {stderr}"
+    assert "are not supported" in stderr
 
 
 def test_rendering_syntax_error():
