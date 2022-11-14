@@ -13,21 +13,14 @@ from .plugin import astprocessor, entriesprocessor, valuesprocessor, outputstrin
 
 
 def __main__():
-    global args
+    global args  # allow plugins to access command line arguments
     args = get_parser().parse_args()
-
     logging.basicConfig(level=args.loglevel.upper())
     load_plugins(args.plugins.split(",") if args.plugins else [])
-    main(
-        args.input,
-        template_name=args.template,
-    )
+    main(args.input, template_name=args.template)
 
 
-def main(
-    har_file: str,
-    template_name="locust.jinja2",
-):
+def main(har_file: str, template_name="locust.jinja2"):
     har_path = pathlib.Path(har_file)
     name = pathlib.Path(har_file).stem.replace("-", "_").replace(".", "_")  # build class name from filename
     with open(har_path, encoding="utf8", errors="ignore") as f:
@@ -39,9 +32,7 @@ def main(
     print(py)
 
 
-def process(
-    har: dict,
-) -> dict:
+def process(har: dict) -> dict:
     """Scan the har dict for common headers
 
     In doing so request and reponse variables are organized in a useful format:
