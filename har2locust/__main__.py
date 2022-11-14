@@ -12,45 +12,35 @@ from .argument_parser import get_parser
 from .plugin import astprocessor, entriesprocessor, valuesprocessor, outputstringprocessor
 
 
-def __main__(args=None):
-    args = get_parser().parse_args(args)
+def __main__():
+    global args
+    args = get_parser().parse_args()
+
     logging.basicConfig(level=args.loglevel.upper())
+    load_plugins(args.plugins.split(",") if args.plugins else [])
     main(
         args.input,
-        plugins=args.plugins.split(",") if args.plugins else [],
-        resource_type=args.resource_types.split(","),
         template_name=args.template,
     )
 
 
 def main(
     har_file: str,
-    plugins: List[str] = [],
-    resource_type=["xhr", "document", "other"],
     template_name="locust.jinja2",
 ):
-    default_plugins = list(pathlib.Path("har2locust/plugins").glob("*.py"))
-    default_and_extra_plugins = default_plugins + plugins
-    for plugin in default_and_extra_plugins:
-        sys.path.append(os.path.curdir)
-        import_path = str(plugin).replace("/", ".").rstrip(".py")
-        importlib.import_module(import_path)
-    logging.debug(f"loaded plugins {default_and_extra_plugins}")
-
     har_path = pathlib.Path(har_file)
     name = pathlib.Path(har_file).stem.replace("-", "_").replace(".", "_")  # build class name from filename
     with open(har_path, encoding="utf8", errors="ignore") as f:
         har = json.load(f)
     logging.debug(f"loaded {har_path}")
 
-    pp_dict = process(har, resource_type=resource_type)
+    pp_dict = process(har)
     py = rendering(template_name, {"name": name, **pp_dict})
     print(py)
 
 
 def process(
     har: dict,
-    resource_type=["xhr", "document", "other"],
 ) -> dict:
     """Scan the har dict for common headers
 
@@ -61,32 +51,13 @@ def process(
 
     Args:
         har (dict): the dict obtain by parsing har file with json
-        resource_type (list): list of resource type to include in the python
-            generated code. Supported type are `xhr`, `script`, `stylesheet`,
-            `image`, `font`, `document`, `other`.
     """
-    supported_resource_type = {
-        "xhr",
-        "script",
-        "stylesheet",
-        "image",
-        "font",
-        "document",
-        "other",
-    }
-    if unsupported := set(resource_type) - supported_resource_type:
-        raise NotImplementedError(f"{unsupported} resource types are not supported")
-
-    har_version = har["log"]["version"]
-    logging.debug(f'har log version is "{har_version}"')
-    if har_version != "1.2":
-        logging.warning(f"Untested har version {har_version}")
+    if har["log"]["version"] != "1.2":
+        logging.warning(f"Untested har version {har['log']['version']}")
 
     entries = har["log"]["entries"]
-    logging.debug(f"found {len(entries)} entries")
 
-    # filtering entries
-    entries = [e for e in har["log"]["entries"] if e["_resourceType"] in resource_type]
+    logging.debug(f"found {len(entries)} entries")
 
     for e in entries:
         # set defaults
@@ -96,8 +67,7 @@ def process(
     for p in entriesprocessor.processors:
         p(entries)
 
-    logging.debug(f"{resource_type=}")
-    logging.debug(f"{len(entries)} entries after filtering by resource_type")
+    logging.debug(f"{len(entries)} entries after applying entriesprocessors")
 
     headers_req, headers_res = [], []
     for e in entries:
@@ -160,6 +130,19 @@ def rendering(template_name: str, values: dict) -> str:
     logging.debug("outputstringprocessors applied")
 
     return py
+
+
+def load_plugins(plugins: List[str] = []):
+    package_root_dir = pathlib.Path(__file__).parents[1]
+    plugin_dir = package_root_dir / "har2locust/plugins"
+    logging.debug(f"loading default plugins from {plugin_dir}")
+    default_plugins = [str(d.relative_to(package_root_dir)) for d in plugin_dir.glob("*.py")]
+    default_and_extra_plugins = default_plugins + plugins
+    sys.path.append(os.path.curdir)  # accept plugins by relative path
+    for plugin in default_and_extra_plugins:
+        import_path = plugin.replace("/", ".").rstrip(".py")
+        importlib.import_module(import_path)
+    logging.debug(f"loaded plugins {default_and_extra_plugins}")
 
 
 if __name__ == "__main__":
