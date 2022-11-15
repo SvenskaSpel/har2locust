@@ -106,6 +106,29 @@ def test_plugins():
     assert "&_" not in stdout
 
 
+def test_plugins_run_as_module():  # same as above test, but run as module
+    har_file = "tests/inputs/login.har"
+    py_file = "tests/outputs/login_plugin.py"
+    with open(py_file, encoding="utf-8") as f:
+        expected_output = f.read()
+    proc = subprocess.Popen(
+        ["python3", "-m", "har2locust", har_file, "--plugins", "tests/plugin_example.py"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        encoding="utf-8",
+        cwd=os.path.join(os.path.dirname(__file__), "../"),
+    )
+    stdout, stderr = proc.communicate()
+    assert proc.returncode == 0, f"Bad return code {proc.returncode}, stderr: {stderr}"
+    assert stdout.strip() == expected_output.strip()
+    assert "self.reader.user" in stdout
+    assert "self.customer" in stdout
+    # test url timestamp rewriting function
+    assert "self.rest_" in stdout
+    assert "&_" not in stdout
+
+
 # this test is intended to be run AFTER regenerating the output using make update_tests
 def test_locust_run():
     proc = h2l("locust", "-f", "outputs/reqres.in.py", "-i", "1", "--headless")
