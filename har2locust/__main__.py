@@ -11,9 +11,11 @@ import jinja2
 from .argument_parser import get_parser
 from .plugin import astprocessor, entriesprocessor, valuesprocessor, outputstringprocessor
 
+args = None
+
 
 def __main__():
-    global args  # allow plugins to access command line arguments
+    global args  # allow plugins to access command line arguments # noqa
     args = get_parser().parse_args()
     logging.basicConfig(level=args.loglevel.upper())
     load_plugins(args.plugins.split(",") if args.plugins else [])
@@ -90,7 +92,7 @@ def rendering(template_name: str, values: dict) -> str:
     if pathlib.Path(template_name).exists():
         template_path = pathlib.Path(template_name)
     else:
-        template_path = pathlib.Path(__file__).parents[0].joinpath(pathlib.Path(template_name))
+        template_path = pathlib.Path(__file__).parents[0] / template_name
         if not template_path.exists():
             raise Exception(f"Template {template_name} does not exist, neither in current directory nor as built in")
 
