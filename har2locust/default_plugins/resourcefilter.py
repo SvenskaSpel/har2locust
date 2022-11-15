@@ -1,6 +1,4 @@
 from har2locust.plugin import entriesprocessor
-import re
-import pathlib
 
 # accessing args here is somewhat of a hack, but plugins dont usually need access to command line params,
 # and I didnt want them *all* to have to take it as a method argument
