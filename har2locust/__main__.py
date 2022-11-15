@@ -10,7 +10,7 @@ from typing import List
 from urllib.parse import urlsplit
 import jinja2
 from .argument_parser import get_parser
-from .plugin import *
+from .plugin import entriesprocessor, entriesprocessor_with_args, valuesprocessor, astprocessor, outputstringprocessor
 
 
 def __main__(arguments=None):

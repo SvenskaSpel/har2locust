@@ -2,7 +2,6 @@ from typing import Callable
 from argparse import Namespace
 import ast
 
-
 # For examples of how to write a plugin, see default_plugins/ or tests/plugin_example.py
 # The processors allow you to interact with your recording at various stages,
 
@@ -14,6 +13,7 @@ class entriesprocessor:
         self.processors.append(func)
 
 
+# immediately after reading the HAR JSON, with access to command line arguments
 class entriesprocessor_with_args:
     processors: list[Callable[[list[dict], Namespace], None]] = []
 
