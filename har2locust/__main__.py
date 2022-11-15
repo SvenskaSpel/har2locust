@@ -14,9 +14,9 @@ from .plugin import astprocessor, entriesprocessor, valuesprocessor, outputstrin
 args = None
 
 
-def __main__():
+def __main__(arguments=None):
     global args  # allow plugins to access command line arguments # noqa
-    args = get_parser().parse_args()
+    args = get_parser().parse_args(arguments)
     logging.basicConfig(level=args.loglevel.upper())
     load_plugins(args.plugins.split(",") if args.plugins else [])
     main(args.input, template_name=args.template)
