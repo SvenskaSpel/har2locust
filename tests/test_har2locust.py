@@ -7,6 +7,7 @@ import pytest
 import re
 from har2locust.__main__ import __main__, process, rendering
 from har2locust.argument_parser import get_parser
+
 inputs_dir = pathlib.Path(__file__).parents[0] / "inputs"
 outputs_dir = pathlib.Path(__file__).parents[0] / "outputs"
 
@@ -30,9 +31,8 @@ with open(inputs_dir / "login.har") as f:
 
 
 def test_har_file_not_found():
-    ns = get_parser().parse_args(str(inputs_dir / "foo.har"))
     with pytest.raises(FileNotFoundError):
-        __main__(ns)
+        __main__(str(inputs_dir / "foo.har"))
 
 
 def test_helptext():
@@ -47,7 +47,7 @@ def test_rendering_syntax_error():
         SyntaxError,
         match=re.escape("invalid syntax (<unknown>, line 1)"),
     ):
-        main(str(inputs_dir / "login.har"), template_name="tests/broken_template.jinja2")
+        __main__([str(inputs_dir / "login.har"), "--template", "tests/broken_template.jinja2"])
 
 
 def test_rendering_missing_template():
@@ -55,7 +55,7 @@ def test_rendering_missing_template():
         Exception,
         match="Template this_doesnt_exist.jinja2 does not exist, neither in current directory nor as built in",
     ):
-        rendering("this_doesnt_exist.jinja2", process(har))
+        __main__([str(inputs_dir / "login.har"), "--template", "this_doesnt_exist.jinja2"])
 
 
 # writing py file in tests/output for manual inspection
