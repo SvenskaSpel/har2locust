@@ -54,7 +54,7 @@ Parameters can also be set using environment variables or config files (har2locu
 or ~/.har2locust.conf) For details, see https://goo.gl/R74nmi
 ```
 
-3. Filter your recording using the files .urlignore and .headerignore (read from your current directory).
+3. Filter your recording using the files `.urlignore` and `.headerignore` (read from your current directory).
 Populate them with regexes to filter any unwanted requests or headers from your recordings. 
 Some headers are always ignored (cookie, content-length and chrome's "fake" headers)
 Here are some examples: [.urlignore](https://github.com/SvenskaSpel/har2locust/tree/main/.urlignore), 
