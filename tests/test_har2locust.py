@@ -5,8 +5,8 @@ import subprocess
 import os
 import pytest
 import re
-from har2locust.__main__ import __main__, main, process, rendering
-
+from har2locust.__main__ import __main__, process, rendering
+from har2locust.argument_parser import get_parser
 inputs_dir = pathlib.Path(__file__).parents[0] / "inputs"
 outputs_dir = pathlib.Path(__file__).parents[0] / "outputs"
 
@@ -30,9 +30,9 @@ with open(inputs_dir / "login.har") as f:
 
 
 def test_har_file_not_found():
-    har_file_foo = inputs_dir / "foo.har"
+    ns = get_parser().parse_args(str(inputs_dir / "foo.har"))
     with pytest.raises(FileNotFoundError):
-        main(str(har_file_foo))
+        __main__(ns)
 
 
 def test_helptext():

@@ -1,14 +1,8 @@
-from har2locust.plugin import entriesprocessor
-
-# accessing args here is somewhat of a hack, but plugins dont usually need access to command line params,
-# and I didnt want them *all* to have to take it as a method argument
-from ..__main__ import args
+from har2locust.plugin import entriesprocessor_with_args
 
 
-@entriesprocessor
-def process(entries):
-    # accessing args here is somewhat of a hack, but plugins dont usually need access to command line params,
-    # and I didnt want them *all* to have to take it as a method argument
+@entriesprocessor_with_args
+def process(entries, args):
     resource_types = args.resource_types.split(",")
     supported_resource_type = {
         "xhr",

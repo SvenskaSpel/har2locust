@@ -1,3 +1,4 @@
+from argparse import Namespace
 import importlib
 import json
 import logging
@@ -9,32 +10,25 @@ from typing import List
 from urllib.parse import urlsplit
 import jinja2
 from .argument_parser import get_parser
-from .plugin import astprocessor, entriesprocessor, valuesprocessor, outputstringprocessor
-
-args = None
+from .plugin import *
 
 
 def __main__(arguments=None):
-    global args  # allow plugins to access command line arguments # noqa
     args = get_parser().parse_args(arguments)
     logging.basicConfig(level=args.loglevel.upper())
     load_plugins(args.plugins.split(",") if args.plugins else [])
-    main(args.input, template_name=args.template)
-
-
-def main(har_file: str, template_name="locust.jinja2"):
-    har_path = pathlib.Path(har_file)
-    name = pathlib.Path(har_file).stem.replace("-", "_").replace(".", "_")  # build class name from filename
+    har_path = pathlib.Path(args.input)
+    name = har_path.stem.replace("-", "_").replace(".", "_")  # build class name from filename
     with open(har_path, encoding="utf8", errors="ignore") as f:
         har = json.load(f)
     logging.debug(f"loaded {har_path}")
 
-    pp_dict = process(har)
-    py = rendering(template_name, {"name": name, **pp_dict})
+    pp_dict = process(har, args)
+    py = rendering(args.template, {"name": name, **pp_dict})
     print(py)
 
 
-def process(har: dict) -> dict:
+def process(har: dict, args: Namespace) -> dict:
     """Scan the har dict for common headers
 
     In doing so request and reponse variables are organized in a useful format:
@@ -59,6 +53,9 @@ def process(har: dict) -> dict:
 
     for p in entriesprocessor.processors:
         p(entries)
+
+    for p in entriesprocessor_with_args.processors:
+        p(entries, args)
 
     logging.debug(f"{len(entries)} entries after applying entriesprocessors")
 

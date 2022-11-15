@@ -1,5 +1,7 @@
 from typing import Callable
+from argparse import Namespace
 import ast
+
 
 # For examples of how to write a plugin, see default_plugins/ or tests/plugin_example.py
 # The processors allow you to interact with your recording at various stages,
@@ -9,6 +11,13 @@ class entriesprocessor:
     processors: list[Callable[[list[dict]], None]] = []
 
     def __init__(self, func: Callable[[list[dict]], None]):
+        self.processors.append(func)
+
+
+class entriesprocessor_with_args:
+    processors: list[Callable[[list[dict], Namespace], None]] = []
+
+    def __init__(self, func: Callable[[list[dict], Namespace], None]):
         self.processors.append(func)
 
 
