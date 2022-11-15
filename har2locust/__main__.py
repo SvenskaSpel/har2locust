@@ -127,7 +127,7 @@ def rendering(template_name: str, values: dict) -> str:
 
 def load_plugins(plugins: List[str] = []):
     package_root_dir = pathlib.Path(__file__).parents[1]
-    plugin_dir = package_root_dir / "har2locust/plugins"
+    plugin_dir = package_root_dir / "har2locust/default_plugins"
     logging.debug(f"loading default plugins from {plugin_dir}")
     default_plugins = [str(d.relative_to(package_root_dir)) for d in plugin_dir.glob("*.py")]
     default_and_extra_plugins = default_plugins + plugins

@@ -7,7 +7,7 @@ import re
 
 @entriesprocessor
 def parametrize_ssn(entries):
-    # this assumes you have a dict on your user called self.customer
+    # self.customer (gets added below by get_customer_from_reader)
     for e in entries:
         if "postData" in e["request"]:
             e["request"]["postData"]["text"] = re.sub(
@@ -19,7 +19,7 @@ def parametrize_ssn(entries):
 
 @entriesprocessor
 def skip_origin_header(entries):
-    # my particular site doesnt care about origin header and skipping it makes the locustfile much neater
+    # this particular site doesnt care about origin header and skipping it makes the locustfile much neater
     for e in entries:
         request = e["request"]
         request["headers"] = [h for h in request["headers"] if h["name"] != "origin"]
