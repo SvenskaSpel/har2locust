@@ -42,10 +42,10 @@ def process(har: dict, args: Namespace) -> dict:
     values = {}
 
     for p in entriesprocessor.processors:
-        values |= p(entries) or {}  # pylint: disable=unsupported-binary-operation
+        values |= p(entries) or {}
 
     for p in entriesprocessor_with_args.processors:
-        values |= p(entries, args) or {}  # pylint: disable=unsupported-binary-operation
+        values |= p(entries, args) or {}
 
     logging.debug(f"{len(entries)} entries after applying entriesprocessors")
 
