@@ -49,8 +49,6 @@ def process(har: dict, args: Namespace) -> dict:
 
     logging.debug(f"{len(entries)} entries after applying entriesprocessors")
 
-    headers_req = []
-
     # calculate headers shared by all requests (same name and value)
     default_headers = None
     for e in entries:
