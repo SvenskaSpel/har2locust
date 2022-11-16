@@ -25,13 +25,13 @@ def skip_origin_header(entries):
         request["headers"] = [h for h in request["headers"] if h["name"] != "origin"]
 
 
-# @astprocessor allows you to do all kinds of advanced stuff, like this function that wraps the entire task function body in a with-block.
 @astprocessor
 def get_customer_from_reader(tree: Module, values: dict):
     class T(NodeTransformer):
         def visit_ImportFrom(self, node: ImportFrom) -> ImportFrom:
+            # import a slightly different RestUser, from another package
             if node.names[0].name == "RestUser":
-                node.module = "svs_locust"  # import a slightly different RestUser, from another package
+                node.module = "svs_locust"
             self.generic_visit(node)
             return node
 
@@ -42,6 +42,7 @@ def get_customer_from_reader(tree: Module, values: dict):
             return node
 
         def visit_FunctionDef(self, node: FunctionDef) -> FunctionDef:
+            # wrap the entire task function body in a with-block.
             if node.name == "t":
                 with_block = parse(
                     f"""
@@ -56,6 +57,7 @@ with self.reader.user() as self.customer:
             return node
 
         def visit_Call(self, node: Call) -> Call:
+            # call rest_ instead of rest for those urls that have &_<timestamp> at the end
             if isinstance(node.func, Attribute) and node.func.attr == "rest":
                 c = node.args[1]
                 if isinstance(c, Constant) and re.search(r"&_=\d+$", c.value):
@@ -73,8 +75,3 @@ with self.reader.user() as self.customer:
 # def log_something_and_drop_everthing_but_the_first_request(entries):
 #     logging.info(f"hello")
 #     entries[:] = [entries[0]]  # update list in-place
-
-
-# @valuesprocessor
-# def custom_user_classname(values):
-#     values["name"] = "NewName"
