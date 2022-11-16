@@ -21,35 +21,31 @@ def __main__(arguments=None):
         har = json.load(f)
     logging.debug(f"loaded {har_path}")
 
-    pp_dict = process(har, args)
-    py = rendering(args.template, {"name": name, **pp_dict})
+    template_vars = process(har, args)
+    template_vars["name"] = name
+    py = rendering(args.template, template_vars)
     print(py)
 
 
+# process har dictionary and return a dict of values to render
 def process(har: dict, args: Namespace) -> dict:
     if har["log"]["version"] != "1.2":
         logging.warning(f"Untested har version {har['log']['version']}")
-
     entries = har["log"]["entries"]
-
     logging.debug(f"found {len(entries)} entries")
 
     for e in entries:
         # set defaults
         e["request"]["fname"] = "client.request"
         e["request"]["extraparams"] = [("catch_response", True)]
-
-    values = {}
-
+    values = {"entries": entries}
     for p in entriesprocessor.processors:
         values |= p(entries) or {}
-
     for p in entriesprocessor_with_args.processors:
         values |= p(entries, args) or {}
-
     logging.debug(f"{len(entries)} entries after applying entriesprocessors")
 
-    return dict(**values, entries=entries)
+    return values
 
 
 def rendering(template_name: str, values: dict) -> str:
