@@ -6,8 +6,8 @@ class {{name}}(FastHttpUser):
     host = "{{host}}"
     {%- if default_headers %}
     default_headers = {
-        {%- for (key, value) in default_headers | sort %}
-        '{{ key }}': '{{ value }}',
+        {%- for h in default_headers %}
+        '{{ h.name }}': '{{ h.value }}',
         {%- endfor %}
     }
     {%- endif %}
@@ -18,9 +18,9 @@ class {{name}}(FastHttpUser):
         {% set request = e.request %}
         with self.{{request.fname}}("{{ request.method | upper }}", "{{ request.url }}"
         {%- if request.fname == "rest" -%}{%- if request.headers -%}, headers={
-            {%- for key, value in request.headers %}
-            {%- if key|lower != "content-type" -%}
-            '{{ key }}': '{{ value }}',
+            {%- for h in request.headers %}
+            {%- if h.name|lower != "content-type" -%}
+            '{{ h.name }}': '{{ h.value }}',
             {%- endif -%}    
             {%- endfor %}}
         {%- endif -%}
@@ -28,8 +28,8 @@ class {{name}}(FastHttpUser):
         {%- endif -%}
         {%- else -%}
         {%- if request.headers -%}, headers={
-            {%- for key, value in request.headers %}
-            '{{ key }}': '{{ value }}',
+            {%- for h in request.headers %}
+            '{{ h.name }}': '{{ h.value }}',
             {%- endfor %}}
         {%- endif -%}
         {%- if request.postData -%}

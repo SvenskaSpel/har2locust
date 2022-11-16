@@ -29,16 +29,6 @@ def __main__(arguments=None):
 
 
 def process(har: dict, args: Namespace) -> dict:
-    """Scan the har dict for common headers
-
-    In doing so request and reponse variables are organized in a useful format:
-    from [[{'name': key, 'value': value}, ...], ...] list of list of dict
-    to   [{(key, value), ...}, ...] list of set of tuple.
-    Moreover requests can be filter by resource type.
-
-    Args:
-        har (dict): the dict obtain by parsing har file with json
-    """
     if har["log"]["version"] != "1.2":
         logging.warning(f"Untested har version {har['log']['version']}")
 
@@ -59,25 +49,43 @@ def process(har: dict, args: Namespace) -> dict:
 
     logging.debug(f"{len(entries)} entries after applying entriesprocessors")
 
-    headers_req, headers_res = [], []
-    for e in entries:
-        headers_req.append({(h["name"], h["value"]) for h in e["request"]["headers"]})
-        headers_res.append({(h["name"], h["value"]) for h in e["response"]["headers"]})
+    headers_req = []
 
-    # collect headers common to all requests
-    default_headers = set.intersection(*headers_req)
+    # calculate headers shared by all requests (same name and value)
+    default_headers = None
+    for e in entries:
+        headers = e["request"]["headers"]
+        if default_headers is None:
+            default_headers = headers[:]
+        else:
+            for dh in default_headers[:]:
+                for h in headers:
+                    if dh["name"] == h["name"]:
+                        if dh["value"] != h["value"]:
+                            default_headers.remove(dh)  # header has different value
+                            break
+                        break
+                else:
+                    default_headers.remove(dh)  # header not present
+    if default_headers is None:
+        default_headers = []
+
+    default_headers.sort(key=lambda item: item["name"])
 
     urlparts = urlsplit(entries[0]["request"]["url"])
     host = f"{urlparts.scheme}://{urlparts.netloc}/"
-    for i, e in enumerate(entries):
-        r = e["request"]
-        r["url"] = r["url"].removeprefix(host)
-        r["headers"] = sorted(headers_req[i] - default_headers, key=lambda item: item[0])
-
+    for e in entries:
+        e["request"]["url"] = e["request"]["url"].removeprefix(host)
+        headers = e["request"]["headers"]
+        for h in headers[:]:
+            for dh in default_headers:
+                if h["name"] == dh["name"]:
+                    headers.remove(dh)
+        headers[:] = sorted(headers, key=lambda item: item["name"])
     logging.debug("preprocessed har dict")
 
     # return the "values"-dict for use in rendering
-    return dict(host=host, default_headers=sorted(default_headers), entries=entries)
+    return dict(host=host, default_headers=default_headers, entries=entries)
 
 
 def rendering(template_name: str, values: dict) -> str:
