@@ -21,9 +21,9 @@ def __main__(arguments=None):
         har = json.load(f)
     logging.debug(f"loaded {har_path}")
 
-    template_vars = process(har, args)
-    template_vars["name"] = name
-    py = rendering(args.template, template_vars)
+    template_values = process(har, args)
+    template_values["class_name"] = name
+    py = render(args.template, template_values)
     print(py)
 
 
@@ -61,14 +61,14 @@ def process(har: dict, args: Namespace) -> dict:
     return values
 
 
-def rendering(template_name: str, values: dict) -> str:
-    logging.debug(f'about to load template "{template_name}"')
-    if pathlib.Path(template_name).exists():
-        template_path = pathlib.Path(template_name)
+def render(name: str, values: dict) -> str:
+    logging.debug(f'about to load template "{name}"')
+    if pathlib.Path(name).exists():
+        template_path = pathlib.Path(name)
     else:
-        template_path = pathlib.Path(__file__).parents[0] / template_name
+        template_path = pathlib.Path(__file__).parents[0] / name
         if not template_path.exists():
-            raise Exception(f"Template {template_name} does not exist, neither in current directory nor as built in")
+            raise Exception(f"Template {name} does not exist, neither in current directory nor as built in")
 
     template_dir = template_path.parents[0]
 

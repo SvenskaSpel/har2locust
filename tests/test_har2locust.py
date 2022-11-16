@@ -5,7 +5,7 @@ import subprocess
 import os
 import pytest
 import re
-from har2locust.__main__ import __main__, process, rendering
+from har2locust.__main__ import __main__, process, render
 from har2locust.argument_parser import get_parser
 
 inputs_dir = pathlib.Path(__file__).parents[0] / "inputs"
@@ -42,7 +42,7 @@ def test_helptext():
     assert "are not supported" in stderr
 
 
-def test_rendering_syntax_error():
+def test_render_syntax_error():
     with pytest.raises(
         SyntaxError,
         match=re.escape("invalid syntax (<unknown>, line 1)"),
@@ -50,7 +50,7 @@ def test_rendering_syntax_error():
         __main__([str(inputs_dir / "login.har"), "--template", "tests/broken_template.jinja2"])
 
 
-def test_rendering_missing_template():
+def test_render_missing_template():
     with pytest.raises(
         Exception,
         match="Template this_doesnt_exist.jinja2 does not exist, neither in current directory nor as built in",

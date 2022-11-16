@@ -49,7 +49,7 @@ from locust_plugins.listeners import RescheduleTaskOnFail
 def on_locust_init(environment, **_kwargs):
     RescheduleTaskOnFail(environment)
 if __name__ == "__main__":
-    run_single_user({values['name']})
+    run_single_user({values['class_name']})
 """,
                 ).body
             )

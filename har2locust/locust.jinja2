@@ -2,7 +2,7 @@
 from locust import task, run_single_user
 from locust import FastHttpUser
 
-class {{name}}(FastHttpUser):
+class {{class_name}}(FastHttpUser):
     host = "{{host}}"
     {%- if default_headers %}
     default_headers = {
