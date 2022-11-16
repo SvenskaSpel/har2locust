@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, Optional
 from argparse import Namespace
 import ast
 
@@ -7,17 +7,17 @@ import ast
 
 # immediately after reading the HAR JSON
 class entriesprocessor:
-    processors: list[Callable[[list[dict]], dict | None]] = []
+    processors: list[Callable[[list[dict]], Optional[dict]]] = []
 
-    def __init__(self, func: Callable[[list[dict]], dict | None]):
+    def __init__(self, func: Callable[[list[dict]], Optional[dict]]):
         self.processors.append(func)
 
 
 # immediately after reading the HAR JSON, with access to command line arguments
 class entriesprocessor_with_args:
-    processors: list[Callable[[list[dict], Namespace], dict | None]] = []
+    processors: list[Callable[[list[dict], Namespace], Optional[dict]]] = []
 
-    def __init__(self, func: Callable[[list[dict], Namespace], dict | None]):
+    def __init__(self, func: Callable[[list[dict], Namespace], Optional[dict]]):
         self.processors.append(func)
 
 
