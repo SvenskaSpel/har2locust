@@ -35,7 +35,7 @@ def test_har_file_not_found():
         __main__(str(inputs_dir / "foo.har"))
 
 
-def test_helptext():
+def test_invalid_resource_types():
     proc = h2l("har2locust", "--resource-types xhr,foo", "tests/inputs/login.har")
     _stdout, stderr = proc.communicate()
     assert proc.returncode == 1, f"Unexpected return code {proc.returncode}, stderr: {stderr}"
