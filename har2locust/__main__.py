@@ -27,6 +27,19 @@ def __main__(arguments=None):
     print(py)
 
 
+def load_plugins(plugins: list[str] = []):
+    package_root_dir = pathlib.Path(__file__).parents[1]
+    plugin_dir = package_root_dir / "har2locust/default_plugins"
+    logging.debug(f"loading default plugins from {plugin_dir}")
+    default_plugins = [str(d.relative_to(package_root_dir)) for d in plugin_dir.glob("*.py")]
+    default_and_extra_plugins = default_plugins + plugins
+    sys.path.append(os.path.curdir)  # accept plugins by relative path
+    for plugin in default_and_extra_plugins:
+        import_path = plugin.replace("/", ".").rstrip(".py")
+        importlib.import_module(import_path)
+    logging.debug(f"loaded plugins {default_and_extra_plugins}")
+
+
 # process har dictionary and return a dict of values to render
 def process(har: dict, args: Namespace) -> dict:
     if har["log"]["version"] != "1.2":
@@ -84,19 +97,6 @@ def rendering(template_name: str, values: dict) -> str:
     logging.debug("outputstringprocessors applied")
 
     return py
-
-
-def load_plugins(plugins: list[str] = []):
-    package_root_dir = pathlib.Path(__file__).parents[1]
-    plugin_dir = package_root_dir / "har2locust/default_plugins"
-    logging.debug(f"loading default plugins from {plugin_dir}")
-    default_plugins = [str(d.relative_to(package_root_dir)) for d in plugin_dir.glob("*.py")]
-    default_and_extra_plugins = default_plugins + plugins
-    sys.path.append(os.path.curdir)  # accept plugins by relative path
-    for plugin in default_and_extra_plugins:
-        import_path = plugin.replace("/", ".").rstrip(".py")
-        importlib.import_module(import_path)
-    logging.debug(f"loaded plugins {default_and_extra_plugins}")
 
 
 if __name__ == "__main__":
