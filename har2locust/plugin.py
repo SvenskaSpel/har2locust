@@ -7,25 +7,17 @@ import ast
 
 # immediately after reading the HAR JSON
 class entriesprocessor:
-    processors: list[Callable[[list[dict]], None]] = []
+    processors: list[Callable[[list[dict]], dict | None]] = []
 
-    def __init__(self, func: Callable[[list[dict]], None]):
+    def __init__(self, func: Callable[[list[dict]], dict | None]):
         self.processors.append(func)
 
 
 # immediately after reading the HAR JSON, with access to command line arguments
 class entriesprocessor_with_args:
-    processors: list[Callable[[list[dict], Namespace], None]] = []
+    processors: list[Callable[[list[dict], Namespace], dict | None]] = []
 
-    def __init__(self, func: Callable[[list[dict], Namespace], None]):
-        self.processors.append(func)
-
-
-# just before passing values to jinja2 template
-class valuesprocessor:
-    processors: list[Callable[[dict], None]] = []
-
-    def __init__(self, func: Callable[[dict], None]):
+    def __init__(self, func: Callable[[list[dict], Namespace], dict | None]):
         self.processors.append(func)
 
 

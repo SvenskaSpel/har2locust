@@ -7,10 +7,9 @@ import pathlib
 import ast
 import sys
 from typing import List
-from urllib.parse import urlsplit
 import jinja2
 from .argument_parser import get_parser
-from .plugin import entriesprocessor, entriesprocessor_with_args, valuesprocessor, astprocessor, outputstringprocessor
+from .plugin import entriesprocessor, entriesprocessor_with_args, astprocessor, outputstringprocessor
 
 
 def __main__(arguments=None):
@@ -41,56 +40,20 @@ def process(har: dict, args: Namespace) -> dict:
         e["request"]["fname"] = "client.request"
         e["request"]["extraparams"] = [("catch_response", True)]
 
+    values = {}
+
     for p in entriesprocessor.processors:
-        p(entries)
+        values |= p(entries) or {}
 
     for p in entriesprocessor_with_args.processors:
-        p(entries, args)
+        values |= p(entries, args) or {}
 
     logging.debug(f"{len(entries)} entries after applying entriesprocessors")
 
-    # calculate headers shared by all requests (same name and value)
-    default_headers = None
-    for e in entries:
-        headers = e["request"]["headers"]
-        if default_headers is None:
-            default_headers = headers[:]
-        else:
-            for dh in default_headers[:]:
-                for h in headers:
-                    if dh["name"] == h["name"]:
-                        if dh["value"] != h["value"]:
-                            default_headers.remove(dh)  # header has different value
-                            break
-                        break
-                else:
-                    default_headers.remove(dh)  # header not present
-    if default_headers is None:
-        default_headers = []
-
-    default_headers.sort(key=lambda item: item["name"])
-
-    urlparts = urlsplit(entries[0]["request"]["url"])
-    host = f"{urlparts.scheme}://{urlparts.netloc}/"
-    for e in entries:
-        e["request"]["url"] = e["request"]["url"].removeprefix(host)
-        headers = e["request"]["headers"]
-        for h in headers[:]:
-            for dh in default_headers:
-                if h["name"] == dh["name"]:
-                    headers.remove(dh)
-        headers[:] = sorted(headers, key=lambda item: item["name"])
-    logging.debug("preprocessed har dict")
-
-    # return the "values"-dict for use in rendering
-    return dict(host=host, default_headers=default_headers, entries=entries)
+    return dict(**values, entries=entries)
 
 
 def rendering(template_name: str, values: dict) -> str:
-    for p in valuesprocessor.processors:
-        p(values)
-    logging.debug("valueprocessors applied")
-
     logging.debug(f'about to load template "{template_name}"')
     if pathlib.Path(template_name).exists():
         template_path = pathlib.Path(template_name)
