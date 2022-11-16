@@ -17,7 +17,7 @@ def __main__(arguments=None):
     load_plugins(args.plugins.split(",") if args.plugins else [])
     har_path = pathlib.Path(args.input)
     name = har_path.stem.replace("-", "_").replace(".", "_")  # build class name from filename
-    with open(har_path, encoding="utf8", errors="ignore") as f:
+    with open(har_path, encoding="utf8") as f:
         har = json.load(f)
     logging.debug(f"loaded {har_path}")
 
