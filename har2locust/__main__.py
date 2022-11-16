@@ -6,7 +6,6 @@ import os
 import pathlib
 import ast
 import sys
-from typing import List
 import jinja2
 from .argument_parser import get_parser
 from .plugin import entriesprocessor, entriesprocessor_with_args, astprocessor, outputstringprocessor
@@ -91,7 +90,7 @@ def rendering(template_name: str, values: dict) -> str:
     return py
 
 
-def load_plugins(plugins: List[str] = []):
+def load_plugins(plugins: list[str] = []):
     package_root_dir = pathlib.Path(__file__).parents[1]
     plugin_dir = package_root_dir / "har2locust/default_plugins"
     logging.debug(f"loading default plugins from {plugin_dir}")
