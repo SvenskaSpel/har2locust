@@ -36,8 +36,8 @@ def get_customer_from_reader(tree: Module, values: dict):
             return node
 
         def visit_ClassDef(self, node: ClassDef) -> ClassDef:
-            class_extra_props = parse("tb = True")
-            node.body[0] = class_extra_props.body[0]  # this will overwrite the "host = ..." line
+            # node.body[0] = parse('host = f"https://api.spela.{env}.svenskaspel.se"').body[0]
+            node.body[0] = parse("lb = True").body[0]
             self.generic_visit(node)
             return node
 
@@ -60,9 +60,12 @@ with self.reader.user() as self.customer:
             # call rest_ instead of rest for those urls that have &_<timestamp> at the end
             if isinstance(node.func, Attribute) and node.func.attr == "rest":
                 c = node.args[1]
-                if isinstance(c, Constant) and re.search(r"&_=\d+$", c.value):
-                    node.func.attr = "rest_"
-                    c.value = re.sub(r"&_=\d+$", "", c.value)
+                if isinstance(c, Constant):
+                    if re.search(r"&_=\d+$", c.value):
+                        node.func.attr = "rest_"
+                        c.value = re.sub(r"&_=\d+$", "", c.value)
+                    elif re.search(r"/player/1/authenticate/testlogin$", c.value):
+                        pass
             self.generic_visit(node)
             return node
 

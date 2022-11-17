@@ -5,7 +5,7 @@ from svs_locust import RestUser
 
 
 class login(RestUser):
-    tb = True
+    lb = True
     default_headers = {
         "accept-encoding": "gzip, deflate, br",
         "accept-language": "sv,en;q=0.9",
@@ -19,14 +19,14 @@ class login(RestUser):
         with self.reader.user() as self.customer:
             with self.rest(
                 "POST",
-                "player/1/authenticate/testlogin",
+                "/player/1/authenticate/testlogin",
                 headers={"accept": "application/json, text/javascript, */*; q=0.01"},
                 json={"personalId": self.customer["ssn"], "source": 3},
             ) as resp:
                 pass
             with self.rest(
                 "GET",
-                "player/1/customizedsettings?_=1636025335990",
+                "/player/1/customizedsettings?_=1636025335990",
                 headers={"accept": "application/json, text/javascript, */*; q=0.01"},
             ) as resp:
                 pass
@@ -49,12 +49,12 @@ class login(RestUser):
             ) as resp:
                 pass
             with self.rest(
-                "POST", "player/1/terms", headers={"accept": "application/json, text/javascript, */*; q=0.01"}, json={}
+                "POST", "/player/1/terms", headers={"accept": "application/json, text/javascript, */*; q=0.01"}, json={}
             ) as resp:
                 pass
             with self.rest_(
                 "GET",
-                "player/1/info?include=accountBalance",
+                "/player/1/info?include=accountBalance",
                 headers={"accept": "application/json, text/javascript, */*; q=0.01"},
             ) as resp:
                 pass

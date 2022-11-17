@@ -5,13 +5,13 @@ from locust_plugins.users import RestUser
 
 
 class apple_buy_a_mac(RestUser):
-    host = "https://secure2.store.apple.com/"
+    host = "https://secure2.store.apple.com"
 
     @task
     def t(self):
         with self.client.request(
             "GET",
-            "shop/sign_in?c=aHR0cHM6Ly93d3cuYXBwbGUuY29tL3Nob3AvYmFnfDFhb3NjY2QxZjg4ZGZjYjY4YWRhNWZmMmY5ZTY5YWMzNjE0OTYyMjZlOWMz&o=O01HTjYz&r=SXYD4UDAPXU7P7KXF&s=aHR0cHM6Ly9zZWN1cmUyLnN0b3JlLmFwcGxlLmNvbS9zaG9wL2NoZWNrb3V0L3N0YXJ0P3BsdG49QTZGNDNFMER8MWFvczg4MjgzMjY3MzJkNWEzNjIxMTQxMDE0ZTU4NmZiNTY5MjEzZGEyY2M&t=SXYD4UDAPXU7P7KXF&up=t",
+            "/shop/sign_in?c=aHR0cHM6Ly93d3cuYXBwbGUuY29tL3Nob3AvYmFnfDFhb3NjY2QxZjg4ZGZjYjY4YWRhNWZmMmY5ZTY5YWMzNjE0OTYyMjZlOWMz&o=O01HTjYz&r=SXYD4UDAPXU7P7KXF&s=aHR0cHM6Ly9zZWN1cmUyLnN0b3JlLmFwcGxlLmNvbS9zaG9wL2NoZWNrb3V0L3N0YXJ0P3BsdG49QTZGNDNFMER8MWFvczg4MjgzMjY3MzJkNWEzNjIxMTQxMDE0ZTU4NmZiNTY5MjEzZGEyY2M&t=SXYD4UDAPXU7P7KXF&up=t",
             headers={
                 "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
                 "Accept-Encoding": "gzip, deflate, br",
@@ -1159,7 +1159,7 @@ class apple_buy_a_mac(RestUser):
             pass
         with self.rest(
             "GET",
-            "shop/bag/status?apikey=SKCXTKATUYT9JK4HD",
+            "/shop/bag/status?apikey=SKCXTKATUYT9JK4HD",
             headers={
                 "Accept": "*/*",
                 "Accept-Encoding": "gzip, deflate, br",
@@ -1179,7 +1179,7 @@ class apple_buy_a_mac(RestUser):
             pass
         with self.client.request(
             "GET",
-            "search-services/suggestions/defaultlinks/?src=globalnav&locale=en_US",
+            "/search-services/suggestions/defaultlinks/?src=globalnav&locale=en_US",
             headers={
                 "Accept": "*/*",
                 "Accept-Encoding": "gzip, deflate, br",
@@ -1293,7 +1293,7 @@ class apple_buy_a_mac(RestUser):
             pass
         with self.client.request(
             "GET",
-            "favicon.ico",
+            "/favicon.ico",
             headers={
                 "Accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
                 "Accept-Encoding": "gzip, deflate, br",

@@ -5,7 +5,7 @@ from locust_plugins.users import RestUser
 
 
 class reqres_in(RestUser):
-    host = "https://reqres.in/"
+    host = "https://reqres.in"
     default_headers = {
         "accept": "*/*",
         "accept-encoding": "gzip, deflate, br",
@@ -17,11 +17,11 @@ class reqres_in(RestUser):
 
     @task
     def t(self):
-        with self.rest("POST", "api/users", json={"name": "morpheus", "job": "leader"}) as resp:
+        with self.rest("POST", "/api/users", json={"name": "morpheus", "job": "leader"}) as resp:
             pass
-        with self.rest("PATCH", "api/users/2", json={"name": "morpheus", "job": "zion resident"}) as resp:
+        with self.rest("PATCH", "/api/users/2", json={"name": "morpheus", "job": "zion resident"}) as resp:
             pass
-        with self.client.request("DELETE", "api/users/2", catch_response=True) as resp:
+        with self.client.request("DELETE", "/api/users/2", catch_response=True) as resp:
             pass
 
 

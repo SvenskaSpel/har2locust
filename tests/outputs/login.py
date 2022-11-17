@@ -5,7 +5,7 @@ from locust_plugins.users import RestUser
 
 
 class login(RestUser):
-    host = "https://api.spela.test3.svenskaspel.se/"
+    host = "https://api.spela.test3.svenskaspel.se"
     default_headers = {
         "accept-encoding": "gzip, deflate, br",
         "accept-language": "sv,en;q=0.9",
@@ -18,7 +18,7 @@ class login(RestUser):
     def t(self):
         with self.rest(
             "POST",
-            "player/1/authenticate/testlogin",
+            "/player/1/authenticate/testlogin",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
                 "origin": "https://spela.test3.svenskaspel.se",
@@ -28,7 +28,7 @@ class login(RestUser):
             pass
         with self.rest(
             "GET",
-            "player/1/customizedsettings?_=1636025335990",
+            "/player/1/customizedsettings?_=1636025335990",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
                 "origin": "https://spela.test3.svenskaspel.se",
@@ -55,7 +55,7 @@ class login(RestUser):
             pass
         with self.rest(
             "POST",
-            "player/1/terms",
+            "/player/1/terms",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
                 "origin": "https://spela.test3.svenskaspel.se",
@@ -65,7 +65,7 @@ class login(RestUser):
             pass
         with self.rest(
             "GET",
-            "player/1/info?include=accountBalance&_=1636025343876",
+            "/player/1/info?include=accountBalance&_=1636025343876",
             headers={
                 "accept": "application/json, text/javascript, */*; q=0.01",
                 "origin": "https://spela.test3.svenskaspel.se",
