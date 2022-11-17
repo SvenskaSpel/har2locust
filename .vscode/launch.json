@@ -37,6 +37,18 @@
                 "LOCUST_PLAYWRIGHT": "1",
                 "LOCUST_TEST_ENV": "test"
             }
+        },
+        {
+            "name": "Python: har2locust module",
+            "type": "python",
+            "gevent": true,
+            "request": "launch",
+            "console": "internalConsole",
+            "internalConsoleOptions": "openOnSessionStart",
+            "args": [
+                "tests/inputs/login.har"
+            ],
+            "module": "har2locust",
         }
     ]
 }
