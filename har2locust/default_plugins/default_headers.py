@@ -26,7 +26,7 @@ def process(entries: list[dict], _args):
     default_headers.sort(key=lambda item: item["name"])
 
     urlparts = urlsplit(entries[0]["request"]["url"])
-    host = f"{urlparts.scheme}://{urlparts.netloc}/"
+    host = f"{urlparts.scheme}://{urlparts.netloc}"
     for e in entries:
         e["request"]["url"] = e["request"]["url"].removeprefix(host)
         headers = e["request"]["headers"]
