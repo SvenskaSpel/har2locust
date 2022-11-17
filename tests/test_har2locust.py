@@ -36,7 +36,7 @@ def test_har_file_not_found():
 
 
 def test_invalid_resource_types():
-    proc = h2l("har2locust", "--resource-types xhr,foo", "tests/inputs/login.har")
+    proc = h2l("har2locust", "--resource-types", "xhr,foo", "inputs/login.har")
     _stdout, stderr = proc.communicate()
     assert proc.returncode == 1, f"Unexpected return code {proc.returncode}, stderr: {stderr}"
     assert "are not supported" in stderr
