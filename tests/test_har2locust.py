@@ -15,14 +15,14 @@ har_files = list(inputs_dir.glob("*.har"))
 py_files = [outputs_dir / f.with_suffix(".py").name for f in har_files]
 
 
-def h2l(*arguments):
+def h2l(*arguments, cwd=os.path.dirname(__file__)):
     return subprocess.Popen(
         arguments,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
         encoding="utf-8",
-        cwd=os.path.dirname(__file__),
+        cwd=cwd,
     )
 
 
@@ -36,7 +36,12 @@ def test_har_file_not_found():
 
 
 def test_invalid_resource_types():
-    proc = h2l("har2locust", "--resource-types", "xhr,foo", "inputs/login.har")
+    proc = h2l(
+        "har2locust",
+        "--resource-types",
+        "xhr,foo",
+        "inputs/login.har",
+    )
     _stdout, stderr = proc.communicate()
     assert proc.returncode == 1, f"Unexpected return code {proc.returncode}, stderr: {stderr}"
     assert "are not supported" in stderr
@@ -63,42 +68,39 @@ def test_render_missing_template():
 def test_output(har_file, py_file):
     with open(py_file, encoding="utf-8") as f:
         expected_output = f.read()
-    proc = subprocess.Popen(
-        ["har2locust", har_file],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        encoding="utf-8",
+    proc = h2l(
+        "har2locust",
+        har_file,
         cwd=os.path.join(os.path.dirname(__file__), "../"),
     )
     stdout, stderr = proc.communicate()
     assert proc.returncode == 0, f"Bad return code {proc.returncode}, stderr: {stderr}"
-    assert stdout.strip() == expected_output.strip()
+    assert stdout == expected_output
 
 
 def test_helptext():
-    proc = h2l("har2locust", "--help")
+    proc = h2l(
+        "har2locust",
+        "--help",
+    )
     stdout, stderr = proc.communicate()
     assert proc.returncode == 0, f"Bad return code {proc.returncode}, stderr: {stderr}"
     assert "usage: har2locust" in stdout
 
 
 def test_plugins():
-    har_file = "tests/inputs/login.har"
-    py_file = "tests/outputs/login_plugin.py"
-    with open(py_file, encoding="utf-8") as f:
+    with open("tests/outputs/login_plugin.py", encoding="utf-8") as f:
         expected_output = f.read()
-    proc = subprocess.Popen(
-        ["har2locust", har_file, "--plugins", "tests/plugin_example.py"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        encoding="utf-8",
+    proc = h2l(
+        "har2locust",
+        "tests/inputs/login.har",
+        "--plugins",
+        "tests/plugin_example.py",
         cwd=os.path.join(os.path.dirname(__file__), "../"),
     )
     stdout, stderr = proc.communicate()
     assert proc.returncode == 0, f"Bad return code {proc.returncode}, stderr: {stderr}"
-    assert stdout.strip() == expected_output.strip()
+    assert stdout == expected_output
     assert "self.reader.user" in stdout
     assert "self.customer" in stdout
     # test url timestamp rewriting function
@@ -107,21 +109,20 @@ def test_plugins():
 
 
 def test_plugins_run_as_module():  # same as above test, but run as module
-    har_file = "tests/inputs/login.har"
-    py_file = "tests/outputs/login_plugin.py"
-    with open(py_file, encoding="utf-8") as f:
+    with open("tests/outputs/login_plugin.py", encoding="utf-8") as f:
         expected_output = f.read()
-    proc = subprocess.Popen(
-        ["python3", "-m", "har2locust", har_file, "--plugins", "tests/plugin_example.py"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        encoding="utf-8",
-        cwd=os.path.join(os.path.dirname(__file__), "../"),
+    proc = h2l(
+        "python3",
+        "-m",
+        "har2locust",
+        "tests/inputs/login.har",
+        "--plugins",
+        "tests/plugin_example.py",
+        cwd=os.path.join(os.path.dirname(__file__), "../"),  # needed to find .headerignore & .urlignore files
     )
     stdout, stderr = proc.communicate()
     assert proc.returncode == 0, f"Bad return code {proc.returncode}, stderr: {stderr}"
-    assert stdout.strip() == expected_output.strip()
+    assert stdout == expected_output
     assert "self.reader.user" in stdout
     assert "self.customer" in stdout
     # test url timestamp rewriting function
@@ -131,7 +132,14 @@ def test_plugins_run_as_module():  # same as above test, but run as module
 
 # this test is intended to be run AFTER regenerating the output using make update_tests
 def test_locust_run():
-    proc = h2l("locust", "-f", "outputs/reqres.in.py", "-i", "1", "--headless")
+    proc = h2l(
+        "locust",
+        "-f",
+        "outputs/reqres.in.py",
+        "-i",
+        "1",
+        "--headless",
+    )
     _, stderr = proc.communicate()
     assert proc.returncode == 0, f"Bad return code {proc.returncode}, stderr: {stderr}"
     assert "Iteration limit reached" in stderr, stderr
