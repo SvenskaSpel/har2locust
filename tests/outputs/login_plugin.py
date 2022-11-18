@@ -17,13 +17,7 @@ class login(RestUser):
     @task
     def t(self):
         with self.reader.user() as self.customer:
-            with self.rest(
-                "POST",
-                "/player/1/authenticate/testlogin",
-                headers={"accept": "application/json, text/javascript, */*; q=0.01"},
-                json={"personalId": self.customer["ssn"], "source": 3},
-            ) as resp:
-                pass
+            self.auth()
             with self.rest(
                 "GET",
                 "/player/1/customizedsettings?_=1636025335990",
