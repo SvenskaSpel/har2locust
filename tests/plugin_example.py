@@ -6,18 +6,6 @@ import re
 
 
 @entriesprocessor
-def parametrize_ssn(entries):
-    # self.customer (gets added below by get_customer_from_reader)
-    for e in entries:
-        if "postData" in e["request"]:
-            e["request"]["postData"]["text"] = re.sub(
-                r'"personalId":"\d*"',
-                "\"personalId\":self.customer['ssn']",
-                e["request"]["postData"]["text"],
-            )
-
-
-@entriesprocessor
 def skip_origin_header(entries):
     # this particular site doesnt care about origin header and skipping it makes the locustfile much neater
     for e in entries:
@@ -36,12 +24,19 @@ def get_customer_from_reader(tree: Module, values: dict):
             return node
 
         def visit_ClassDef(self, node: ClassDef) -> ClassDef:
-            # node.body[0] = parse('host = f"https://api.spela.{env}.svenskaspel.se"').body[0]
             node.body[0] = parse("lb = True").body[0]
             self.generic_visit(node)
             return node
 
         def visit_FunctionDef(self, node: FunctionDef) -> FunctionDef:
+            # replace testlogin request with call to self.auth()
+            for i in range(len(node.body)):
+                try:
+                    if node.body[i].items[0].context_expr.args[1].value == "/player/1/authenticate/testlogin":  # type: ignore
+                        node.body[i] = parse("self.auth()").body[0]
+                except:
+                    pass
+
             # wrap the entire task function body in a with-block.
             if node.name == "t":
                 with_block = parse(
@@ -64,8 +59,6 @@ with self.reader.user() as self.customer:
                     if re.search(r"&_=\d+$", c.value):
                         node.func.attr = "rest_"
                         c.value = re.sub(r"&_=\d+$", "", c.value)
-                    elif re.search(r"/player/1/authenticate/testlogin$", c.value):
-                        pass
             self.generic_visit(node)
             return node
 
@@ -78,3 +71,13 @@ with self.reader.user() as self.customer:
 # def log_something_and_drop_everthing_but_the_first_request(entries):
 #     logging.info(f"hello")
 #     entries[:] = [entries[0]]  # update list in-place
+
+# @entriesprocessor
+# def parametrize_ssn(entries):
+#     for e in entries:
+#         if "postData" in e["request"]:
+#             e["request"]["postData"]["text"] = re.sub(
+#                 r'"personalId":"\d*"',
+#                 "\"personalId\":self.customer['ssn']",
+#                 e["request"]["postData"]["text"],
+#             )
