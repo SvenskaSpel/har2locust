@@ -14,7 +14,8 @@ from .plugin import entriesprocessor, entriesprocessor_with_args, astprocessor, 
 def __main__(arguments=None):
     args = get_parser().parse_args(arguments)
     logging.basicConfig(level=args.loglevel.upper())
-    load_plugins(args.plugins.split(",") if args.plugins else [])
+    load_plugins(args.plugins.split(",") if args.plugins else [],
+                 args.disable_plugins.split(",") if args.disable_plugins else [])
     har_path = pathlib.Path(args.input)
     name = har_path.stem.replace("-", "_").replace(".", "_")  # build class name from filename
     with open(har_path, encoding="utf8") as f:
@@ -27,11 +28,12 @@ def __main__(arguments=None):
     print(py)
 
 
-def load_plugins(plugins: list[str] = []):
+def load_plugins(plugins: list[str] = [], disable_plugins: list[str] = []):
     package_root_dir = pathlib.Path(__file__).parents[1]
     plugin_dir = package_root_dir / "har2locust/default_plugins"
     logging.debug(f"loading default plugins from {plugin_dir}")
-    default_plugins = [str(d.relative_to(package_root_dir)) for d in plugin_dir.glob("*.py")]
+    default_plugins = [str(d.relative_to(package_root_dir)) for d in plugin_dir.glob("*.py")
+                       if d.name not in disable_plugins]
     default_and_extra_plugins = default_plugins + plugins
     sys.path.append(os.path.curdir)  # accept plugins by relative path
     for plugin in default_and_extra_plugins:
