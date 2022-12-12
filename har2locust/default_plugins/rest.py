@@ -1,6 +1,6 @@
 from har2locust.plugin import entriesprocessor, astprocessor
 import logging
-from ast import *
+from ast import *  # pylint: disable-all
 
 
 @entriesprocessor

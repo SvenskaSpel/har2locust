@@ -11,7 +11,7 @@ def process(entries: list[dict], _args):
         if default_headers is None:
             default_headers = headers[:]
         else:
-            for dh in default_headers[:]:
+            for dh in default_headers[:]:  # pylint: disable=unsubscriptable-object
                 for h in headers:
                     if dh["name"] == h["name"]:
                         if dh["value"] != h["value"]:

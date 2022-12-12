@@ -1,6 +1,7 @@
 [FORMAT]
 max-line-length=300
 max-args=6
+max-nested-blocks=7
 
 [BASIC]
 # only require really big functions to have docstrings. and we should never have this long functions.
