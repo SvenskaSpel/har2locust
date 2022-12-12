@@ -34,6 +34,18 @@ def get_customer_from_reader(tree: Module, values: dict):
                 try:
                     if node.body[i].items[0].context_expr.args[1].value == "/player/1/authenticate/testlogin":  # type: ignore
                         node.body[i] = parse("self.auth()").body[0]
+                    # if node.body[i].items[0].context_expr.args[1].value == "/wager/9/wagers":  # type: ignore
+                    #     json_param = [
+                    #         kw_arg.value
+                    #         for kw_arg in node.body[i].items[0].context_expr.keywords  # type: ignore
+                    #         if kw_arg.arg == "json"
+                    #     ][0]
+                    #     bets = [
+                    #         json_param.values[k]
+                    #         for k in range(len(json_param.keys))
+                    #         if json_param.keys[k].value == "bets"
+                    #     ][0]
+                    #     node.body[i] = parse("self.wagerwrapper(game, append_draw_num=True)").body[0]
                 except:
                     pass
 
@@ -56,9 +68,9 @@ with self.reader.user() as self.customer:
             if isinstance(node.func, Attribute) and node.func.attr == "rest":
                 c = node.args[1]
                 if isinstance(c, Constant):
-                    if re.search(r"&_=\d+$", c.value):
+                    if re.search(r"[&?]_=\d+$", c.value):
                         node.func.attr = "rest_"
-                        c.value = re.sub(r"&_=\d+$", "", c.value)
+                        c.value = re.sub(r"[&?]_=\d+$", "", c.value)
             self.generic_visit(node)
             return node
 

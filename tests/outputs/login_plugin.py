@@ -18,9 +18,9 @@ class login(RestUser):
     def t(self):
         with self.reader.user() as self.customer:
             self.auth()
-            with self.rest(
+            with self.rest_(
                 "GET",
-                "/player/1/customizedsettings?_=1636025335990",
+                "/player/1/customizedsettings",
                 headers={"accept": "application/json, text/javascript, */*; q=0.01"},
             ) as resp:
                 pass
