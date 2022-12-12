@@ -8,7 +8,8 @@ DEFAULT_CONFIG_FILES = ["~/.har2locust.conf", "har2locust.conf"]
 
 def get_parser() -> configargparse.ArgumentParser:
     parser = configargparse.ArgumentParser(
-        epilog="""Example usage: har2locust myrecording.har myplugin1.py > locustfile
+        epilog="""Example usages: har2locust myrecording.har myplugin1.py > locustfile
+                                  har2locust --disable-plugins=rest.py myrecording.har myplugin1.py > locustfile
 
 Parameters can also be set using environment variables or config files (har2locust.conf 
 or ~/.har2locust.conf) For details, see https://goo.gl/R74nmi""",
@@ -36,6 +37,12 @@ or ~/.har2locust.conf) For details, see https://goo.gl/R74nmi""",
         type=str,
         default="",
         help="Comma separated list of extra python files to source, containing decorated methods for processing the har file.",
+    )
+    parser.add_argument(
+        "--disable-plugins",
+        type=str,
+        default="",
+        help="Temporarily disable default plugins. Specified by comma separated list of default plugin python files to source.",
     )
     parser.add_argument(
         "--resource-types",
