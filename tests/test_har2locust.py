@@ -136,10 +136,10 @@ def test_locust_run():
         "locust",
         "-f",
         "outputs/reqres.in.py",
-        "-i",
-        "1",
+        "-t",
+        "4",
         "--headless",
     )
     _, stderr = proc.communicate()
     assert proc.returncode == 0, f"Bad return code {proc.returncode}, stderr: {stderr}"
-    assert "Iteration limit reached" in stderr, stderr
+    assert "--run-time limit reached" in stderr, stderr
