@@ -1,10 +1,8 @@
-from locust import events
-from locust_plugins.listeners import RescheduleTaskOnFail
 from locust import task, run_single_user
-from locust_plugins.users import RestUser
+from locust import FastHttpUser
 
 
-class apple_buy_a_mac(RestUser):
+class apple_buy_a_mac(FastHttpUser):
     host = "https://secure2.store.apple.com"
 
     @task
@@ -1339,11 +1337,6 @@ class apple_buy_a_mac(RestUser):
             catch_response=True,
         ) as resp:
             pass
-
-
-@events.init.add_listener
-def on_locust_init(environment, **_kwargs):
-    RescheduleTaskOnFail(environment)
 
 
 if __name__ == "__main__":
