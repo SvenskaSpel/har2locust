@@ -88,11 +88,6 @@ def test_helptext():
     assert "usage: har2locust" in stdout
 
 
-def test_load_plugins():
-    loaded_plugins = load_plugins()
-    assert len(loaded_plugins) == 7, f"Unexpected plugin length: {loaded_plugins}"
-
-
 def test_plugins():
     with open("tests/outputs/login_plugin.py", encoding="utf-8") as f:
         expected_output = f.read()
