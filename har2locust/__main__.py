@@ -34,6 +34,7 @@ def load_plugins(plugins: list[str] = [], disable_plugins: list[str] = []):
     logging.debug(f"loading default plugins from {plugin_dir}")
     default_plugins = [str(d.relative_to(package_root_dir)) for d in plugin_dir.glob("*.py")
                        if d.name not in disable_plugins]
+    default_plugins.sort()  # ensure deterministic ordering
     default_and_extra_plugins = default_plugins + plugins
     sys.path.append(os.path.curdir)  # accept plugins by relative path
     for plugin in default_and_extra_plugins:
