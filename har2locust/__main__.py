@@ -28,7 +28,7 @@ def __main__(arguments=None):
     print(py)
 
 
-def load_plugins(plugins: list[str] = [], disable_plugins: list[str] = []):
+def load_plugins(plugins: list[str] = [], disable_plugins: list[str] = []) -> list[str]:
     package_root_dir = pathlib.Path(__file__).parents[1]
     plugin_dir = package_root_dir / "har2locust/default_plugins"
     logging.debug(f"loading default plugins from {plugin_dir}")
@@ -40,6 +40,7 @@ def load_plugins(plugins: list[str] = [], disable_plugins: list[str] = []):
         import_path = plugin.replace("/", ".").rstrip(".py")
         importlib.import_module(import_path)
     logging.debug(f"loaded plugins {default_and_extra_plugins}")
+    return default_and_extra_plugins
 
 
 # process har dictionary and return a dict of values to render

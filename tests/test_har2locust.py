@@ -5,7 +5,7 @@ import subprocess
 import os
 import pytest
 import re
-from har2locust.__main__ import __main__, process, render
+from har2locust.__main__ import __main__, process, render, load_plugins
 from har2locust.argument_parser import get_parser
 
 inputs_dir = pathlib.Path(__file__).parents[0] / "inputs"
@@ -88,6 +88,11 @@ def test_helptext():
     assert "usage: har2locust" in stdout
 
 
+def test_load_plugins():
+    loaded_plugins = load_plugins()
+    assert len(loaded_plugins) == 7, f"Unexpected plugin length: {loaded_plugins}"
+
+
 def test_plugins():
     with open("tests/outputs/login_plugin.py", encoding="utf-8") as f:
         expected_output = f.read()
@@ -96,6 +101,8 @@ def test_plugins():
         "tests/inputs/login.har",
         "--plugins",
         "tests/plugin_example.py",
+        "-L",
+        "DEBUG",
         cwd=os.path.join(os.path.dirname(__file__), "../"),
     )
     stdout, stderr = proc.communicate()
