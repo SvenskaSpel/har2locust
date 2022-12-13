@@ -1,10 +1,8 @@
-from locust import events
-from locust_plugins.listeners import RescheduleTaskOnFail
 from locust import task, run_single_user
-from svs_locust import RestUser
+from locust import FastHttpUser
 
 
-class login(RestUser):
+class login(FastHttpUser):
     lb = True
     default_headers = {
         "accept-encoding": "gzip, deflate, br",
@@ -52,11 +50,6 @@ class login(RestUser):
                 headers={"accept": "application/json, text/javascript, */*; q=0.01"},
             ) as resp:
                 pass
-
-
-@events.init.add_listener
-def on_locust_init(environment, **_kwargs):
-    RescheduleTaskOnFail(environment)
 
 
 if __name__ == "__main__":

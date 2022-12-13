@@ -41,3 +41,6 @@ class {{class_name}}(FastHttpUser):
         {% endif %}) as resp:
             pass
         {% endfor %}
+
+if __name__ == "__main__":
+    run_single_user({{class_name}})

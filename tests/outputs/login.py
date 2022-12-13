@@ -1,10 +1,8 @@
-from locust import events
-from locust_plugins.listeners import RescheduleTaskOnFail
 from locust import task, run_single_user
-from locust_plugins.users import RestUser
+from locust import FastHttpUser
 
 
-class login(RestUser):
+class login(FastHttpUser):
     host = "https://api.spela.test3.svenskaspel.se"
     default_headers = {
         "accept-encoding": "gzip, deflate, br",
@@ -72,11 +70,6 @@ class login(RestUser):
             },
         ) as resp:
             pass
-
-
-@events.init.add_listener
-def on_locust_init(environment, **_kwargs):
-    RescheduleTaskOnFail(environment)
 
 
 if __name__ == "__main__":
