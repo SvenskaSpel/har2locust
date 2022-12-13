@@ -107,6 +107,7 @@ def test_plugins():
     )
     stdout, stderr = proc.communicate()
     assert proc.returncode == 0, f"Bad return code {proc.returncode}, stderr: {stderr}"
+    print(stderr)  # this will only be shown if it fails anyway
     assert stdout == expected_output
     assert "self.reader.user" in stdout
     assert "self.customer" in stdout
