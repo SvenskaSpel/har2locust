@@ -1,8 +1,8 @@
 from locust import task, run_single_user
-from locust import FastHttpUser
+from svs_locust import RestUser
 
 
-class login(FastHttpUser):
+class login(RestUser):
     lb = True
     default_headers = {
         "accept-encoding": "gzip, deflate, br",

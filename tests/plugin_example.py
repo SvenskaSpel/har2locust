@@ -17,13 +17,15 @@ def skip_origin_header(entries):
 def get_customer_from_reader(tree: Module, values: dict):
     class T(NodeTransformer):
         def visit_ImportFrom(self, node: ImportFrom) -> ImportFrom:
-            # import a slightly different RestUser, from another package
-            if node.names[0].name == "RestUser":
+            # our base class is RestUser, not FastHttpUser
+            if node.names[0].name == "FastHttpUser":
                 node.module = "svs_locust"
+                node.names[0].name = "RestUser"
             self.generic_visit(node)
             return node
 
         def visit_ClassDef(self, node: ClassDef) -> ClassDef:
+            node.bases[0].id = "RestUser"
             node.body[0] = parse("lb = True").body[0]
             self.generic_visit(node)
             return node
