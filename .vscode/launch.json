@@ -15,7 +15,7 @@
                 "-L",
                 "DEBUG",
                 "--plugins",
-                "tests/plugin_example.py"
+                "har2locust.extra_plugins.plugin_example"
             ],
             "env": {
                 "LC_ALL": "en_US.UTF-8"
