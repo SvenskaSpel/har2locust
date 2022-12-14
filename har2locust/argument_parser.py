@@ -8,7 +8,7 @@ DEFAULT_CONFIG_FILES = ["~/.har2locust.conf", "har2locust.conf"]
 
 def get_parser() -> configargparse.ArgumentParser:
     parser = configargparse.ArgumentParser(
-        epilog="""Simplest usage: 
+        epilog="""Simplest usage:
 har2locust myrecording.har > locustfile.py
 
 Load one extra plugins by import path and another one by filename: 
