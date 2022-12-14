@@ -1,6 +1,5 @@
 from har2locust.plugin import entriesprocessor
 import logging
-from ast import *  # pylint: disable-all
 
 
 @entriesprocessor
@@ -20,7 +19,7 @@ def process(entries: list[dict]):
 
 
 # The following is no longer needed, now that rest-method is a part of FastHttpUser, but can still serve as a good example:
-
+# from ast import *  # pylint: disable-all
 # from har2locust.plugin import astprocessor
 #
 # @astprocessor
