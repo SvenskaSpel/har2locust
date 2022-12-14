@@ -95,7 +95,7 @@ def test_plugins():
         "har2locust",
         "tests/inputs/login.har",
         "--plugins",
-        "tests/plugin_example.py",
+        "har2locust.extra_plugins.plugin_example",
         "-L",
         "DEBUG",
         cwd=os.path.join(os.path.dirname(__file__), "../"),
@@ -111,6 +111,25 @@ def test_plugins():
     assert "&_" not in stdout
 
 
+def test_disable_plugins():
+    with open("tests/outputs/login_disable_rest.py", encoding="utf-8") as f:
+        expected_output = f.read()
+    proc = h2l(
+        "har2locust",
+        "tests/inputs/login.har",
+        "--disable-plugins",
+        "rest.py",
+        "-L",
+        "DEBUG",
+        cwd=os.path.join(os.path.dirname(__file__), "../"),
+    )
+    stdout, stderr = proc.communicate()
+    assert proc.returncode == 0, f"Bad return code {proc.returncode}, stderr: {stderr}"
+    print(stderr)  # this will only be shown if it fails anyway
+    assert stdout == expected_output
+    assert "self.rest" not in stdout
+
+
 def test_plugins_run_as_module():  # same as above test, but run as module
     with open("tests/outputs/login_plugin.py", encoding="utf-8") as f:
         expected_output = f.read()
@@ -120,7 +139,7 @@ def test_plugins_run_as_module():  # same as above test, but run as module
         "har2locust",
         "tests/inputs/login.har",
         "--plugins",
-        "tests/plugin_example.py",
+        "har2locust/extra_plugins/plugin_example.py",
         cwd=os.path.join(os.path.dirname(__file__), "../"),  # needed to find .headerignore & .urlignore files
     )
     stdout, stderr = proc.communicate()

@@ -27,35 +27,33 @@ This will also install [locust](https://github.com/locustio/locust/) and [locust
 
 ```
 > har2locust --help
-usage: har2locust [-h] [-t TEMPLATE] [--plugins PLUGINS] [--disable-plugins DISABLE_PLUGINS]
-                  [--resource-types RESOURCE_TYPES] [--version] [--loglevel LOGLEVEL]
-                  input
+usage: har2locust [-h] [-t TEMPLATE] [--plugins PLUGINS] [--disable-plugins DISABLE_PLUGINS] [--resource-types RESOURCE_TYPES] [--version] [--loglevel LOGLEVEL] input
 
 positional arguments:
   input                 har input file
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -t TEMPLATE, --template TEMPLATE
-                        jinja2 template used to generate locustfile. Defaults to locust.jinja2. Will
-                        check current directory/relative paths first and har2locust built-ins second
-  --plugins PLUGINS     Comma separated list of extra python files to source, containing decorated
-                        methods for processing the har file.
+                        jinja2 template used to generate locustfile. Defaults to locust.jinja2. Will check current directory/relative paths first and har2locust built-ins second
+  --plugins PLUGINS     Comma separated list of extra python files to source OR import paths, containing decorated methods for processing the har file.
   --disable-plugins DISABLE_PLUGINS
-                        Temporarily disable default plugins. Specified by comma separated list of
-                        default plugin python files to source.
+                        Temporarily disable default plugins. Specified by comma separated list of default plugin python files to source.
   --resource-types RESOURCE_TYPES
-                        Commas separated list of resource types to be included in the locustfile.
-                        Supported type are `xhr`, `script`, `stylesheet`, `image`, `font`,
-                        `document`, `other`. Defaults to xhr,document,other.
+                        Commas separated list of resource types to be included in the locustfile. Supported type are `xhr`, `script`, `stylesheet`, `image`, `font`, `document`, `other`. Defaults to xhr,document,other.
   --version, -V         show program's version number and exit
   --loglevel LOGLEVEL, -L LOGLEVEL
 
-Example usages: har2locust myrecording.har myplugin1.py > locustfile
-                har2locust --disable-plugins=rest.py myrecording.har myplugin1.py > locustfile
+Simplest usage:
+har2locust myrecording.har > locustfile.py
 
-Parameters can also be set using environment variables or config files (har2locust.conf
-or ~/.har2locust.conf) For details, see https://goo.gl/R74nmi
+Load 2 extra plugins by package name & filename:
+har2locust --plugins har2locust.extra_plugins.plugin_example,myplugin.py myrecording.har
+
+Disable one of the default plugins:
+har2locust --disable-plugins=rest.py myrecording.har
+
+Parameters can also be set using environment variables or config files (har2locust.conf or ~/.har2locust.conf) For details about how to set parameters see https://goo.gl/R74nmi
 ```
 
 3. Filter your recording using the files `.urlignore` and `.headerignore` (read from your current directory).
