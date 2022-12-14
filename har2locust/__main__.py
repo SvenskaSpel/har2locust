@@ -33,16 +33,18 @@ def load_plugins(plugins: list[str] = [], disable_plugins: list[str] = []):
     package_root_dir = pathlib.Path(__file__).parents[1]
     plugin_dir = package_root_dir / "har2locust/default_plugins"
     default_plugins = [str(d.relative_to(package_root_dir)) for d in plugin_dir.glob("*.py")]
-    default_plugins_copy = default_plugins.copy()
-    for p in disable_plugins:
-        try:
-            plugins.remove(p)
-            logging.debug("Disabled plugin: " + p)
-        except ValueError:
-            logging.error(f"Tried to disable unknown plugin: {p}. Known default plugins are {default_plugins_copy}")
-            raise
     default_plugins.sort()  # ensure deterministic ordering
     default_and_extra_plugins = default_plugins + plugins
+
+    plugins_copy = default_and_extra_plugins.copy()
+    for p in disable_plugins:
+        try:
+            default_and_extra_plugins.remove(p)
+            logging.debug("Disabled plugin: " + p)
+        except ValueError:
+            logging.error(f"Tried to disable unknown plugin: {p}. Known plugins are {plugins_copy}")
+            raise
+
     sys.path.append(os.path.curdir)  # accept plugins by relative path
     for plugin in default_and_extra_plugins:
         import_path = plugin.replace("/", ".").rstrip(".py")
