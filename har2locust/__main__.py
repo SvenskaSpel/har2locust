@@ -37,13 +37,14 @@ def load_plugins(plugins: list[str] = [], disable_plugins: list[str] = []):
     default_and_extra_plugins = default_plugins + plugins
 
     plugins_copy = default_and_extra_plugins.copy()
-    for p in disable_plugins:
-        try:
-            default_and_extra_plugins.remove(p)
-            logging.debug("Disabled plugin: " + p)
-        except ValueError:
-            logging.error(f"Tried to disable unknown plugin: {p}. Known plugins are {plugins_copy}")
-            raise
+    for dp in disable_plugins:
+        for p in default_and_extra_plugins[:]:
+            if p.endswith(dp):
+                default_and_extra_plugins.remove(p)
+                logging.debug("Disabled plugin: " + p)
+                break
+        else:
+            raise Exception(f"Tried to disable unknown plugin: {dp}. Known plugins are {plugins_copy}")
 
     sys.path.append(os.path.curdir)  # accept plugins by relative path
     for plugin in default_and_extra_plugins:
