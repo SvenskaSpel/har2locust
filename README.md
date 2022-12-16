@@ -16,8 +16,6 @@ At its core har2locust uses a [jinja2 template](https://github.com/SvenskaSpel/h
 
 `pip install har2locust`
 
-This will also install [locust](https://github.com/locustio/locust/) and [locust-plugins](https://github.com/SvenskaSpel/locust-plugins/), because they are needed to run the generated locustfiles.
-
 ## Usage
 
 1. Navigate the web with your browser while recording your activity. Then export the recording into a HAR file. Here is an example with Chrome Devs Tools
