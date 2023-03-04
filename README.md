@@ -1,6 +1,6 @@
 [![PyPI](https://img.shields.io/pypi/v/har2locust.svg)](https://pypi.org/project/har2locust/)
 [![PyPI](https://img.shields.io/pypi/pyversions/har2locust.svg)](https://pypi.org/project/har2locust/)
-[![Build Status](https://github.com/SvenskaSpel/har2locust/workflows/Tests/badge.svg)](https://github.com/SvenskaSpel/har2locustlocust/actions?query=workflow%3ATests)
+[![Build Status](https://github.com/SvenskaSpel/har2locust/workflows/Tests/badge.svg)](https://github.com/SvenskaSpel/har2locust/actions?query=workflow%3ATests)
 
 # har2locust
 
