@@ -5,6 +5,7 @@ import ast
 # For examples of how to write a plugin, see default_plugins/ or tests/plugin_example.py
 # The processors allow you to interact with your recording at various stages,
 
+
 # immediately after reading the HAR JSON
 class entriesprocessor:
     processors: list[Callable[[list[dict]], Optional[dict]]] = []
