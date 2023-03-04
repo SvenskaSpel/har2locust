@@ -49,7 +49,7 @@ def load_plugins(plugins: list[str] = [], disable_plugins: list[str] = []):
     sys.path.append(os.path.curdir)  # accept plugins by relative path
     for plugin in default_and_extra_plugins:
         # in  windows OS   print(plugin) echo  har2locust\default_plugins\1_resourcefilter.py
-        import_path = plugin.replace("/", ".").replace("\\", ".").rstrip(".py") 
+        import_path = plugin.replace("/", ".").replace("\\", ".").rstrip(".py")
         importlib.import_module(import_path)
         logging.debug("imported " + import_path)
     logging.debug(f"loaded plugins {default_and_extra_plugins}")
