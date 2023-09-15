@@ -18,10 +18,10 @@ At its core har2locust uses a [jinja2 template](https://github.com/SvenskaSpel/h
 
 ## Usage
 
-1. Navigate the web with your browser while recording your activity. Then export the recording into a HAR file. Here is an example with Chrome Devs Tools
+1. Navigate the web with your browser while recording your activity. Then export the recording into a HAR file. Here is an example using Chrome Devs Tools
 ![har.gif](https://github.com/SvenskaSpel/har2locust/blob/main/har.gif?raw=true)
 
-2. Run `har2locust myharfile.har > locustfile.py`
+2. Run `har2locust myrecording.har > locustfile.py`
 
 ```
 > har2locust --help
@@ -52,7 +52,7 @@ options:
 Simplest usage:
 har2locust myrecording.har > locustfile.py
 
-Load one extra plugins by import path and another one by filename:
+Load extra plugins by import path and/or filename:
 har2locust --plugins har2locust.extra_plugins.plugin_example,myplugin.py myrecording.har
 
 Disable one of the default plugins:
@@ -61,16 +61,18 @@ har2locust --disable-plugins=rest.py myrecording.har
 Parameters can also be set using environment variables or config files (har2locust.conf or ~/.har2locust.conf) For details about how to set parameters see https://goo.gl/R74nmi
 ```
 
-3. Filter your recording using the files `.urlignore` and `.headerignore` (read from your current directory).
+3. Run locust!
+
+## Advanced usage
+
+* Filter your recording using the files `.urlignore` and `.headerignore` (read from your current directory).
 Populate them with regexes to filter any unwanted requests or headers from your recordings. 
 Some headers are always ignored (cookie, content-length and chrome's "fake" headers)
 Here are some examples: [.urlignore](https://github.com/SvenskaSpel/har2locust/tree/main/.urlignore), 
 [.headerignore](https://github.com/SvenskaSpel/har2locust/tree/main/.headerignore)
 
-4. Use the [plugin system](https://github.com/SvenskaSpel/har2locust/tree/main/har2locust/plugin.py) 
+* Use the [plugin system](https://github.com/SvenskaSpel/har2locust/tree/main/har2locust/plugin.py) 
 for more advanced processing.
-
-5. Edit the file manually as needed.
 
 ## Notes
 
