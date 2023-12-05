@@ -16,4 +16,4 @@ def process(entries, args):
     if unsupported := set(resource_types) - supported_resource_type:
         raise NotImplementedError(f"{unsupported} resource types are not supported")
 
-    entries[:] = [e for e in entries if e["_resourceType"] in resource_types]
+    entries[:] = [e for e in entries if e.get("_resourceType", "other") in resource_types]
