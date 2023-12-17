@@ -13,42 +13,40 @@ class login(RestUser):
 
     @task
     def t(self):
-        with self.reader.user() as self.customer:
-            self.auth()
-            with self.rest_(
-                "GET",
-                "/player/1/customizedsettings",
-                headers={"accept": "application/json, text/javascript, */*; q=0.01"},
-            ) as resp:
-                pass
-            with self.client.request(
-                "GET",
-                "https://spela.test3.svenskaspel.se/",
-                headers={
-                    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
-                },
-                catch_response=True,
-            ) as resp:
-                pass
-            with self.client.request(
-                "GET",
-                "https://spela.test3.svenskaspel.se/logga-in/uppdaterade-villkor?returnUrl=%2F",
-                headers={
-                    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
-                },
-                catch_response=True,
-            ) as resp:
-                pass
-            with self.rest(
-                "POST", "/player/1/terms", headers={"accept": "application/json, text/javascript, */*; q=0.01"}, json={}
-            ) as resp:
-                pass
-            with self.rest_(
-                "GET",
-                "/player/1/info?include=accountBalance",
-                headers={"accept": "application/json, text/javascript, */*; q=0.01"},
-            ) as resp:
-                pass
+        self.customer = next(self.customer_iterator)
+        self.auth()
+        with self.rest_(
+            "GET", "/player/1/customizedsettings", headers={"accept": "application/json, text/javascript, */*; q=0.01"}
+        ) as resp:
+            pass
+        with self.client.request(
+            "GET",
+            "https://spela.test3.svenskaspel.se/",
+            headers={
+                "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
+            },
+            catch_response=True,
+        ) as resp:
+            pass
+        with self.client.request(
+            "GET",
+            "https://spela.test3.svenskaspel.se/logga-in/uppdaterade-villkor?returnUrl=%2F",
+            headers={
+                "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
+            },
+            catch_response=True,
+        ) as resp:
+            pass
+        with self.rest(
+            "POST", "/player/1/terms", headers={"accept": "application/json, text/javascript, */*; q=0.01"}, json={}
+        ) as resp:
+            pass
+        with self.rest_(
+            "GET",
+            "/player/1/info?include=accountBalance",
+            headers={"accept": "application/json, text/javascript, */*; q=0.01"},
+        ) as resp:
+            pass
 
 
 if __name__ == "__main__":

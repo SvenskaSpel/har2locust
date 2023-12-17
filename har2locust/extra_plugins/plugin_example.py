@@ -35,7 +35,15 @@ def get_customer_from_reader(tree: Module, values: dict):
             for i in range(len(node.body)):
                 try:
                     if node.body[i].items[0].context_expr.args[1].value == "/player/1/authenticate/testlogin":  # type: ignore
-                        node.body[i] = parse("self.auth()").body[0]
+                        block = parse(
+                            """
+self.customer = next(self.customer_iterator)
+self.auth()
+"""
+                        )
+                        node.body[i] = block.body[0]
+                        # yea, the next line modifies what we're iterating over so we'll miss the last element, which is ugly
+                        node.body.insert(i + 1, block.body[1])
                     # if node.body[i].items[0].context_expr.args[1].value == "/wager/9/wagers":  # type: ignore
                     #     json_param = [
                     #         kw_arg.value
@@ -51,17 +59,18 @@ def get_customer_from_reader(tree: Module, values: dict):
                 except:
                     pass
 
-            # wrap the entire task function body in a with-block.
-            if node.name == "t":
-                with_block = parse(
-                    f"""
-with self.reader.user() as self.customer:
-    pass
-                    """
-                ).body[0]
-                assert isinstance(with_block, With), with_block
-                with_block.body = node.body
-                node.body = [with_block]
+            # Old school
+            #             # wrap the entire task function body in a with-block.
+            #             if node.name == "t":
+            #                 with_block = parse(
+            #                     f"""
+            # with self.reader.user() as self.customer:
+            #     pass
+            #                     """
+            #                 ).body[0]
+            #                 assert isinstance(with_block, With), with_block
+            #                 with_block.body = node.body
+            #                 node.body = [with_block]
             self.generic_visit(node)
             return node
 
