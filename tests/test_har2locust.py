@@ -44,7 +44,7 @@ def test_invalid_resource_types():
     )
     _stdout, stderr = proc.communicate()
     assert proc.returncode == 1, f"Unexpected return code {proc.returncode}, stderr: {stderr}"
-    assert "are not supported" in stderr
+    assert "unsupported resource type" in stderr
 
 
 def test_render_syntax_error():
