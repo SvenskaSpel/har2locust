@@ -118,4 +118,8 @@
     "python.analysis.diagnosticSeverityOverrides": {
         "reportWildcardImportFromLibrary": "none"
     },
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "python.formatting.provider": "none",
 }

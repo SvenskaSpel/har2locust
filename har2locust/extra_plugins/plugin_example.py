@@ -26,7 +26,7 @@ def get_customer_from_reader(tree: Module, values: dict):
 
         def visit_ClassDef(self, node: ClassDef) -> ClassDef:
             node.bases[0].id = "RestUser"
-            node.body[0] = parse("lb = True").body[0]
+            node.body.pop(0)  # remove host
             self.generic_visit(node)
             return node
 

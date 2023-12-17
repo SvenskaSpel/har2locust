@@ -3,7 +3,6 @@ from svs_locust import RestUser
 
 
 class login(RestUser):
-    lb = True
     default_headers = {
         "accept-encoding": "gzip, deflate, br",
         "accept-language": "sv,en;q=0.9",

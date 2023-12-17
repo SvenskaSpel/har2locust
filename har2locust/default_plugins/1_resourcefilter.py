@@ -1,19 +1,26 @@
+import logging
 from har2locust.plugin import entriesprocessor_with_args
 
 
 @entriesprocessor_with_args
 def process(entries, args):
     resource_types = args.resource_types.split(",")
-    supported_resource_type = {
+    known_resource_type = {
         "xhr",
         "script",
         "stylesheet",
         "image",
+        "media",
         "font",
         "document",
         "other",
+        "fetch",
+        "texttrack",
+        "eventsource",
+        "manifest",
+        # websocket
     }
-    if unsupported := set(resource_types) - supported_resource_type:
-        raise NotImplementedError(f"{unsupported} resource types are not supported")
+    if unknown := set(resource_types) - known_resource_type:
+        logging.warning(f"You asked for an unknown/unsupported resource type!? ({unknown})")
 
     entries[:] = [e for e in entries if e.get("_resourceType", "other") in resource_types]
