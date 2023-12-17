@@ -43,7 +43,7 @@ def test_invalid_resource_types():
         "inputs/login.har",
     )
     _stdout, stderr = proc.communicate()
-    assert proc.returncode == 1, f"Unexpected return code {proc.returncode}, stderr: {stderr}"
+    assert proc.returncode == 0, f"Unexpected return code {proc.returncode}, stderr: {stderr}"
     assert "unsupported resource type" in stderr
 
 
