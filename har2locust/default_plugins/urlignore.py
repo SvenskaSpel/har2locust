@@ -1,10 +1,11 @@
-from har2locust.plugin import entriesprocessor
-import re
 import pathlib
+import re
+
+from har2locust.plugin import entriesprocessor
 
 
 @entriesprocessor
-def process(entries: list[dict]):
+def urlignore(entries: list[dict]):
     urlignore_file = pathlib.Path(".urlignore")
     filters = []
     if urlignore_file.is_file():

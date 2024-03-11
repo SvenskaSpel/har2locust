@@ -1,8 +1,13 @@
 # This file has some advanced examples of how to massage your recording
 # Use it as inspiration for the techniques, not as a recommendation for exactly what to do
-from har2locust.plugin import entriesprocessor, astprocessor
-from ast import *
+import ast
+import pathlib
 import re
+import typing
+
+from har2locust.plugin import astprocessor, entriesprocessor
+
+# useful way to debug: print(ast.unparse(node))
 
 
 @entriesprocessor
@@ -14,9 +19,9 @@ def skip_origin_header(entries):
 
 
 @astprocessor
-def get_customer_from_reader(tree: Module, values: dict):
-    class T(NodeTransformer):
-        def visit_ImportFrom(self, node: ImportFrom) -> ImportFrom:
+def inject_authentication(tree: ast.Module, values: dict):
+    class T(ast.NodeTransformer):
+        def visit_ImportFrom(self, node: ast.ImportFrom) -> ast.ImportFrom:
             # our base class is RestUser, not FastHttpUser
             if node.names[0].name == "FastHttpUser":
                 node.module = "svs_locust"
@@ -24,64 +29,55 @@ def get_customer_from_reader(tree: Module, values: dict):
             self.generic_visit(node)
             return node
 
-        def visit_ClassDef(self, node: ClassDef) -> ClassDef:
-            node.bases[0].id = "RestUser"
+        def visit_ClassDef(self, node: ast.ClassDef) -> ast.ClassDef:
+            typing.cast(ast.Name, node.bases[0]).id = "RestUser"
             node.body.pop(0)  # remove host
             self.generic_visit(node)
             return node
 
-        def visit_FunctionDef(self, node: FunctionDef) -> FunctionDef:
+        def visit_FunctionDef(self, node: ast.FunctionDef) -> ast.FunctionDef:
             # replace testlogin request with call to self.auth()
             for i in range(len(node.body)):
                 try:
-                    if node.body[i].items[0].context_expr.args[1].value == "/player/1/authenticate/testlogin":  # type: ignore
-                        block = parse(
-                            """
+                    url = node.body[i].items[0].context_expr.args[1].value  # type: ignore
+                except:  # noqa: E722
+                    url = None
+                if url == "/player/1/authenticate/testlogin":
+                    block = ast.parse(
+                        """
 self.customer = next(self.customer_iterator)
 self.auth()
 """
-                        )
-                        node.body[i] = block.body[0]
-                        # yea, the next line modifies what we're iterating over so we'll miss the last element, which is ugly
-                        node.body.insert(i + 1, block.body[1])
-                    # if node.body[i].items[0].context_expr.args[1].value == "/wager/9/wagers":  # type: ignore
-                    #     json_param = [
-                    #         kw_arg.value
-                    #         for kw_arg in node.body[i].items[0].context_expr.keywords  # type: ignore
-                    #         if kw_arg.arg == "json"
-                    #     ][0]
-                    #     bets = [
-                    #         json_param.values[k]
-                    #         for k in range(len(json_param.keys))
-                    #         if json_param.keys[k].value == "bets"
-                    #     ][0]
-                    #     node.body[i] = parse("self.wagerwrapper(game, append_draw_num=True)").body[0]
-                except:
-                    pass
-
-            # Old school
-            #             # wrap the entire task function body in a with-block.
-            #             if node.name == "t":
-            #                 with_block = parse(
-            #                     f"""
-            # with self.reader.user() as self.customer:
-            #     pass
-            #                     """
-            #                 ).body[0]
-            #                 assert isinstance(with_block, With), with_block
-            #                 with_block.body = node.body
-            #                 node.body = [with_block]
+                    )
+                    node.body[i] = block.body[0]
+                    # yea, the next line modifies what we're iterating over so we'll miss the last element, which is ugly
+                    node.body.insert(i + 1, block.body[1])
             self.generic_visit(node)
             return node
 
-        def visit_Call(self, node: Call) -> Call:
+    T().visit(tree)
+
+
+@astprocessor
+def rest_(tree: ast.Module, values: dict):
+    class T(ast.NodeTransformer):
+        def visit_Call(self, node: ast.Call) -> ast.Call:
             # call rest_ instead of rest for those urls that have &_<timestamp> at the end
-            if isinstance(node.func, Attribute) and node.func.attr == "rest":
-                c = node.args[1]
-                if isinstance(c, Constant):
-                    if re.search(r"[&?]_=\d+$", c.value):
-                        node.func.attr = "rest_"
-                        c.value = re.sub(r"[&?]_=\d+$", "", c.value)
+            if isinstance(node.func, ast.Attribute):
+                try:
+                    url = node.args[1]
+                except Exception:
+                    url = None
+                if isinstance(url, ast.Constant):
+                    if node.func.attr == "rest":
+                        if re.search(r"[&?]_=\d+$", url.value):
+                            node.func.attr = "rest_"
+                            url.value = re.sub(r"[&?]_=\d+$", "", url.value)
+            self.generic_visit(node)
+            return node
+
+    T().visit(tree)
+
             self.generic_visit(node)
             return node
 

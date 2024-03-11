@@ -115,11 +115,18 @@
         "**/[._]*.un~": true,
         "**/_version.py": true,
     },
-    "python.analysis.diagnosticSeverityOverrides": {
-        "reportWildcardImportFromLibrary": "none"
-    },
     "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter"
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "charliermarsh.ruff"
     },
-    "python.formatting.provider": "none",
+    "python.languageServer": "Pylance",
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.diagnosticSeverityOverrides": {
+        // "reportOptionalSubscript": "none",
+        "reportOptionalMemberAccess": "none",
+        "reportOptionalOperand": "none",
+        "reportPrivateImportUsage": "none"
+    },
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
 }

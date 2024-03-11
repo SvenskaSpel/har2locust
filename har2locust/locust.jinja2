@@ -1,6 +1,8 @@
-# note that any comments here will be removed during AST parsing
-from locust import task, run_single_user
+# note that any comments here will be removed during AST parsing, and formatting will remove any unused imports
+from locust import task, run_single_user, events
 from locust import FastHttpUser
+import re
+import os
 
 class {{class_name}}(FastHttpUser):
     host = "{{host}}"

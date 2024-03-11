@@ -1,7 +1,8 @@
-import configargparse
 from argparse import RawDescriptionHelpFormatter
-from ._version import version
 
+import configargparse
+
+from ._version import version
 
 DEFAULT_CONFIG_FILES = ["~/.har2locust.conf", "har2locust.conf"]
 
@@ -11,7 +12,7 @@ def get_parser() -> configargparse.ArgumentParser:
         epilog="""Simplest usage:
 har2locust myrecording.har > locustfile.py
 
-Load extra plugins by import path and/or filename: 
+Load extra plugins by import path and/or filename:
 har2locust --plugins har2locust.extra_plugins.plugin_example,myplugin.py myrecording.har
 
 Disable one of the default plugins:

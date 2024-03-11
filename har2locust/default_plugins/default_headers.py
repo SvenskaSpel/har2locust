@@ -1,9 +1,11 @@
-from har2locust.plugin import entriesprocessor_with_args
+import logging
 from urllib.parse import urlsplit
+
+from har2locust.plugin import entriesprocessor_with_args
 
 
 @entriesprocessor_with_args  # use with-args version because it is executed last
-def process(entries: list[dict], _args):
+def default_headers(entries: list[dict], _args):
     # calculate headers shared by all requests (same name and value)
     default_headers = None
     for e in entries:
