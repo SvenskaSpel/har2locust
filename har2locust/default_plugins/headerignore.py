@@ -1,10 +1,11 @@
-from har2locust.plugin import entriesprocessor
-import re
 import pathlib
+import re
+
+from har2locust.plugin import entriesprocessor
 
 
 @entriesprocessor
-def process(entries: list[dict]):
+def headerignore(entries: list[dict]):
     headerignore_path = pathlib.Path(".headerignore")
     filters = []
     if headerignore_path.is_file():

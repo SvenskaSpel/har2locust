@@ -1,9 +1,10 @@
 import logging
+
 from har2locust.plugin import entriesprocessor_with_args
 
 
 @entriesprocessor_with_args
-def process(entries, args):
+def resourcefilter(entries, args):
     resource_types = args.resource_types.split(",")
     known_resource_type = {
         "xhr",

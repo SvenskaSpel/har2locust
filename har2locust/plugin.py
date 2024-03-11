@@ -1,6 +1,6 @@
-from typing import Callable, Optional
-from argparse import Namespace
 import ast
+from argparse import Namespace
+from typing import Callable, Optional
 
 # For examples of how to write a plugin, see default_plugins/ or tests/plugin_example.py
 # The processors allow you to interact with your recording at various stages,

@@ -1,11 +1,13 @@
 # pylint: disable=redefined-outer-name
 import json
-import pathlib
-import subprocess
 import os
-import pytest
+import pathlib
 import re
-from har2locust.__main__ import __main__, process, render, load_plugins
+import subprocess
+
+import pytest
+
+from har2locust.__main__ import __main__, load_plugins, process, render
 from har2locust.argument_parser import get_parser
 
 inputs_dir = pathlib.Path(__file__).parents[0] / "inputs"

@@ -1,9 +1,10 @@
-from har2locust.plugin import entriesprocessor
 import logging
+
+from har2locust.plugin import entriesprocessor
 
 
 @entriesprocessor
-def process(entries: list[dict]):
+def rest(entries: list[dict]):
     for e in entries:
         for h in e["response"]["headers"]:
             if h["name"].lower() == "content-type":
@@ -13,7 +14,7 @@ def process(entries: list[dict]):
                         "postData" not in r  # not a post, ok for .rest
                         or r["postData"]["mimeType"] == "application/json"  # json payload, also ok
                     ):
-                        logging.debug(f"{r['url']} is a rest request!")
+                        # logging.debug(f"{r['url']} is a rest request!")
                         r["fname"] = "rest"
                         r["extraparams"] = []  # catch_response=True is already the default for .rest()
 

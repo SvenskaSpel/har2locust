@@ -1,14 +1,16 @@
-from argparse import Namespace
+import ast
 import importlib
 import json
 import logging
 import os
 import pathlib
-import ast
 import sys
+from argparse import Namespace
+
 import jinja2
+
 from .argument_parser import get_parser
-from .plugin import entriesprocessor, entriesprocessor_with_args, astprocessor, outputstringprocessor
+from .plugin import astprocessor, entriesprocessor, entriesprocessor_with_args, outputstringprocessor
 
 
 def __main__(arguments=None):
@@ -69,8 +71,10 @@ def process(har: dict, args: Namespace) -> dict:
     values = {"entries": entries}
     for p in entriesprocessor.processors:
         values |= p(entries) or {}
+        # logging.debug(f"{len(entries)} entries after applying {p.__name__}")
     for p in entriesprocessor_with_args.processors:
         values |= p(entries, args) or {}
+        # logging.debug(f"{len(entries)} entries after applying with_args {p.__name__}")
     logging.debug(f"{len(entries)} entries after applying entriesprocessors")
 
     return values
