@@ -7,8 +7,7 @@ import subprocess
 
 import pytest
 
-from har2locust.__main__ import __main__, load_plugins, process, render
-from har2locust.argument_parser import get_parser
+from har2locust.__main__ import __main__
 
 inputs_dir = pathlib.Path(__file__).parents[0] / "inputs"
 outputs_dir = pathlib.Path(__file__).parents[0] / "outputs"
@@ -45,7 +44,7 @@ def test_invalid_resource_types():
         "inputs/login.har",
     )
     _stdout, stderr = proc.communicate()
-    assert proc.returncode == 0, f"Unexpected return code {proc.returncode}, stderr: {stderr}"
+    assert proc.returncode == 1, f"Unexpected return code {proc.returncode}, stderr: {stderr}"
     assert "unsupported resource type" in stderr
 
 
