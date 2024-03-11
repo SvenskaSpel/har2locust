@@ -1,6 +1,7 @@
 # This file has some advanced examples of how to massage your recording
 # Use it as inspiration for the techniques, not as a recommendation for exactly what to do
 import ast
+import pathlib
 import re
 import typing
 
@@ -72,6 +73,47 @@ def rest_(tree: ast.Module, values: dict):
                         if re.search(r"[&?]_=\d+$", url.value):
                             node.func.attr = "rest_"
                             url.value = re.sub(r"[&?]_=\d+$", "", url.value)
+            self.generic_visit(node)
+            return node
+
+    T().visit(tree)
+
+
+@astprocessor
+def do_correlations(tree: ast.Module, values: dict):
+    correlation_path = pathlib.Path(".correlations")
+    if correlation_path.is_file():
+        with open(correlation_path) as f:
+            correlations = [
+                line.rstrip() for line in f.readlines() if line.strip() and not line.strip().startswith("#")
+            ]
+    else:
+        correlations = []
+
+    class T(ast.NodeTransformer):
+        def visit_Call(self, node: ast.Call) -> ast.Call:
+            for kw in node.keywords:
+                if kw.arg == "json" or kw.arg == "headers":
+                    param_dict: ast.Dict = typing.cast(ast.Dict, kw.value)
+                    for key in param_dict.keys:
+                        for correlation in correlations:
+                            _, _, *corr_vars = correlation.split(",")
+                            if typing.cast(ast.Constant, key).s in corr_vars:
+                                param_dict.values[param_dict.keys.index(key)] = (
+                                    # the variable will always have the name of the first corr var
+                                    ast.Name(corr_vars[0].replace("-", "_"))
+                                )
+
+            self.generic_visit(node)
+            return node
+
+        def visit_With(self, node: ast.With) -> ast.With:
+            for correlation in correlations:
+                url, corr_expr, *corr_vars = correlation.split(",")
+                if url == node.items[0].context_expr.args[1].value:  # type: ignore
+                    node.body[0] = ast.parse(
+                        f"""{corr_vars[0].replace('-', '_')} = re.findall('''{corr_expr}''', resp.text)[0] if resp.text else None"""
+                    )
             self.generic_visit(node)
             return node
 

@@ -90,7 +90,7 @@ def test_helptext():
     assert "usage: har2locust" in stdout
 
 
-def test_plugins():
+def test_plugin_with_login():
     with open("tests/outputs/login_plugin.py", encoding="utf-8") as f:
         expected_output = f.read()
     proc = h2l(
@@ -111,6 +111,26 @@ def test_plugins():
     # test url timestamp rewriting function
     assert "self.rest_" in stdout
     assert "&_" not in stdout
+
+
+def test_plugin_with_correlation():
+    with open("tests/outputs/reqres_plugin.py", encoding="utf-8") as f:
+        expected_output = f.read()
+    proc = h2l(
+        "har2locust",
+        "tests/inputs/reqres.in.har",
+        "--plugins",
+        "har2locust.extra_plugins.plugin_example",
+        "-L",
+        "DEBUG",
+        cwd=os.path.join(os.path.dirname(__file__), "../"),
+    )
+    stdout, stderr = proc.communicate()
+    assert proc.returncode == 0, f"Bad return code {proc.returncode}, stderr: {stderr}"
+    print(stderr)  # this will only be shown if it fails anyway
+    assert stdout == expected_output
+    assert "re.findall(" in stdout
+    assert '"job": job}' in stdout
 
 
 def test_disable_plugins():
