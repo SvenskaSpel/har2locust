@@ -1,5 +1,3 @@
-import logging
-
 from har2locust.plugin import entriesprocessor
 
 

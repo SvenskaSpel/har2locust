@@ -1,7 +1,6 @@
 # This file has some advanced examples of how to massage your recording
 # Use it as inspiration for the techniques, not as a recommendation for exactly what to do
 import ast
-import pathlib
 import re
 import typing
 
@@ -73,11 +72,6 @@ def rest_(tree: ast.Module, values: dict):
                         if re.search(r"[&?]_=\d+$", url.value):
                             node.func.attr = "rest_"
                             url.value = re.sub(r"[&?]_=\d+$", "", url.value)
-            self.generic_visit(node)
-            return node
-
-    T().visit(tree)
-
             self.generic_visit(node)
             return node
 
