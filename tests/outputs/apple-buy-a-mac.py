@@ -1,5 +1,4 @@
-from locust import task, run_single_user
-from locust import FastHttpUser
+from locust import FastHttpUser, run_single_user, task
 
 
 class apple_buy_a_mac(FastHttpUser):
@@ -535,29 +534,6 @@ class apple_buy_a_mac(FastHttpUser):
         ) as resp:
             pass
         with self.client.request(
-            "OPTIONS",
-            "https://xp.apple.com/report/2/xp_aos_clientperf",
-            headers={
-                "Accept": "*/*",
-                "Accept-Encoding": "gzip, deflate, br",
-                "Accept-Language": "en-US,en;q=0.9",
-                "Access-Control-Request-Headers": "content-type",
-                "Access-Control-Request-Method": "POST",
-                "Cache-Control": "no-cache",
-                "Connection": "keep-alive",
-                "Host": "xp.apple.com",
-                "Origin": "https://www.apple.com",
-                "Pragma": "no-cache",
-                "Referer": "https://www.apple.com/",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "same-site",
-                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
-            },
-            catch_response=True,
-        ) as resp:
-            pass
-        with self.client.request(
             "POST",
             "https://securemetrics.apple.com/b/ss/applestoreww,appleglobal/1/JS-2.17.0/s56893829888064?AQB=1&ndh=1&pf=1&t=28%2F10%2F2020%2012%3A59%3A19%206%20-60&fid=0EE10F1DE7BC5EFE-229AB97ADA08D75A&ce=UTF-8&pageName=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fselect&g=https%3A%2F%2Fwww.apple.com%2Fshop%2Fbuy-mac%2Fmacbook-air&r=https%3A%2F%2Fwww.apple.com%2Fmacbook-air%2F&cc=USD&server=as-13.5.0&events=event210%3D7.01%2Cevent246%2Cevent500&v3=AOS%3A%20US%20Consumer&c4=D%3Dg&v4=D%3DpageName&c5=macintel&v6=D%3DpageName%2B%22%7C%7C%7CStep%201%20-%20Select%20Button%7Cselected%22&c8=AOS%3A%20Mac&c14=macbook%20air%20-%20overview%20%28us%29&v14=en-us&c19=AOS%3A%20US%20Consumer%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fselect&v19=D%3Dc19&c20=AOS%3A%20US%20Consumer&c40=10078&v49=D%3Dr&v54=D%3Dg&v94=7.01&v97=s.tl-o&pe=lnk_o&pev2=undefined%7CStep%201%20-%20Select%20Button%7Cselected&c.&a.&activitymap.&page=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fselect&link=select%20apple%20m1%20chip%20with%208core%20cpu%20and%207core%20gpu%20%7C%20no%20href%20%7C%20body&region=body&pageIDType=1&.activitymap&.a&.c&pid=AOS%3A%20home%2Fshop_mac%2Ffamily%2Fmacbook_air%2Fselect&pidt=1&oid=proceed&oidt=3&ot=SUBMIT&s=1920x1080&c=24&j=1.6&v=N&k=Y&bw=1420&bh=630&lrt=91&AQE=1",
             headers={
@@ -703,29 +679,6 @@ class apple_buy_a_mac(FastHttpUser):
                 "Sec-Fetch-Dest": "empty",
                 "Sec-Fetch-Mode": "cors",
                 "Sec-Fetch-Site": "cross-site",
-                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
-            },
-            catch_response=True,
-        ) as resp:
-            pass
-        with self.client.request(
-            "OPTIONS",
-            "https://xp.apple.com/report/2/xp_aos_clientperf",
-            headers={
-                "Accept": "*/*",
-                "Accept-Encoding": "gzip, deflate, br",
-                "Accept-Language": "en-US,en;q=0.9",
-                "Access-Control-Request-Headers": "content-type",
-                "Access-Control-Request-Method": "POST",
-                "Cache-Control": "no-cache",
-                "Connection": "keep-alive",
-                "Host": "xp.apple.com",
-                "Origin": "https://www.apple.com",
-                "Pragma": "no-cache",
-                "Referer": "https://www.apple.com/",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "same-site",
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
             catch_response=True,
@@ -996,29 +949,6 @@ class apple_buy_a_mac(FastHttpUser):
             catch_response=True,
         ) as resp:
             pass
-        with self.client.request(
-            "OPTIONS",
-            "https://xp.apple.com/report/2/xp_aos_clientperf",
-            headers={
-                "Accept": "*/*",
-                "Accept-Encoding": "gzip, deflate, br",
-                "Accept-Language": "en-US,en;q=0.9",
-                "Access-Control-Request-Headers": "content-type",
-                "Access-Control-Request-Method": "POST",
-                "Cache-Control": "no-cache",
-                "Connection": "keep-alive",
-                "Host": "xp.apple.com",
-                "Origin": "https://www.apple.com",
-                "Pragma": "no-cache",
-                "Referer": "https://www.apple.com/",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "same-site",
-                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
-            },
-            catch_response=True,
-        ) as resp:
-            pass
         with self.rest(
             "GET",
             "https://www.apple.com/shop/bag/status?apikey=SJHJUH4YFCTTPD4F4",
@@ -1094,29 +1024,6 @@ class apple_buy_a_mac(FastHttpUser):
                 "Sec-Fetch-Dest": "empty",
                 "Sec-Fetch-Mode": "cors",
                 "Sec-Fetch-Site": "cross-site",
-                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
-            },
-            catch_response=True,
-        ) as resp:
-            pass
-        with self.client.request(
-            "OPTIONS",
-            "https://xp.apple.com/report/2/xp_aos_clientperf",
-            headers={
-                "Accept": "*/*",
-                "Accept-Encoding": "gzip, deflate, br",
-                "Accept-Language": "en-US,en;q=0.9",
-                "Access-Control-Request-Headers": "content-type",
-                "Access-Control-Request-Method": "POST",
-                "Cache-Control": "no-cache",
-                "Connection": "keep-alive",
-                "Host": "xp.apple.com",
-                "Origin": "https://www.apple.com",
-                "Pragma": "no-cache",
-                "Referer": "https://www.apple.com/",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "same-site",
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
             catch_response=True,
@@ -1234,29 +1141,6 @@ class apple_buy_a_mac(FastHttpUser):
                 "Sec-Fetch-Dest": "empty",
                 "Sec-Fetch-Mode": "cors",
                 "Sec-Fetch-Site": "cross-site",
-                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
-            },
-            catch_response=True,
-        ) as resp:
-            pass
-        with self.client.request(
-            "OPTIONS",
-            "https://xp.apple.com/report/2/xp_aos_clientperf",
-            headers={
-                "Accept": "*/*",
-                "Accept-Encoding": "gzip, deflate, br",
-                "Accept-Language": "en-US,en;q=0.9",
-                "Access-Control-Request-Headers": "content-type",
-                "Access-Control-Request-Method": "POST",
-                "Cache-Control": "no-cache",
-                "Connection": "keep-alive",
-                "Host": "xp.apple.com",
-                "Origin": "https://secure2.store.apple.com",
-                "Pragma": "no-cache",
-                "Referer": "https://secure2.store.apple.com/",
-                "Sec-Fetch-Dest": "empty",
-                "Sec-Fetch-Mode": "cors",
-                "Sec-Fetch-Site": "same-site",
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36",
             },
             catch_response=True,

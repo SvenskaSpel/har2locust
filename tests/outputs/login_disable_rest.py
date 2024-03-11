@@ -1,5 +1,4 @@
-from locust import task, run_single_user
-from locust import FastHttpUser
+from locust import FastHttpUser, run_single_user, task
 
 
 class login(FastHttpUser):

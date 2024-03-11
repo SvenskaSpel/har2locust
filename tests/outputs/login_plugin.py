@@ -1,4 +1,5 @@
-from locust import task, run_single_user
+from locust import run_single_user, task
+
 from svs_locust import RestUser
 
 
