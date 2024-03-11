@@ -1,7 +1,6 @@
 # This file has some advanced examples of how to massage your recording
 # Use it as inspiration for the techniques, not as a recommendation for exactly what to do
 import ast
-import pathlib
 import re
 import typing
 
