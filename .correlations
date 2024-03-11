@@ -1,3 +1,3 @@
 # syntax: url for which request to get the data from, regex (with single capture group) to get data from the response, variable name to store the data in, and replace json values in requests
-# this example is a little awkward in that we're using the "id" from a response and putting it in the "job" field in the next request, but I had to make do with what reqres.in offers.
-/api/users,"id":"([^"]*)",job
+# this example is a little awkward in that we're using the "token" from a response and putting it in the "job" field in the next request, but I had to make do with what reqres.in offers.
+/api/register,"token":"([^"]*)",job

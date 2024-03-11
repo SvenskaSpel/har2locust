@@ -16,7 +16,7 @@ class reqres_in(FastHttpUser):
 
     @task
     def t(self):
-        with self.rest("POST", "/api/users", json={"name": "morpheus", "job": "leader"}) as resp:
+        with self.rest("POST", "/api/register", json={"email": "eve.holt@reqres.in", "password": "pistol"}) as resp:
             pass
         with self.rest("PATCH", "/api/users/2", json={"name": "morpheus", "job": "zion resident"}) as resp:
             pass

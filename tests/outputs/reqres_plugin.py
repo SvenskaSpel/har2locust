@@ -18,8 +18,8 @@ class reqres_in(RestUser):
 
     @task
     def t(self):
-        with self.rest("POST", "/api/users", json={"name": "morpheus", "job": job}) as resp:
-            job = re.findall('"id":"([^"]*)"', resp.text)[0] if resp.text else None
+        with self.rest("POST", "/api/register", json={"email": "eve.holt@reqres.in", "password": "pistol"}) as resp:
+            job = re.findall('"token":"([^"]*)"', resp.text)[0] if resp.text else None
         with self.rest("PATCH", "/api/users/2", json={"name": "morpheus", "job": job}) as resp:
             pass
 
