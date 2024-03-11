@@ -17,10 +17,16 @@ def default_headers(entries: list[dict], _args):
                 for h in headers:
                     if dh["name"] == h["name"]:
                         if dh["value"] != h["value"]:
+                            logging.debug(
+                                f"removed default header {dh['name']} with value {dh['value']} from default headers because it has different value in {e['request']['url']}"
+                            )
                             default_headers.remove(dh)  # header has different value
                             break
                         break
                 else:
+                    logging.debug(
+                        f"removed default header {dh['name']} with value {dh['value']} from default headers because it was not present in {e['request']['url']}"
+                    )
                     default_headers.remove(dh)  # header not present
     if default_headers is None:
         default_headers = []
