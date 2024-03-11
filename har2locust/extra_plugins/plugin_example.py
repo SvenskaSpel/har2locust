@@ -78,11 +78,6 @@ def rest_(tree: ast.Module, values: dict):
 
     T().visit(tree)
 
-            self.generic_visit(node)
-            return node
-
-    T().visit(tree)
-
 
 # More examples
 
