@@ -13,7 +13,7 @@ def default_headers(entries: list[dict], _args):
         if default_headers is None:
             default_headers = headers[:]
         else:
-            for dh in default_headers[:]:  # pylint: disable=unsubscriptable-object
+            for dh in default_headers[:]:
                 if dh["name"] == "accept-language":
                     # accept-language is likely to be common among most requests so we never remove it from default headers
                     # (instead it will be overridden in the specific requests where it differs)
