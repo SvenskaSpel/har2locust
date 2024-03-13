@@ -14,18 +14,17 @@ def default_headers(entries: list[dict], _args):
             default_headers = headers[:]
         else:
             for dh in default_headers[:]:  # pylint: disable=unsubscriptable-object
+                if dh["name"] == "accept-language":
+                    # accept-language is likely to be common among most requests so we never remove it from default headers
+                    # (instead it will be overridden in the specific requests where it differs)
+                    continue
                 for h in headers:
-                    if h["name"] == "accept-language":
-                        # accept-language is likely to be common among most requests so we never remove it from default headers
-                        # (instead it will be overridden in the specific requests where it differs)
-                        break
                     if dh["name"] == h["name"]:
                         if dh["value"] != h["value"]:
                             logging.debug(
                                 f"removed default header {dh['name']} with value {dh['value']} from default headers because it has different value in {e['request']['url']}"
                             )
                             default_headers.remove(dh)  # header has different value
-                            break
                         break
                 else:
                     logging.debug(
