@@ -15,6 +15,10 @@ def default_headers(entries: list[dict], _args):
         else:
             for dh in default_headers[:]:  # pylint: disable=unsubscriptable-object
                 for h in headers:
+                    if h["name"] == "accept-language":
+                        # accept-language is likely to be common among most requests so we never remove it from default headers
+                        # (instead it will be overridden in the specific requests where it differs)
+                        break
                     if dh["name"] == h["name"]:
                         if dh["value"] != h["value"]:
                             logging.debug(
@@ -40,7 +44,7 @@ def default_headers(entries: list[dict], _args):
         headers = e["request"]["headers"]
         for h in headers[:]:
             for dh in default_headers:
-                if h["name"] == dh["name"]:
+                if h["name"] == dh["name"] and h["value"] == dh["value"]:
                     headers.remove(dh)
         headers[:] = sorted(headers, key=lambda item: item["name"])
 
