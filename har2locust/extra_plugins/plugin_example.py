@@ -112,21 +112,3 @@ def do_correlations(tree: ast.Module, values: dict):
             return node
 
     T().visit(tree)
-
-
-# More examples
-
-# @entriesprocessor
-# def log_something_and_drop_everthing_but_the_first_request(entries):
-#     logging.info(f"hello")
-#     entries[:] = [entries[0]]  # update list in-place
-
-# @entriesprocessor
-# def parametrize_ssn(entries):
-#     for e in entries:
-#         if "postData" in e["request"]:
-#             e["request"]["postData"]["text"] = re.sub(
-#                 r'"personalId":"\d*"',
-#                 "\"personalId\":self.customer['ssn']",
-#                 e["request"]["postData"]["text"],
-#             )
