@@ -52,13 +52,13 @@ Parameters can also be set using environment variables or config files (har2locu
     )
     parser.add_argument(
         "--resource-types",
-        default="xhr,document,other",
+        default="xhr,document,other,fetch",
         type=str,
         help=(
             "Commas separated list of resource types to be included "
             "in the locustfile. Supported type are `xhr`, "
             "`script`, `stylesheet`, `image`, `font`, `document`, `other`. "
-            "Defaults to xhr,document,other."
+            "Defaults to xhr,document,other,fetch."
         ),
     )
     parser.add_argument(
