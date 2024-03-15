@@ -4,22 +4,40 @@ import ast
 import pathlib
 import re
 import typing
+
 from har2locust.plugin import astprocessor
 
-
-# useful way to debug: print(ast.unparse(node))
-
-
+# useful way to debug: logging.info(ast.unparse(node))
 
 
 @astprocessor
 def inject_authentication(tree: ast.Module, values: dict):
     class T(ast.NodeTransformer):
+        def visit_Module(self, node: ast.Module) -> ast.Module:
+            things = ast.parse("""
+import re
+import os
+
+from locust_plugins.listeners import StopUserOnFail
+os.environ["LOCUST_TEST_ENV"] = "itp1"
+os.environ["LOCUST_TENANT"] = "lb"
+
+
+@events.init.add_listener
+def on_locust_init(environment, **_kwargs):
+    import time
+    environment.events.request.add_listener(lambda *args, **kw: time.sleep(0.1))
+    StopUserOnFail(environment)""")
+            node.body[2:2] = things.body  # list slicing is fun
+            self.generic_visit(node)
+            return node
+
         def visit_ImportFrom(self, node: ast.ImportFrom) -> ast.ImportFrom:
             # our base class is RestUser, not FastHttpUser
             if node.names[0].name == "FastHttpUser":
                 node.module = "svs_locust"
                 node.names[0].name = "RestUser"
+
             self.generic_visit(node)
             return node
 
@@ -34,7 +52,7 @@ def inject_authentication(tree: ast.Module, values: dict):
             for i in range(len(node.body)):
                 try:
                     url = node.body[i].items[0].context_expr.args[1].value  # type: ignore
-                except:  # noqa: E722
+                except Exception:
                     url = None
                 if url == "/player/1/authenticate/testlogin":
                     block = ast.parse(
@@ -85,18 +103,17 @@ def do_correlations(tree: ast.Module, values: dict):
         correlations = []
 
     class T(ast.NodeTransformer):
-        def visit_Call(self, node: ast.Call) -> ast.Call:
-            for kw in node.keywords:
-                if kw.arg == "json" or kw.arg == "headers":
-                    param_dict: ast.Dict = typing.cast(ast.Dict, kw.value)
-                    for key in param_dict.keys:
-                        for correlation in correlations:
-                            _, _, *corr_vars = correlation.split(",")
-                            if typing.cast(ast.Constant, key).s in corr_vars:
-                                param_dict.values[param_dict.keys.index(key)] = (
-                                    # the variable will always have the name of the first corr var
-                                    ast.Name(corr_vars[0].replace("-", "_"))
-                                )
+        def visit_Dict(self, node: ast.Dict) -> ast.Dict:
+            for key in node.keys:
+                if typing.cast(ast.Constant, key).s == "bet_number":
+                    node.values[node.keys.index(key)] = ast.parse('f"single_{id}"').body[0]
+                for correlation in correlations:
+                    _, _, *corr_vars = correlation.split(",")
+                    if typing.cast(ast.Constant, key).s in corr_vars:
+                        node.values[node.keys.index(key)] = (
+                            # the variable will always have the name of the first corr var
+                            ast.Name(corr_vars[0].replace("-", "_"))
+                        )
 
             self.generic_visit(node)
             return node
