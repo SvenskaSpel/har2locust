@@ -100,6 +100,11 @@ def render(name: str, values: dict) -> str:
 
     try:
         tree = ast.parse(py, type_comments=True)
+    except ValueError as e:
+        logging.debug(py)
+        levelmessage = " (set log level DEBUG to see the whole output)" if logging.DEBUG < logging.root.level else ""
+        logging.error(f"{e} when parsing rendered template{levelmessage}")
+        raise
     except SyntaxError as e:
         logging.debug(py)
         levelmessage = " (set log level DEBUG to see the whole output)" if logging.DEBUG < logging.root.level else ""
