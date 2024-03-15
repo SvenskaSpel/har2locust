@@ -9,7 +9,6 @@ class reqres_in(FastHttpUser):
         "accept-language": "sv,en;q=0.9",
         "cache-control": "no-cache",
         "content-type": "application/json",
-        "origin": "https://reqres.in",
         "pragma": "no-cache",
         "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
     }

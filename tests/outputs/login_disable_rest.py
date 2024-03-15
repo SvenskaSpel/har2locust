@@ -16,11 +16,7 @@ class login(FastHttpUser):
         with self.client.request(
             "POST",
             "/player/1/authenticate/testlogin",
-            headers={
-                "accept": "application/json, text/javascript, */*; q=0.01",
-                "content-type": "application/json",
-                "origin": "https://spela.test3.svenskaspel.se",
-            },
+            headers={"accept": "application/json, text/javascript, */*; q=0.01", "content-type": "application/json"},
             data='{"personalId":"193804122491","source":3}',
             catch_response=True,
         ) as resp:
@@ -28,11 +24,7 @@ class login(FastHttpUser):
         with self.client.request(
             "GET",
             "/player/1/customizedsettings?_=1636025335990",
-            headers={
-                "accept": "application/json, text/javascript, */*; q=0.01",
-                "content-type": "text/plain",
-                "origin": "https://spela.test3.svenskaspel.se",
-            },
+            headers={"accept": "application/json, text/javascript, */*; q=0.01", "content-type": "text/plain"},
             catch_response=True,
         ) as resp:
             pass
@@ -57,11 +49,7 @@ class login(FastHttpUser):
         with self.client.request(
             "POST",
             "/player/1/terms",
-            headers={
-                "accept": "application/json, text/javascript, */*; q=0.01",
-                "content-type": "application/json",
-                "origin": "https://spela.test3.svenskaspel.se",
-            },
+            headers={"accept": "application/json, text/javascript, */*; q=0.01", "content-type": "application/json"},
             data="{}",
             catch_response=True,
         ) as resp:
@@ -69,11 +57,7 @@ class login(FastHttpUser):
         with self.client.request(
             "GET",
             "/player/1/info?include=accountBalance&_=1636025343876",
-            headers={
-                "accept": "application/json, text/javascript, */*; q=0.01",
-                "content-type": "text/plain",
-                "origin": "https://spela.test3.svenskaspel.se",
-            },
+            headers={"accept": "application/json, text/javascript, */*; q=0.01", "content-type": "text/plain"},
             catch_response=True,
         ) as resp:
             pass
