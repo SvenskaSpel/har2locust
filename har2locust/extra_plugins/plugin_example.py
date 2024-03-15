@@ -4,18 +4,12 @@ import ast
 import pathlib
 import re
 import typing
+from har2locust.plugin import astprocessor
 
-from har2locust.plugin import astprocessor, entriesprocessor
 
 # useful way to debug: print(ast.unparse(node))
 
 
-@entriesprocessor
-def skip_origin_header(entries):
-    # this particular site doesnt care about origin header and skipping it makes the locustfile much neater
-    for e in entries:
-        request = e["request"]
-        request["headers"] = [h for h in request["headers"] if h["name"] != "origin"]
 
 
 @astprocessor
