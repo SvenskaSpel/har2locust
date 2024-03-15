@@ -106,7 +106,7 @@ def do_correlations(tree: ast.Module, values: dict):
         def visit_Dict(self, node: ast.Dict) -> ast.Dict:
             for key in node.keys:
                 if typing.cast(ast.Constant, key).s == "bet_number":
-                    node.values[node.keys.index(key)] = ast.parse('f"single_{id}"').body[0]
+                    node.values[node.keys.index(key)] = ast.parse('f"single_{id}"').body[0]  # type: ignore
                 for correlation in correlations:
                     _, _, *corr_vars = correlation.split(",")
                     if typing.cast(ast.Constant, key).s in corr_vars:
@@ -122,7 +122,7 @@ def do_correlations(tree: ast.Module, values: dict):
             for correlation in correlations:
                 url, corr_expr, *corr_vars = correlation.split(",")
                 if url == node.items[0].context_expr.args[1].value:  # type: ignore
-                    node.body[0] = ast.parse(
+                    node.body[0] = ast.parse(  # type: ignore
                         f"""{corr_vars[0].replace('-', '_')} = re.findall('''{corr_expr}''', resp.text)[0] if resp.text else None"""
                     )
             self.generic_visit(node)
