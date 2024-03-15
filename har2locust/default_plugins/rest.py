@@ -1,3 +1,5 @@
+import json
+
 from har2locust.plugin import entriesprocessor
 
 
@@ -13,6 +15,8 @@ def rest(entries: list[dict]):
                         or r["postData"]["mimeType"] == "application/json"  # json payload, also ok
                     ):
                         # logging.debug(f"{r['url']} is a rest request!")
+                        if "postData" in r and "text" in r["postData"]:
+                            r["postData"]["text"] = json.loads(r["postData"]["text"])
                         r["fname"] = "rest"
                         r["extraparams"] = []  # catch_response=True is already the default for .rest()
 
