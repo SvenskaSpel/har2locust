@@ -1,10 +1,42 @@
+import sys
 from argparse import RawDescriptionHelpFormatter
+from collections import OrderedDict
 
 import configargparse
+
+if sys.version_info >= (3, 11):
+    import tomllib
+else:
+    import tomli as tomllib
 
 from ._version import version
 
 DEFAULT_CONFIG_FILES = ["~/.har2locust.conf", "har2locust.conf", "pyproject.toml"]
+
+
+class LocustTomlConfigParser(configargparse.TomlConfigParser):
+    def parse(self, stream):
+        try:
+            config = tomllib.loads(stream.read())
+        except Exception as e:
+            raise configargparse.ConfigFileParserException(f"Couldn't parse TOML file: {e}")
+
+        # convert to dict and filter based on section names
+        result = OrderedDict()
+
+        for section in self.sections:
+            data = configargparse.get_toml_section(config, section)
+            if data:
+                for key, value in data.items():
+                    if isinstance(value, list):
+                        result[key] = value
+                    elif value is None:
+                        pass
+                    else:
+                        result[key] = str(value)
+                break
+
+        return result
 
 
 def get_parser() -> configargparse.ArgumentParser:
@@ -24,6 +56,12 @@ Parameters can also be set using environment variables or config files (pyprojec
         add_config_file_help=False,
         formatter_class=RawDescriptionHelpFormatter,
         default_config_files=DEFAULT_CONFIG_FILES,
+        config_file_parser_class=configargparse.CompositeConfigParser(
+            [
+                LocustTomlConfigParser(["tool.har2locust"]),
+                configargparse.DefaultConfigFileParser,
+            ]
+        ),
     )
     parser.add_argument(
         "input",
