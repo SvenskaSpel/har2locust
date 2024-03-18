@@ -4,7 +4,7 @@ import configargparse
 
 from ._version import version
 
-DEFAULT_CONFIG_FILES = ["~/.har2locust.conf", "har2locust.conf"]
+DEFAULT_CONFIG_FILES = ["~/.har2locust.conf", "har2locust.conf", "pyproject.toml"]
 
 
 def get_parser() -> configargparse.ArgumentParser:
@@ -18,7 +18,7 @@ har2locust --plugins har2locust.extra_plugins.plugin_example,myplugin.py myrecor
 Disable one of the default plugins:
 har2locust --disable-plugins=rest.py myrecording.har
 
-Parameters can also be set using environment variables or config files (har2locust.conf or ~/.har2locust.conf) For details about how to set parameters see https://goo.gl/R74nmi""",
+Parameters can also be set using environment variables or config files (pyproject.toml, har2locust.conf, ~/.har2locust.conf) For details about how to set parameters see https://pypi.org/project/ConfigArgParse/""",
         auto_env_var_prefix="HAR2LOCUST_",
         add_env_var_help=False,
         add_config_file_help=False,
