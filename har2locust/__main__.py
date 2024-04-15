@@ -5,6 +5,7 @@ import logging
 import os
 import pathlib
 import sys
+import unicodedata
 from argparse import Namespace
 
 import jinja2
@@ -20,7 +21,7 @@ def __main__(arguments=None):
         args.plugins.split(",") if args.plugins else [], args.disable_plugins.split(",") if args.disable_plugins else []
     )
     har_path = pathlib.Path(args.input)
-    name = har_path.stem.replace("-", "_").replace(".", "_")  # build class name from filename
+    name = generate_class_name(har_path.stem)  # build class name from filename
     with open(har_path, encoding="utf8") as f:
         har = json.load(f)
     logging.debug(f"loaded {har_path}")
@@ -121,6 +122,48 @@ def render(name: str, values: dict) -> str:
     logging.debug("outputstringprocessors applied")
 
     return py
+
+
+# Generate a valid identifier (https://docs.python.org/3.8/reference/lexical_analysis.html#identifiers) by replacing
+# invalid characters with "_".
+def generate_class_name(file_name: str) -> str:
+    VALID_STARTING_CHARACTER_CATEGORIES = ["Lu", "Ll", "Lt", "Lm", "Lo", "Nl"]
+    OTHER_ID_START_CHARACTERS = ["\u1885", "\u1886", "\u2118", "\u212e", "\u309b", "\u309c"]
+    VALID_CONTINUATION_CHARACTER_CATEGORIES = VALID_STARTING_CHARACTER_CATEGORIES + ["Mn", "Mc", "Nd", "Pc"]
+    OTHER_ID_CONTINUE_CHARACTERS = ["\u00b7", "\u0387", "\u1369", "\u1370", "\u1371", "\u19da"]
+
+    def valid_continuation_character(character: str) -> bool:
+        normalized_character = unicodedata.normalize("NFKC", character)
+        for character in normalized_character:
+            if (
+                unicodedata.category(character) not in VALID_CONTINUATION_CHARACTER_CATEGORIES
+                and character not in OTHER_ID_START_CHARACTERS + OTHER_ID_CONTINUE_CHARACTERS
+                and character != "_"
+            ):
+                return False
+        return True
+
+    def valid_starting_character(character: str) -> bool:
+        normalized_character = unicodedata.normalize("NFKC", character)
+        first = normalized_character[0]
+        if (
+            unicodedata.category(first) not in VALID_STARTING_CHARACTER_CATEGORIES
+            and first not in OTHER_ID_START_CHARACTERS
+            and first != "_"
+        ):
+            return False
+        for character in normalized_character[1:]:
+            if not valid_continuation_character(character):
+                return False
+        return True
+
+    first_character = file_name[0]
+    name = first_character if valid_starting_character(first_character) else "_"
+
+    for character in file_name[1:]:
+        name += character if valid_continuation_character(character) else "_"
+
+    return name
 
 
 if __name__ == "__main__":
