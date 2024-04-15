@@ -6,7 +6,7 @@ import subprocess
 
 import pytest
 
-from har2locust.__main__ import __main__
+from har2locust.__main__ import __main__, generate_class_name
 
 inputs_dir = pathlib.Path(__file__).parents[0] / "inputs"
 outputs_dir = pathlib.Path(__file__).parents[0] / "outputs"
@@ -186,3 +186,9 @@ def test_locust_run():
     _, stderr = proc.communicate()
     assert proc.returncode == 0, f"Bad return code {proc.returncode}, stderr: {stderr}"
     assert "--run-time limit reached" in stderr, stderr
+
+
+def test_generate_class_name_with_invalid_characters():
+    file_name = "0invalid(characters)"
+    generated_name = generate_class_name(file_name)
+    assert generated_name == "_invalid_characters_"
