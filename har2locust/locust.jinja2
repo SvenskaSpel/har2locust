@@ -33,7 +33,7 @@ class {{class_name}}(FastHttpUser):
             {%- endfor %}}
         {%- endif -%}
         {%- if request.postData -%}
-        , data='{{ request.postData.text }}'
+        , data={{ request.postData.text }}
         {%- endif -%}
         {%- for (key, value) in request.extraparams -%}
             ,{{ key }}={{ value }}

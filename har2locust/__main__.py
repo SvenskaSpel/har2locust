@@ -124,6 +124,14 @@ def render(name: str, values: dict) -> str:
     return py
 
 
+@entriesprocessor_with_args
+def transform_payload_strings(entries: list[dict], args):
+    for entry in entries:
+        request = entry["request"]
+        if "postData" in request and "text" in request["postData"] and request["fname"] != "rest":
+            request["postData"]["text"] = ast.unparse(ast.Constant(value=request["postData"]["text"]))
+
+
 # Generate a valid identifier (https://docs.python.org/3.8/reference/lexical_analysis.html#identifiers) by replacing
 # invalid characters with "_".
 def generate_class_name(file_name: str) -> str:
