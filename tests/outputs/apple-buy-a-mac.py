@@ -1855,7 +1855,7 @@ class apple_buy_a_mac(FastHttpUser):
                 "scnt": "",
                 "x-csrf-token": "",
             },
-            data='{"type":"INFO","title":"AppleAuthDebug","message":"APPLE ID : Launching AppleAuth application.{"data":{"initApp":{"startTime":1400.0300000188872}},"order":["initApp"]}","iframeId":"auth-bbfc2b43-ol01-rowz-a4jz-l79n3zhj","details":"{"pageVisibilityState":"visible"}"}',
+            data='{"type":"INFO","title":"AppleAuthDebug","message":"APPLE ID : Launching AppleAuth application.{\\"data\\":{\\"initApp\\":{\\"startTime\\":1400.0300000188872}},\\"order\\":[\\"initApp\\"]}","iframeId":"auth-bbfc2b43-ol01-rowz-a4jz-l79n3zhj","details":"{\\"pageVisibilityState\\":\\"visible\\"}"}',
             catch_response=True,
         ) as resp:
             pass
@@ -1903,7 +1903,7 @@ class apple_buy_a_mac(FastHttpUser):
                 "scnt": "",
                 "x-csrf-token": "",
             },
-            data='{"type":"INFO","title":"AppleAuthPerf","message":"APPLE ID : TTI {"data":{"initApp":{"startTime":1400.0300000188872},"loadAuthComponent":{"startTime":2087.4300000141375},"startAppToTTI":{"duration":686.1000000208151}},"order":["initApp","loadAuthComponent","startAppToTTI"]}","iframeId":"auth-bbfc2b43-ol01-rowz-a4jz-l79n3zhj","details":"{"pageVisibilityState":"visible"}"}',
+            data='{"type":"INFO","title":"AppleAuthPerf","message":"APPLE ID : TTI {\\"data\\":{\\"initApp\\":{\\"startTime\\":1400.0300000188872},\\"loadAuthComponent\\":{\\"startTime\\":2087.4300000141375},\\"startAppToTTI\\":{\\"duration\\":686.1000000208151}},\\"order\\":[\\"initApp\\",\\"loadAuthComponent\\",\\"startAppToTTI\\"]}","iframeId":"auth-bbfc2b43-ol01-rowz-a4jz-l79n3zhj","details":"{\\"pageVisibilityState\\":\\"visible\\"}"}',
             catch_response=True,
         ) as resp:
             pass
