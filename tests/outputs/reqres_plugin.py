@@ -3,10 +3,10 @@ from locust import events, run_single_user, task
 import os
 import re
 
-from locust_plugins.listeners import StopUserOnFail
+from locust_plugins import listeners
 from svs_locust import RestUser
 
-os.environ["LOCUST_TEST_ENV"] = "itp1"
+os.environ["LOCUST_TEST_ENV"] = "test3"
 os.environ["LOCUST_TENANT"] = "lb"
 
 
@@ -15,7 +15,7 @@ def on_locust_init(environment, **_kwargs):
     import time
 
     environment.events.request.add_listener(lambda *args, **kw: time.sleep(0.1))
-    StopUserOnFail(environment)
+    listeners.StopUserOnFail(environment)
 
 
 class reqres_in(RestUser):
