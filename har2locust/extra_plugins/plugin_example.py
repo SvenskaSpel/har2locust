@@ -6,7 +6,7 @@ import re
 import typing
 
 from har2locust.plugin import astprocessor
-
+import logging
 # useful way to debug: logging.info(ast.unparse(node))
 
 
@@ -18,8 +18,8 @@ def inject_authentication(tree: ast.Module, values: dict):
 import re
 import os
 
-from locust_plugins.listeners import StopUserOnFail
-os.environ["LOCUST_TEST_ENV"] = "itp1"
+from locust_plugins import listeners
+os.environ["LOCUST_TEST_ENV"] = "test3"
 os.environ["LOCUST_TENANT"] = "lb"
 
 
@@ -27,7 +27,7 @@ os.environ["LOCUST_TENANT"] = "lb"
 def on_locust_init(environment, **_kwargs):
     import time
     environment.events.request.add_listener(lambda *args, **kw: time.sleep(0.1))
-    StopUserOnFail(environment)""")
+    listeners.StopUserOnFail(environment)""")
             node.body[2:2] = things.body  # list slicing is fun
             self.generic_visit(node)
             return node
@@ -51,9 +51,9 @@ def on_locust_init(environment, **_kwargs):
             # replace testlogin request with call to self.auth()
             for i in range(len(node.body)):
                 try:
-                    url = node.body[i].items[0].context_expr.args[1].value  # type: ignore
+                    url: str = node.body[i].items[0].context_expr.args[1].value  # type: ignore
                 except Exception:
-                    url = None
+                    continue
                 if url == "/player/1/authenticate/testlogin":
                     block = ast.parse(
                         """
@@ -64,6 +64,21 @@ self.auth()
                     node.body[i] = block.body[0]
                     # yea, the next line modifies what we're iterating over so we'll miss the last element, which is ugly
                     node.body.insert(i + 1, block.body[1])
+                replacements = [
+                    r"([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})",
+                    r"(svs-development.workload.shapegamescloud.com)",
+                    r"(-api.kambicdn.com)",
+                    r"(spela.svenskaspel.se)",
+                ]
+                for r in replacements:
+                    if re.search(r, url):
+                        n = ast.keyword(
+                            arg="name",
+                            value=ast.Constant(value=re.sub("https://", "", re.sub(r, "..", url))),
+                        )
+                        node.body[i].items[0].context_expr.args.append(n)
+                        break
+
             self.generic_visit(node)
             return node
 
