@@ -19,6 +19,8 @@ def ruff(py: str):
             "--fix",
             "-q",
             "--exit-zero",  # ignore linting fails, we're most interested in applying fixes, and it is up to the user to examin errors
+            "--dummy-variable-rgx",
+            "_.*|^ignored_|^unused_|^kwargs|^environment|^resp",
             "-",
         ],
         stdin=subprocess.PIPE,
