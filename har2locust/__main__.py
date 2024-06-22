@@ -7,6 +7,7 @@ import pathlib
 import sys
 import unicodedata
 from argparse import Namespace
+from urllib.parse import urlencode
 
 import jinja2
 
@@ -130,6 +131,21 @@ def transform_payload_strings(entries: list[dict], args):
         request = entry["request"]
         if "postData" in request and "text" in request["postData"] and request["fname"] != "rest":
             request["postData"]["text"] = ast.unparse(ast.Constant(value=request["postData"]["text"]))
+
+
+@entriesprocessor_with_args
+def generate_text_from_url_encoded_params(entries: list[dict], args):
+    for entry in entries:
+        request = entry["request"]
+        if (
+            "postData" in request
+            and request["postData"]["mimeType"] == "application/x-www-form-urlencoded"
+            and "text" not in request["postData"]
+            and "params" in request["postData"]
+        ):
+            params = [(param["name"], param["value"]) for param in request["postData"]["params"]]
+            text = f"'{urlencode(params)}'"
+            request["postData"]["text"] = text
 
 
 # Generate a valid identifier (https://docs.python.org/3.8/reference/lexical_analysis.html#identifiers) by replacing
