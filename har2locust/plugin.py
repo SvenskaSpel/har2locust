@@ -1,6 +1,6 @@
 import ast
 from argparse import Namespace
-from typing import Callable, Optional
+from collections.abc import Callable
 
 # For examples of how to write a plugin, see default_plugins/ or tests/plugin_example.py
 # The processors allow you to interact with your recording at various stages,
@@ -8,17 +8,17 @@ from typing import Callable, Optional
 
 # immediately after reading the HAR JSON
 class entriesprocessor:
-    processors: list[Callable[[list[dict]], Optional[dict]]] = []
+    processors: list[Callable[[list[dict]], dict | None]] = []
 
-    def __init__(self, func: Callable[[list[dict]], Optional[dict]]):
+    def __init__(self, func: Callable[[list[dict]], dict | None]):
         self.processors.append(func)
 
 
 # immediately after reading the HAR JSON, with access to command line arguments
 class entriesprocessor_with_args:
-    processors: list[Callable[[list[dict], Namespace], Optional[dict]]] = []
+    processors: list[Callable[[list[dict], Namespace], dict | None]] = []
 
-    def __init__(self, func: Callable[[list[dict], Namespace], Optional[dict]]):
+    def __init__(self, func: Callable[[list[dict], Namespace], dict | None]):
         self.processors.append(func)
 
 
