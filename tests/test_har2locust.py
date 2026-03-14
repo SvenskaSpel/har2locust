@@ -174,6 +174,7 @@ def test_plugins_run_as_module():  # same as above test, but run as module
 
 
 # this test is intended to be run AFTER regenerating the output using make update_tests
+@pytest.skip(reason="reqres.in seems to be broken atm.")
 def test_locust_run():
     proc = h2l(
         "locust",
