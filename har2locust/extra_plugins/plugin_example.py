@@ -138,7 +138,7 @@ def do_correlations(tree: ast.Module, values: dict):
                 url, corr_expr, *corr_vars = correlation.split(",")
                 if url == node.items[0].context_expr.args[1].value:  # type: ignore
                     node.body[0] = ast.parse(  # type: ignore
-                        f"""{corr_vars[0].replace('-', '_')} = re.findall('''{corr_expr}''', resp.text)[0] if resp.text else None"""
+                        f"""{corr_vars[0].replace("-", "_")} = re.findall('''{corr_expr}''', resp.text)[0] if resp.text else None"""
                     )
             self.generic_visit(node)
             return node
