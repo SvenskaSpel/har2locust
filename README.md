@@ -81,4 +81,4 @@ instead of a basic Python file and extended to support plugins.
 
 har2locust is very new, and before 1.0 there may be changes to interfaces without notice. If you encounter an issue, PRs are very welcome.
 
-Also, dont expect that the generated file will always be very useful out of the box. You'll want to add [response validations](https://docs.locust.io/en/stable/writing-a-locustfile.html#validating-responses) to ensure the quality of your test, and perhaps parametrize dynamic data like usernames.
+Also, dont expect that the generated file will always be very useful out of the box. You'll want to add [response validations](https://docs.locust.io/en/stable/writing-a-locustfile.html#validating-responses) to ensure the quality of your test.
