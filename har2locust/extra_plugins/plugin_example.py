@@ -120,11 +120,11 @@ def do_correlations(tree: ast.Module, values: dict):
     class T(ast.NodeTransformer):
         def visit_Dict(self, node: ast.Dict) -> ast.Dict:
             for key in node.keys:
-                if typing.cast(ast.Constant, key).s == "bet_number":
+                if typing.cast(ast.Constant, key).value == "bet_number":
                     node.values[node.keys.index(key)] = ast.parse('f"single_{id}"').body[0]  # type: ignore
                 for correlation in correlations:
                     _, _, *corr_vars = correlation.split(",")
-                    if typing.cast(ast.Constant, key).s in corr_vars:
+                    if typing.cast(ast.Constant, key).value in corr_vars:
                         node.values[node.keys.index(key)] = (
                             # the variable will always have the name of the first corr var
                             ast.Name(corr_vars[0].replace("-", "_"))
